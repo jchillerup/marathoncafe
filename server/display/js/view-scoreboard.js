@@ -5,18 +5,17 @@ var Scoreboard = Backbone.View.extend({
 
     initialize: function() {
         this.model.on('change', _.bind(this.render, this));
-        
-        
+                
         // Create all the kitchen widgets
         var kitchens = [
-            "G1", 
-            "G2", "M2", "N2",
-            "G3", "M3", "N3",
-            "G4", "M4", "N4",
-            "G5", "M5", "N5",
-            "G6", "M6", "N6",
-            "G7", "M7", "N7",
-            "G8", "M8", "N8"
+            "GL1", 
+            "GL2", "ML2", "NY2",
+            "GL3", "ML3", "NY3",
+            "GL4", "ML4", "NY4",
+            "GL5", "ML5", "NY5",
+            "GL6", "ML6", "NY6",
+            "GL7", "ML7", "NY7",
+            "GL8", "ML8", "NY8"
         ];
 
         for (var kitchen in kitchens) {
@@ -51,6 +50,7 @@ var ScoreboardUnit = Backbone.View.extend({
         }
 
         this.model.on('change:'+this.kitchen_id, _.bind(this.render, this));
+        this.render();
     },
     render: function() {
         console.log(this.kitchen_id + " render" );

@@ -1,52 +1,28 @@
-var scoreboard = require('scoreboard');
-var redis = require('redis');
 var http = require('http');
 var url = require('url');
 var connect = require('connect');
 
-
-var server = http.createServer(connect.createServer(connect.static('display/'))).listen(80);
+var app = connect.createServer(connect.static('display'));
+var server = http.createServer(app).listen(8080);
 var io = require('socket.io').listen(server);
 
 
+var sqlite3 = require('sqlite3');
+var db = new sqlite3.Database('db.sqlite');
 
+var state = { cur_scores: { 'GL1': 0, 'GL2': 0, 'GL3': 0, 'GL4': 0, 'GL5': 0, 'GL6': 0, 'GL7': 0, 'GL8': 0, 'ML2': 0, 'ML3': 0, 'ML4': 0, 'ML5': 0, 'ML6': 0, 'ML7': 0, 'ML8': 0, 'NY2': 0, 'NY3': 0, 'NY4': 0, 'NY5': 0, 'NY6': 0, 'NY7': 0, 'NY8': 0 } }; 
 
-scoreboard.redis.createClient = function() {
-    var client = redis.createClient(6379, 'localhost');
-    client.auth();
-    return client;
-};
-
-var Score = scoreboard.Score;
-var scores = new Score();
-var state = {cur_scores: {}};
-
-function partial( fn /*, args...*/) {
-  var aps = Array.prototype.slice,
-    args = aps.call( arguments, 1 );
-  
-  return function() {
-    return fn.apply( this, args.concat( aps.call( arguments ) ) );
-  };
-}
-
-
-
-scores.leader({keys: ['streger']}).run(function(err, leaders) {
-    for (var kitchen_idx in leaders) {
-        var kitchen = leaders[kitchen_idx];
-        var cur_scores = {};
-        scores.client.zscore('streger', kitchen, (partial(function(kitchen, err, score) {
-            
-            state.cur_scores[kitchen] = parseInt(score);
-
-        }, kitchen)));
-    }
+// load state from sqlite
+db.serialize(function() { 
+    db.each('SELECT kitchen, SUM(quantity) count FROM streger GROUP BY kitchen;', function(err, row) {
+        state.cur_scores[row.kitchen] = row.count;
+    });
 });
 
 
+
 // http server
-http.createServer(function (req, res) {
+var http_server = http.createServer(function (req, res) {
     res.writeHead(200, {'Content-Type': 'application/json'});
     
     var queryData = url.parse(req.url, true).query;
@@ -56,8 +32,10 @@ http.createServer(function (req, res) {
         var quantity = parseInt(queryData.quantity);
         
         // update stored state
-        scores.index('streger', quantity, queryData.kitchen);
+        // scores.index('streger', quantity, queryData.kitchen);
         
+        db.run('INSERT INTO streger VALUES (\''+queryData.kitchen+'\', '+quantity+', '+(new Date).getTime()+')');
+
         // update local state
         state.cur_scores[queryData.kitchen] += quantity;
         
@@ -70,7 +48,9 @@ http.createServer(function (req, res) {
         res.end(JSON.stringify(state));
         break;
     }
-}).listen(8081, '0.0.0.0');
+}).listen(8081);
+
+
 
 // socket.io
 io.sockets.on('connection', function (socket) {
