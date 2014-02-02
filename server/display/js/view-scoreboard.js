@@ -34,7 +34,7 @@ var Scoreboard = Backbone.View.extend({
     render: function() {
         console.log("scoreboard render");
 
-        this.$el.children().tsort('span.points', {order: 'desc'});
+        this.$el.children().tsort('div.points', {order: 'desc'});
     }
 });
 
@@ -50,10 +50,17 @@ var ScoreboardUnit = Backbone.View.extend({
         }
 
         this.model.on('change:'+this.kitchen_id, _.bind(this.render, this));
+        
+        this.$el.html("<h2>"+this.kitchen_id +"</h2><div class=\"points\">0</div><div class=\"odometer\">0</span>");
+
         this.render();
     },
     render: function() {
         console.log(this.kitchen_id + " render" );
-        this.$el.html(this.kitchen_id + " <span class=\"points\">" + this.model.get(this.kitchen_id) + "</span>");
+        
+        this.$el.effect('highlight').css('display', 'inline-block');
+
+        this.$('.points').text(this.model.get(this.kitchen_id));
+        this.$('.odometer').text(this.model.get(this.kitchen_id));
     }
 });
