@@ -1,13 +1,18 @@
 // establish a connection to the scoreboard server
 
 $(function() {
-    var state = new Backbone.Model();
+    var scores = new Backbone.Model();
+    var jerseys = new Backbone.Model();
     var socket = io.connect();
     
-    var scoreboardview = new Scoreboard({ el: document.getElementById("scoreboard"), model: state });
+    var scoreboardview = new Scoreboard({ el: document.getElementById("scoreboard"), model: scores });
+    
+    var loggerview = new Logger({model: scores});
+    $('#logContainer').append(loggerview.$el);
 
     socket.on('state', function (data) {
-        state.set(data.cur_scores);
+        scores.set(data.cur_scores);
+        jerseys.set(data.jerseys);
     });
     
 });
@@ -15,6 +20,6 @@ $(function() {
 
 window.odometerOptions = {
     duration: 800,
-    theme: 'car', 
-    animation: 'count' 
+    theme: 'car'
+    // animation: 'count' 
 };
