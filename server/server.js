@@ -29,7 +29,7 @@ var http_server = http.createServer(function (req, res) {
     switch(queryData.mode) {
         
     case "streg":
-        var quantity = parseInt(queryData.quantity);
+        var quantity = parseFloat(queryData.quantity);
         
         // update stored state
         // scores.index('streger', quantity, queryData.kitchen);
