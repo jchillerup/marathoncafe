@@ -1,1 +1,0 @@
-var Scoreboard = Backbone.View.extend(properties, );
