@@ -47,6 +47,10 @@ http.createServer(function(req, res) {
     if (req.url === "/reload") {
         io.sockets.emit('reload');
     }
+    
+    if (req.url === "/server_close") {
+        process.exit();
+    }
 
     res.end(req.url);
 
