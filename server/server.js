@@ -4,7 +4,7 @@ var connect = require('connect');
 
 var app = connect.createServer(connect.static('display'));
 var server = http.createServer(app).listen(8080);
-var io = require('socket.io').listen(server);
+var io = require('socket.io').listen(server, {log:false});
 
 
 var sqlite3 = require('sqlite3');
@@ -19,40 +19,22 @@ db.serialize(function() {
     });
 });
 
-
-
-// http server
-var http_server = http.createServer(function (req, res) {
-    res.writeHead(200, {'Content-Type': 'application/json'});
-    
-    var queryData = url.parse(req.url, true).query;
-    switch(queryData.mode) {
-        
-    case "streg":
-        var quantity = parseFloat(queryData.quantity);
-        
-        // update stored state
-        // scores.index('streger', quantity, queryData.kitchen);
-        
-        db.run('INSERT INTO streger VALUES (\''+queryData.kitchen+'\', '+quantity+', '+(new Date).getTime()+')');
-
-        // update local state
-        state.cur_scores[queryData.kitchen] += quantity;
-        
-        // tell listeners about this
-        io.sockets.emit('state', state);
-
-        res.end(JSON.stringify({status: "OK"}));
-
-    default:
-        res.end(JSON.stringify(state));
-        break;
-    }
-}).listen(8081);
-
-
-
 // socket.io
 io.sockets.on('connection', function (socket) {
     socket.emit('state', state);
+
+    
+    socket.on('streg', function(data) {
+        var quantity = parseFloat(data.quantity);
+        
+        // update stored state
+        // db.run('INSERT INTO streger VALUES (\''+data.kitchen+'\', '+quantity+', '+(new Date).getTime()+')');
+        db.run('INSERT INTO streger VALUES (?,?,?)', [data.kitchen, quantity, (new Date).getTime()]);
+
+        // update local state
+        state.cur_scores[data.kitchen] += quantity;
+        
+        // tell listeners about this
+        io.sockets.emit('state', state);
+    });
 });
