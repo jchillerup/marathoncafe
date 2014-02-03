@@ -49,7 +49,7 @@ http.createServer(function(req, res) {
     }
     
     if (req.url === "/server_close") {
-        process.exit();
+        .exit();
     }
 
     res.end(req.url);
