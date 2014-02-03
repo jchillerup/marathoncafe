@@ -37,7 +37,9 @@ var Scoreboard = Backbone.View.extend({
 	var padding = 20;
         var offsetTop = 60;
 
-        var $units = this.$(".scoreboard-unit");
+        this.$el.children().tsort('div.points', {order: 'desc'});
+
+        var $units = this.$el.children();
 	var totalWidth = $(document.body).width();
 	var cols = Math.floor( totalWidth / ($units.width() + padding) );
 	$units.each(function(index) {
@@ -54,7 +56,6 @@ var Scoreboard = Backbone.View.extend({
 		});
 	});
 
-        this.$el.children().tsort('div.points', {order: 'desc'});
     }
 });
 
