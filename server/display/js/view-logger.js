@@ -1,3 +1,26 @@
+function getTimestamp() {
+    var d = new Date();
+    var ts = "";
+    var h = d.getHours(), m = d.getMinutes(), s = d.getSeconds();
+    
+    if (h < 10) {
+        ts += "0";
+    } 
+    ts += "" + h + ":";
+    
+    if (m < 10) {
+        ts += "0";
+    } 
+    ts += "" + m + ":";
+    
+    if (s < 10) {
+        ts += "0";
+    } 
+    ts += "" + s;
+    
+    return ts;
+}
+
 var Logger = Backbone.View.extend({
     tagName: "ul",
     id: "logList",
@@ -12,17 +35,17 @@ var Logger = Backbone.View.extend({
 
         for (var kitchen in attributes) {
             var diff = attributes[kitchen] - prevAttributes[kitchen];
-            var $obj = $("<li>").html(kitchen+ ": "+ diff + " streger.");
+            var $obj = $("<li>").html(getTimestamp() + ": " + kitchen+ " "+ diff + " streger.");
 
-            this.$el.append($obj);
+            this.$el.prepend($obj);
             
             this.render();
         }
     },
 
     render: function() {
-        while (this.$el.children().length > 7) {
-            $(this.$el.children()[0]).remove();
+        while (this.$el.children().length > 15) {
+            $(this.$el.children()[15]).remove();
         }
     }
 });
