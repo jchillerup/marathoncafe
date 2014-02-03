@@ -15,6 +15,10 @@ $(function() {
         jerseys.set(data.jerseys);
     });
     
+    socket.on('reload', function(data) {
+        window.location.reload();
+    });
+    
 });
 
 

@@ -38,3 +38,16 @@ io.sockets.on('connection', function (socket) {
         io.sockets.emit('state', state);
     });
 });
+
+
+// http admin interface
+http.createServer(function(req, res) {
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    
+    if (req.url === "/reload") {
+        io.sockets.emit('reload');
+    }
+
+    res.end(req.url);
+
+}).listen(8081);
