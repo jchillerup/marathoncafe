@@ -284,11 +284,14 @@ h1 {
    Modify as content requires.
    ========================================================================== */
 @media only screen 
-and (min-device-width : 320px) 
-and (max-device-width : 480px) {
+and (max-width : 500px) {
 
     .odometer {
-        font-size: 1.1em;
+        font-size: 1.0em;
+    }
+
+    #logList {
+        display: none;
     }
     
 }

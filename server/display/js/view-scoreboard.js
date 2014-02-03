@@ -31,13 +31,15 @@ var Scoreboard = Backbone.View.extend({
         
         $(window).resize(_.bind(this.render, this));
         
-        $(function() {
-            setTimeout(function() {
-                $(".scoreboard-unit").css({"transition": "all 1s", "-webkit-transition": "all 1s"});            
-            }, 2000);
-        });
+        $(_.bind(function() {
+            setTimeout(this.enableEffects, 2000);
+        }, this));
     },
-
+    enableEffects: function() {
+        console.log('enabling effects');
+        $(".scoreboard-unit").css({"transition": "all 1s", "-webkit-transition": "all 1s"});
+        window.odometerOptions.duration = 800;
+    },
     render: function() {
         console.log("scoreboard render");
 	var padding = 20;
@@ -80,11 +82,12 @@ var ScoreboardUnit = Backbone.View.extend({
         this.model.on('change:'+this.kitchen_id, _.bind(this.render, this));
         
         this.$el.html("<h2>"+this.kitchen_id +"</h2><div class=\"points\">0</div><div class=\"odometer\">0</span>");
-
+        
         this.render();
+        
+        $(window).resize(_.bind(this.ensureRound, this));
     },
     render: function() {
-        console.log(this.kitchen_id + " render" );
         
         if (!this.firstTime) {
             this.$el.effect('highlight');
@@ -92,14 +95,25 @@ var ScoreboardUnit = Backbone.View.extend({
 
         this.$('.points').text(this.model.get(this.kitchen_id));
         this.$('.odometer').text(this.model.get(this.kitchen_id));
-        
+       
         this.firstTime = false;
+        this.ensureRound();
+        
+    },
+    
+    ensureRound: function() {
+        this.$el.css('height', this.$el.width() + "px");
+        // if (this.$el.height() > this.$el.width()) {
+        //     this.$el.css('height', this.$el.width() + "px");
+        // } else {
+        //     this.$el.css('height', '');
+        // }
     }
 });
 
 
 window.odometerOptions = {
-    duration: 400,
+    duration: 800,
     theme: 'car',
     animation: 'count' 
 };
