@@ -28,20 +28,18 @@ var KitchenPicker = Backbone.View.extend({
     },
 
     initialize: function() {
-        console.log('kitchen picker initialized');
-        
         this.$buttons = this.$('button');
 
-        this.model.on('change:quantity', _.bind(function() {
-            if (this.model.get('quantity') === 0) {
-                this.$buttons.attr('disabled', 'disabled');
-            } else {
-                this.$buttons.removeAttr('disabled');
-            }
-        }, this));
+        this.model.on('change:quantity', _.bind(this.render, this));
     },
 
-    render: function() {},
+    render: function() {
+        if (this.model.get('quantity') === 0) {
+            this.$buttons.attr('disabled', 'disabled');
+        } else {
+            this.$buttons.removeAttr('disabled');
+        }
+    },
     
     setScore: function(el) {
         var kitchen = el.target.id;
@@ -69,11 +67,14 @@ $(function() {
     var kitchenView = new KitchenPicker({ el: document.getElementById("kitchens"), model: curScore });
     
     var posView = new POSView({model: curScore});
-    $('body').append(posView.$el);
+    $('#display h1').after(posView.$el);
 
     $("#orders button").click(function() {
-        var score = this.value;
-
-        curScore.set('quantity', parseFloat(curScore.get('quantity')) + parseFloat(score));
+        if (this.id === "clearButton") {
+            curScore.set('quantity', 0);
+        } else {
+            var score = this.value;
+            curScore.set('quantity', parseFloat(curScore.get('quantity')) + parseFloat(score));
+        }
     });
 });

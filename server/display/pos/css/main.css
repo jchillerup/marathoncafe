@@ -90,25 +90,59 @@ body {
 }
 
 #kitchens {
-    display:inline-block;
-    float: left;
+    position:absolute;
+    right: 0px;
+
     width: 40%;
     height: 100%;
 }
 #kitchens td {
-    width: 100%;
-    height: 100%;
+    width: auto;
+    height: auto;;
     padding: 5px;
 }
 
 #kitchens button {
-    width: 250px;
-    height: 85px;
+    width: 100%;
+    height: 100%;
+}
+
+#display {
+    position: absolute;
+    left: 20%;
+
+    width: calc(40% - 30px);
+    padding: 15px;
 }
 
 #orders {
-    display: inline-block;
-    float: left;
+    position: absolute;
+
+    left: 0px;
+    width: 20%;
+}
+
+#orders button {
+    width: 100%;
+    height: 85px;
+    margin-bottom: 15px;
+}
+
+#clearButton {
+    background: red;
+    color: #fff;
+}
+
+#posView {
+    text-align: center;
+    color: #800;
+    font-size: 2em;
+    font-family: "Courier New", sans-serif;
+    font-weight: bold;
+}
+
+button {
+    font-size: 2.5em;
 }
 
 
