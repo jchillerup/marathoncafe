@@ -16,13 +16,13 @@ var Logger = Backbone.View.extend({
 
             this.$el.append($obj);
             
-            while (this.$el.children().length > 7) {
-                $(this.$el.children()[0]).remove();
-            }
+            this.render();
         }
     },
 
     render: function() {
-        
+        while (this.$el.children().length > 7) {
+            $(this.$el.children()[0]).remove();
+        }
     }
 });

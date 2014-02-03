@@ -135,6 +135,10 @@ h1 {
     background: pink;
 }
 
+#scoreboard {
+    width: 70%;
+}
+
 .scoreboard-unit {
     width: 25%;
     max-width: 120px;
@@ -161,6 +165,12 @@ h1 {
     font-size:1.3em;
 }
 
+#logContainer {
+    width: 30%;
+    position: absolute;
+    left: 70%;
+}
+
 
 #logList {
     list-style: inside; 
@@ -168,8 +178,6 @@ h1 {
 }
 
 #logList li {
-    display: inline;
-    float: left;
     margin-right: 10px;
 }
 
@@ -293,7 +301,10 @@ and (max-width : 500px) {
     #logList {
         display: none;
     }
-    
+
+    #scoreboard {
+        width: 100%;
+    }
 }
 
 @media print,

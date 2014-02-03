@@ -48,8 +48,9 @@ var Scoreboard = Backbone.View.extend({
         this.$el.children().tsort('div.points', {order: 'desc'});
 
         var $units = this.$el.children();
-	var totalWidth = $(document.body).width();
+	var totalWidth = this.$el.width();
 	var cols = Math.floor( totalWidth / ($units.width() + padding) );
+        // cols = 5;
 	$units.each(function(index) {
 		var width = $(this).width();
 		var height = $(this).height();
