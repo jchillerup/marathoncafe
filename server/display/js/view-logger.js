@@ -37,7 +37,7 @@ var Logger = Backbone.View.extend({
             var diff = attributes[kitchen] - prevAttributes[kitchen];
             var $obj = $("<li>").html(getTimestamp() + ": " + kitchen+ " "+ diff + " streger.");
 
-            this.$el.prepend($obj);
+            this.$el.prepend($obj.fadeIn());
             
             this.render();
         }
@@ -45,7 +45,7 @@ var Logger = Backbone.View.extend({
 
     render: function() {
         while (this.$el.children().length > 15) {
-            $(this.$el.children()[15]).remove();
+            $(this.$el.children()[15]).fadeOut().remove();
         }
     }
 });
