@@ -29,7 +29,13 @@ var Scoreboard = Backbone.View.extend({
             this.$el.append(unit.$el);
         }
         
-        $(window).resize(this.render);
+        $(window).resize(_.bind(this.render, this));
+        
+        $(function() {
+            setTimeout(function() {
+                $(".scoreboard-unit").css({"transition": "all 1s", "-webkit-transition": "all 1s"});            
+            }, 2000);
+        });
     },
 
     render: function() {
@@ -62,7 +68,8 @@ var Scoreboard = Backbone.View.extend({
 var ScoreboardUnit = Backbone.View.extend({
     tagName: "div",
     className: "scoreboard-unit",
-    
+    firstTime: true,
+
     initialize: function() {
         this.kitchen_id = this.id.split("-")[1];
         
@@ -79,9 +86,20 @@ var ScoreboardUnit = Backbone.View.extend({
     render: function() {
         console.log(this.kitchen_id + " render" );
         
-        this.$el.effect('highlight');
+        if (!this.firstTime) {
+            this.$el.effect('highlight');
+        }
 
         this.$('.points').text(this.model.get(this.kitchen_id));
         this.$('.odometer').text(this.model.get(this.kitchen_id));
+        
+        this.firstTime = false;
     }
 });
+
+
+window.odometerOptions = {
+    duration: 400,
+    theme: 'car',
+    animation: 'count' 
+};

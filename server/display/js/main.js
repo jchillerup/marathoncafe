@@ -20,10 +20,3 @@ $(function() {
     });
     
 });
-
-
-window.odometerOptions = {
-    duration: 800,
-    theme: 'car',
-    animation: 'count' 
-};

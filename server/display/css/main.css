@@ -136,7 +136,7 @@ h1 {
 }
 
 .scoreboard-unit {
-    width: 30%;
+    width: 25%;
     max-width: 120px;
     height: 120px;
     background: #555;
@@ -149,8 +149,6 @@ h1 {
 
     display: block;
     position: absolute;
-    transition: all 1s;
-    -webkit-transition: all 1s;
 }
 
 .scoreboard-unit h2 {
