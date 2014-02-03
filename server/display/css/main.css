@@ -139,7 +139,6 @@ h1 {
     width: 30%;
     max-width: 120px;
     height: 120px;
-    display: inline-block;
     background: #555;
     color: #fff;
 
@@ -147,6 +146,11 @@ h1 {
     border-radius: 100%;
     border: 2px solid #000;
     text-align: center;
+
+    display: block;
+    position: absolute;
+    transition: all 1s;
+    -webkit-transition: all 1s;
 }
 
 .scoreboard-unit h2 {

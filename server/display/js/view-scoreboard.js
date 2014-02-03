@@ -28,11 +28,31 @@ var Scoreboard = Backbone.View.extend({
             this.children.push(unit);
             this.$el.append(unit.$el);
         }
-
+        
+        $(window).resize(this.render);
     },
 
     render: function() {
         console.log("scoreboard render");
+	var padding = 20;
+        var offsetTop = 60;
+
+        var $units = this.$(".scoreboard-unit");
+	var totalWidth = $(document.body).width();
+	var cols = Math.floor( totalWidth / ($units.width() + padding) );
+	$units.each(function(index) {
+		var width = $(this).width();
+		var height = $(this).height();
+		var c = index % cols;
+		var r = Math.floor( index / cols);
+		var left = c * (width + padding);
+		var top = r * (height + padding) + offsetTop;
+		left = left % (totalWidth - width);
+		$(this).css({
+			left: left,
+			top: top
+		});
+	});
 
         this.$el.children().tsort('div.points', {order: 'desc'});
     }
@@ -58,7 +78,7 @@ var ScoreboardUnit = Backbone.View.extend({
     render: function() {
         console.log(this.kitchen_id + " render" );
         
-        this.$el.effect('highlight').css('display', 'inline-block');
+        this.$el.effect('highlight');
 
         this.$('.points').text(this.model.get(this.kitchen_id));
         this.$('.odometer').text(this.model.get(this.kitchen_id));
