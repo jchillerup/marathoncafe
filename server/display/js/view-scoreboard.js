@@ -5,7 +5,7 @@ var Scoreboard = Backbone.View.extend({
 
     initialize: function() {
         this.model.on('change', _.bind(this.render, this));
-                
+        
         // Create all the kitchen widgets
         var kitchens = [
             "GL1", 
@@ -37,32 +37,31 @@ var Scoreboard = Backbone.View.extend({
     },
     enableEffects: function() {
         console.log('enabling effects');
-        $(".scoreboard-unit").css({"transition": "all 1s", "-webkit-transition": "all 1s"});
-        window.odometerOptions.duration = 800;
+        $(".scoreboard-unit").addClass('animated');
     },
     render: function() {
         console.log("scoreboard render");
 	var padding = 20;
-        var offsetTop = 60;
 
         this.$el.children().tsort('div.points', {order: 'desc'});
 
         var $units = this.$el.children();
 	var totalWidth = this.$el.width();
 	var cols = Math.floor( totalWidth / ($units.width() + padding) );
-        // cols = 5;
+
 	$units.each(function(index) {
-		var width = $(this).width();
-		var height = $(this).height();
-		var c = index % cols;
-		var r = Math.floor( index / cols);
-		var left = c * (width + padding);
-		var top = r * (height + padding) + offsetTop;
-		left = left % (totalWidth - width);
-		$(this).css({
-			left: left,
-			top: top
-		});
+	    var width = $(this).width();
+	    var height = $(this).height();
+	    var c = index % cols;
+	    var r = Math.floor( index / cols);
+	    var left = c * (width + padding);
+	    var top = r * (height + padding);
+	    left = left % (totalWidth - width);
+
+	    $(this).css({
+		left: left,
+		top: top
+	    });
 	});
 
     }
@@ -71,7 +70,7 @@ var Scoreboard = Backbone.View.extend({
 var ScoreboardUnit = Backbone.View.extend({
     tagName: "div",
     className: "scoreboard-unit",
-    firstTime: true,
+    renderCount: 0,
 
     initialize: function() {
         this.kitchen_id = this.id.split("-")[1];
@@ -90,25 +89,22 @@ var ScoreboardUnit = Backbone.View.extend({
     },
     render: function() {
         
-        if (!this.firstTime) {
-            this.$el.effect('highlight');
+        if (this.renderCount > 1) {
+            console.log('highlighting');
+
+            this.$el.removeClass('animated').effect('highlight', 'fast').addClass('animated');
         }
 
         this.$('.points').text(this.model.get(this.kitchen_id));
         this.$('.odometer').text(this.model.get(this.kitchen_id));
-       
-        this.firstTime = false;
+        
+        this.renderCount++;
         this.ensureRound();
         
     },
     
     ensureRound: function() {
         this.$el.css('height', this.$el.width() + "px");
-        // if (this.$el.height() > this.$el.width()) {
-        //     this.$el.css('height', this.$el.width() + "px");
-        // } else {
-        //     this.$el.css('height', '');
-        // }
     }
 });
 

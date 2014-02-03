@@ -137,6 +137,11 @@ h1 {
 
 #scoreboard {
     width: 70%;
+    position:relative;
+}
+.animated {
+    transition: all 1s;
+    -webkit-transition: all 1s;
 }
 
 .scoreboard-unit {
