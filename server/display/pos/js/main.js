@@ -69,7 +69,7 @@ $(function() {
     var posView = new POSView({model: curScore});
     $('#display h1').after(posView.$el);
 
-    $("#orders button").mousedown(function() {
+    $("#orders button").on('mousedown startdrag', function() {
         if (this.id === "clearButton") {
             curScore.set('quantity', 0);
         } else {
