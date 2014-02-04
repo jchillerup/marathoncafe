@@ -24,7 +24,7 @@ var ScoreModel = Backbone.Model.extend({
 
 var KitchenPicker = Backbone.View.extend({
     events: {
-        "click .kitchenButton": "setScore"
+        "mousedown .kitchenButton": "setScore"
     },
 
     initialize: function() {
@@ -69,7 +69,7 @@ $(function() {
     var posView = new POSView({model: curScore});
     $('#display h1').after(posView.$el);
 
-    $("#orders button").click(function() {
+    $("#orders button").mousedown(function() {
         if (this.id === "clearButton") {
             curScore.set('quantity', 0);
         } else {
