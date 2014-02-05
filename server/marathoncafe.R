@@ -64,7 +64,7 @@ if (length(NonNAindex) == 0){
 } else if (length(NonNAindex) > 0){
   count[NonNAindex,]$st = 0
 }
-if (print == 1){png(file = "plot1_streger_sorted_after_kitchen.png")}
+if (print == 1){png(file = "display/plots/plot1_streger_sorted_after_kitchen.png")}
 barplot(count$st,xlab="Koekken",ylab="Antal streger",names.arg = count[1:22,1],las=2,col=rainbow(23),main="Antal streger fordelt paa koekkener")
 if (print == 1){dev.off()}
 
@@ -83,7 +83,7 @@ if (length(NonNAindex) == 0){
   count[NonNAindex,]$st = 0
 }
 count <- count[order(count[,"st"]),] # Sorting
-if (print == 1){png(file = "plot2_streger_sorted_after_winner.png")}
+if (print == 1){png(file = "display/plots/plot2_streger_sorted_after_winner.png")}
 barplot(count$st,xlab="Koekken",ylab="Antal streger",names.arg = count[1:22,1],las=2,col=rainbow(23),main="Antal streger fordelt paa koekkener")
 if (print == 1){dev.off()}
 
@@ -100,7 +100,7 @@ data$min <- data$min - min(data$min) + data$yhour*60
 
 data$cumst<-cumsum(data$st)
 
-if (print == 1){png(file = "plot3_cumulated_minutes_for_hele_perioden.png")}
+if (print == 1){png(file = "display/plots/plot3_cumulated_minutes_for_hele_perioden.png")}
 par(mar=c(6, 6, 4, 2) + 0.1)
 plot(data$min,data$cumst,type="l",col="blue",xaxt="n",las=1,ylab="",xlab="")
 abline(v=c(540,540+24*60),lty=2,col="red")
@@ -120,7 +120,7 @@ if (print == 1){dev.off()}
 ####
 # Kommuleret antal fordelt p?? timer
 data$cumst<-cumsum(data$st)
-if (print == 1){png(file = "plot4_cumulated_timer_for_hele_perioden.png")}
+if (print == 1){png(file = "display/plots/plot4_cumulated_timer_for_hele_perioden.png")}
 par(mar=c(6, 6, 4, 2) + 0.1)
 plot(data$yhour,data$cumst,type="l",col="blue",xaxt="n",las=1,ylab="",xlab="")
 abline(v=c(9,9+24),lty=2,col="red")
@@ -151,7 +151,7 @@ count <- data.frame(count)
 count <- count[,1:2]
 names(count) <- c("yhour","st")
 
-if (print == 1){png(file = "plot5_antal_streger_fordelt_paa_timer.png")}
+if (print == 1){png(file = "display/plots/plot5_antal_streger_fordelt_paa_timer.png")}
 par(mar=c(5, 4.5, 4, 2) + 0.1)
 plot(count$st,type="l",col="blue",xaxt="n",las=1,ylab="",xlab="")
 abline(v=c(9,9+24),lty=2,col="red")
@@ -178,7 +178,7 @@ NonNAindex <- which(is.na(count$st))
 count[NonNAindex,]$st = 0
 
 # dev.off()
-if (print == 1){png(file = "plot6_antal_streger_fordelt_paa_minutter_hele_periode.png")}
+if (print == 1){png(file = "display/plots/plot6_antal_streger_fordelt_paa_minutter_hele_periode.png")}
 par(mar=c(5, 4.5, 4, 2) + 0.1)
 plot(count$st,col="red",xaxt="n",las=1,ylab="",xlab="",type="l")
 abline(v=c(540,540+24*60),lty=1,col="black")
@@ -190,7 +190,7 @@ text(c(270,1440/2+540,2430),c(10,10,10), c("fredag","loerdag","soendag"),col="bl
 if (print == 1){dev.off()}
 
 
-if (print == 1){png(file = "plot7_antal_streger_fordelt_paa_minutter_2_timer.png")}
+if (print == 1){png(file = "display/plots/plot7_antal_streger_fordelt_paa_minutter_2_timer.png")}
 par(mar=c(5, 4.5, 4, 2) + 0.1)
 plot(count$st,type="l",col="blue",xaxt="n",las=1,ylab="",xlab="",xlim=c(max(data$min)-120,max(data$min)))
 abline(v=c(540,540+24*60),lty=2,col="red")
@@ -249,7 +249,7 @@ if (length(NonNAindex) == 0){
   cheats[NonNAindex,]$vagt = 0
 }
 
-if (print == 1){png(file = "plot8_antal_streger_paa_egent_kokken.png")}
+if (print == 1){png(file = "display/plots/plot8_antal_streger_paa_egent_kokken.png")}
 if (sum(cheats$vagt)==0){
   plot(0,col="white",xlab="",ylab="",xaxt="n",yaxt="n")  
   text(1,0,c("*This plot will be generated when data is available* \n (Antal streger sat paa det koekken med barvagten)"))
@@ -310,7 +310,7 @@ GL7$cumst <- cumsum(GL7$st)
 GL8$cumst <- cumsum(GL8$st)
 
 
-if (print == 1){png(file = "plot9_cumulated_timer_for_hele_perioden_per_kokken.png")}
+if (print == 1){png(file = "display/plots/plot9_cumulated_timer_for_hele_perioden_per_kokken.png")}
 par(mar=c(6, 5, 4, 2) + 0.1)
 plot(NY2$min,NY2$cumst,type="l",col=1,xaxt="n",las=1,ylab="",xlab="",ylim = c(0,maximum))
 points(NY3$min,NY3$cumst,type="l",col=2,xaxt="n",las=1,ylab="",xlab="")
@@ -372,7 +372,7 @@ if (length(NonNAindex) == 0){
 count <- count[order(count[,"st"]),] # Sorting
 
 if (dim(count)[1] >= 3){
-  if (print == 1){png(file = "plot10_cumulated_for_de_forende_kokkener_hele_periode.png")}  
+  if (print == 1){png(file = "display/plots/plot10_cumulated_for_de_forende_kokkener_hele_periode.png")}  
   nr1 <- count[dim(count)[1],]
   nr1 <- data.frame(lapply(nr1, as.character), stringsAsFactors=FALSE)[1]
   nr1 <- as.character(nr1)
@@ -980,7 +980,7 @@ momm <- c(GL1m$momm[length(GL1m$momm)],GL2m$momm[length(GL2m$momm)],GL3m$momm[le
 
 ki <- c("GL1","GL2","GL3","GL4","GL5","GL6","GL7","GL8","ML2","ML3","ML4","ML5","ML6","ML7","ML8","NY2","NY3","NY4","NY5","NY6","NY7","NY8")
 count <- data.frame(ki,momm)
-if (print == 1){png(file = "plot11_hamringmomentum.png")}
+if (print == 1){png(file = "display/plots/plot11_hamringmomentum.png")}
 barplot(count$momm,xlab="*En form for 'hamrings-hastigheds-speedometer'",ylab="Hamringsmomentum",names.arg = count[1:22,1],las=2,col=rainbow(23),main="Hamringmomentum* fordelt paa koekkener \n med daempning paa 5 % per minut")
 if (print == 1){dev.off()}
 
@@ -1007,7 +1007,7 @@ for(i in 2:dim(datam)[1]-1) {
 }  
 
 
-if (print == 1){png(file = "plot12_hamringmomentum_for_alle.png")}
+if (print == 1){png(file = "display/plots/plot12_hamringmomentum_for_alle.png")}
 par(mar=c(5, 4.5, 4, 2) + 0.1)
 plot(datam$min,datam$momm,type="l",col="blue",xaxt="n",las=1,ylab="",xlab="")
 abline(v=c(540,540+24*60),lty=1,col="black")
@@ -1117,7 +1117,7 @@ tableprint <- merge(tableprint,et3, all = TRUE,by = c('Koekken'))
 names(tableprint) <- c("Koekken","Streger","Momentum","Etape 1","Etape 2","Etape 3")
 tableprint$Momentum <- round(tableprint$Momentum)
 
-if (print == 1){png(file = "plot13_oversigtstabel.png")}
+if (print == 1){png(file = "display/plots/plot13_oversigtstabel.png")}
 grid.newpage() 
 pushViewport(viewport(layout.pos.col=2, layout.pos.row=2, clip="on"))
 grid.draw(tableGrob(tableprint, gp=gpar(fontsize=12, lwd=.5)))
@@ -1126,7 +1126,7 @@ if (print == 1){dev.off()}
 
 
 
-if (print == 1){png(file = "plot14_hamringsmomentum_gra.png")}
+if (print == 1){png(file = "display/plots/plot14_hamringsmomentum_gra.png")}
 par(mar=c(6, 5, 4, 2) + 0.1)
 plot(NY2m$ki,NY2m$momm,type="l",col=1,xaxt="n",las=1,ylab="",xlab="",ylim = c(0,max(datam$momm)))
 points(NY3m$ki,NY3m$momm,type="l",col=2,xaxt="n",las=1,ylab="",xlab="")
