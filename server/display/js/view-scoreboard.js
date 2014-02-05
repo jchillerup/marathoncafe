@@ -34,6 +34,8 @@ var Scoreboard = Backbone.View.extend({
         $(_.bind(function() {
             setTimeout(this.enableEffects, 2000);
         }, this));
+        
+        this.render();
     },
     enableEffects: function() {
         console.log('enabling effects');
