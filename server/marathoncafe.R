@@ -177,7 +177,7 @@ names(count) <- c("min","st")
 NonNAindex <- which(is.na(count$st))
 count[NonNAindex,]$st = 0
 
-dev.off()
+# dev.off()
 if (print == 1){png(file = "plot6_antal_streger_fordelt_paa_minutter_hele_periode.png")}
 par(mar=c(5, 4.5, 4, 2) + 0.1)
 plot(count$st,col="red",xaxt="n",las=1,ylab="",xlab="",type="l")
