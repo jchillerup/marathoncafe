@@ -7,8 +7,8 @@ $(function() {
     
     var scoreboardview = new Scoreboard({ el: document.getElementById("scoreboard"), model: scores });
     
-    var loggerview = new Logger({model: scores});
-    $('#logContainer').append(loggerview.$el);
+//    var loggerview = new Logger({model: scores});
+//    $('#logContainer').append(loggerview.$el);
 
     socket.on('state', function (data) {
         scores.set(data.cur_scores);

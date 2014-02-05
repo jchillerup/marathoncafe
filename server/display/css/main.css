@@ -98,6 +98,7 @@ textarea {
    ========================================================================== */
 body {
     background: url(../img/bg.png);
+
 }
 
 h1 {
@@ -136,7 +137,7 @@ h1 {
 }
 
 #scoreboard {
-    width: 70%;
+    width: 100%;
     position:relative;
 }
 .animated {
@@ -146,13 +147,13 @@ h1 {
 
 .scoreboard-unit {
     width: 25%;
-    max-width: 120px;
-    height: 120px;
-    background: #555;
+    max-width: 81px;
+    height: 81px;
+    background: #888;
     color: #fff;
 
-    margin: 15px;
-    border-radius: 100%;
+    margin: 7px;
+    border-radius: 15px;
     border: 2px solid #000;
     text-align: center;
 
@@ -162,33 +163,40 @@ h1 {
 
 .scoreboard-unit h2 {
     text-align: center;
-    font-size: 1.3em;
+    font-size: 1.2em;
+    margin-top: 8px;
     margin-bottom: 0px;
 }
 .points{display:none}
 .odometer {
-    font-size:1.3em;
+    font-size:1.1em;
 }
 
 #logContainer {
-    width: 30%;
+    width: 25%;
     position: absolute;
     left: 70%;
 }
 
 
 #logList {
-    list-style: inside; 
-    
+    list-style: none; 
+    margin: 0px;
 }
 
 #logList li {
-    margin-right: 10px;
+    margin: 3px 0px;
+    font-size: 0.8em;
 }
 
+#plots {}
 
+#plots img {
+    border: 2px solid #000;
+    background: #aaa;
+    padding: 5px;
 
-
+}
 
 /* ==========================================================================
    Helper classes

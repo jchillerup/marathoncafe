@@ -10,19 +10,21 @@ var io = require('socket.io').listen(server, {log:false});
 var sqlite3 = require('sqlite3');
 var db = new sqlite3.Database('db.sqlite');
 
-var state = { cur_scores: { 'GL1': 0, 'GL2': 0, 'GL3': 0, 'GL4': 0, 'GL5': 0, 'GL6': 0, 'GL7': 0, 'GL8': 0, 'ML2': 0, 'ML3': 0, 'ML4': 0, 'ML5': 0, 'ML6': 0, 'ML7': 0, 'ML8': 0, 'NY2': 0, 'NY3': 0, 'NY4': 0, 'NY5': 0, 'NY6': 0, 'NY7': 0, 'NY8': 0 } }; 
+var state = { cur_scores: { 'GL1': 0, 'GL2': 0, 'GL3': 0, 'GL4': 0, 'GL5': 0, 'GL6': 0, 'GL7': 0, 'GL8': 0, 'ML2': 0, 'ML3': 0, 'ML4': 0, 'ML5': 0, 'ML6': 0, 'ML7': 0, 'ML8': 0, 'NY2': 0, 'NY3': 0, 'NY4': 0, 'NY5': 0, 'NY6': 0, 'NY7': 0, 'NY8': 0 }, jerseys: {yellow: null, green: null, dotted: null}}; 
+
 
 // load state from sqlite
 db.serialize(function() { 
     db.each('SELECT kitchen, SUM(quantity) count FROM streger GROUP BY kitchen;', function(err, row) {
         state.cur_scores[row.kitchen] = row.count;
+    
+        // TODO: set jerseys here.
     });
 });
 
 // socket.io
 io.sockets.on('connection', function (socket) {
     socket.emit('state', state);
-
     
     socket.on('streg', function(data) {
         var quantity = parseFloat(data.quantity);
@@ -34,6 +36,21 @@ io.sockets.on('connection', function (socket) {
         // update local state
         state.cur_scores[data.kitchen] += quantity;
         
+        
+        // YELLOW
+        var maxScores = 0;
+        for (var kitchen in state.cur_scores) {
+            if (state.cur_scores[kitchen] > maxScores) {
+                maxScores = state.cur_scores[kitchen];
+            }
+        }
+        if (state.cur_scores[data.kitchen] == maxScores) {
+            state.jerseys['yellow'] = data.kitchen;
+        }
+        
+        // DOTTED
+        
+
         // tell listeners about this
         io.sockets.emit('state', state);
     });
@@ -55,3 +72,4 @@ http.createServer(function(req, res) {
     res.end(req.url);
 
 }).listen(8081);
+
