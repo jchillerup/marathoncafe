@@ -223,7 +223,12 @@ h1 {
 
 #logList li {
     margin: 3px 0px;
-    font-size: 0.8em;
+    font-size: 1em;
+}
+
+#logList li .timestamp {
+    font-weight: bold;
+    margin-right: 6px;
 }
 
 /* ==========================================================================
