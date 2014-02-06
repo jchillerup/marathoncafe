@@ -1,5 +1,6 @@
 var http = require('http');
 var url = require('url');
+var qs = require('querystring');
 var connect = require('connect');
 
 var app = connect.createServer(connect.static('display'));
@@ -34,22 +35,7 @@ io.sockets.on('connection', function (socket) {
         db.run('INSERT INTO streger VALUES (?,?,?)', [data.kitchen, quantity, (new Date).getTime()]);
 
         // update local state
-        state.cur_scores[data.kitchen] += quantity;
-        
-        
-        // YELLOW
-        var maxScores = 0;
-        for (var kitchen in state.cur_scores) {
-            if (state.cur_scores[kitchen] > maxScores) {
-                maxScores = state.cur_scores[kitchen];
-            }
-        }
-        if (state.cur_scores[data.kitchen] == maxScores) {
-            state.jerseys['yellow'] = data.kitchen;
-        }
-        
-        // DOTTED
-        
+        state.cur_scores[data.kitchen] += quantity;        
 
         // tell listeners about this
         io.sockets.emit('state', state);
@@ -61,12 +47,24 @@ io.sockets.on('connection', function (socket) {
 http.createServer(function(req, res) {
     res.writeHead(200, {'Content-Type': 'text/plain'});
     
-    if (req.url === "/reload") {
+    var parsed = url.parse(req.url);
+    var query = qs.parse(parsed['query']);
+
+    switch(query['mode']) {
+    case "reload":
         io.sockets.emit('reload');
-    }
-    
-    if (req.url === "/server_close") {
-        process.exit();
+        break;
+        
+    case "jersey":
+        state.jerseys['yellow'] = query['yellow'];
+        state.jerseys['green'] = query['green'];
+        state.jerseys['dotted'] = query['dotted'];
+
+        io.sockets.emit('state', state);
+
+        break;
+    default:
+        console.log('Did not understand this on the MGMT interface: ' + query);
     }
 
     res.end(req.url);

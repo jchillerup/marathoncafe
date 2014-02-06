@@ -271,7 +271,7 @@ if (print == 1){dev.off()}
 
 
 
-start <- read.table("start.csv", sep=";", quote="\"") 
+start <- read.table("data.csv", sep=";", quote="\"") 
 start$V3 <- starttime
 names(start) <- c("ki","st","utime")
 
@@ -1011,7 +1011,7 @@ ki <- c("GL1","GL2","GL3","GL4","GL5","GL6","GL7","GL8","ML2","ML3","ML4","ML5",
 count <- data.frame(ki,momm)
 if (print == 1){png(file = "display/plots/plot11.png",res=reso)}
 barplot(count$momm,xlab="*En form for 'hamrings-hastigheds-speedometer'",ylab="Hamringsmomentum",names.arg = count[1:22,1],las=2,col=rainbow(23),main="Hamringmomentum* fordelt paa koekkener \n med daempning paa 2.34% per minut")
-if (print == 1){dev.off()}
+# if (print == 1){dev.off()}
 
 
 # Dette skal laves paa en tilsvarende maade.
@@ -1404,11 +1404,14 @@ barplot(troje$gron,xlab="*gives til det koekken med det stoerste areal under mom
 if (print == 1){dev.off()}
 
 
-a<-c("jersey/yellow=",as.character(count[which(count$st == max(count$st)),1]))
-b<-c("/green=",as.character(troje[which(troje$gron == max(troje$gron)),1]))
-c<-c("/dotted=",as.character(troje[which(troje$prik == max(troje$prik)),1]))
+a<-c("/?mode=jersey&yellow=",as.character(count[which(count$st == max(count$st)),1]))
+b<-c("&green=",as.character(troje[which(troje$gron == max(troje$gron)),1]))
+c<-c("&dotted=",as.character(troje[which(troje$prik == max(troje$prik)),1]))
 a<-paste(a,collapse="");b<-paste(b,collapse="");c<-paste(c,collapse="")
 JC<-paste(c(a,b),collapse="");JC<-paste(c(JC,c),collapse="")
-getToHost("localhost",JC,"", port=8081)
+
+JC
+
+getToHost("127.0.0.1",JC,"", port=8081)
 
 
