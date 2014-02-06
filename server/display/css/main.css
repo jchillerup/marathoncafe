@@ -135,8 +135,7 @@ h1 {
 }
 
 .scoreboard-unit {
-    width: 25%;
-    max-width: 81px;
+    width: 81px;
     height: 81px;
     background: #888;
     color: #fff;
