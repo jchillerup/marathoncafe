@@ -40,6 +40,7 @@ var Scoreboard = Backbone.View.extend({
     enableEffects: function() {
         console.log('enabling effects');
         $(".scoreboard-unit").addClass('animated');
+        this.render();
     },
     render: function() {
         console.log("scoreboard render");
