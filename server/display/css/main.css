@@ -195,10 +195,24 @@ h1 {
     font-size:1.1em;
 }
 
-#logContainer {
-    width: 25%;
+#plots {
+    position: relative;
+    width: 480px;
+    height: 480px;
+    overflow: hidden;
+    display: inline-block;
+    float: left;
+}
+
+#plots img {
     position: absolute;
-    left: 70%;
+    width: 480px;
+    height: 480px;
+}
+
+#logContainer {
+    float: left;
+    display: inline-block;
 }
 
 
@@ -210,19 +224,6 @@ h1 {
 #logList li {
     margin: 3px 0px;
     font-size: 0.8em;
-}
-
-#plots {
-    position: relative;
-    width: 480px;
-    height: 480px;
-    overflow: hidden;
-}
-
-#plots img {
-    position: absolute;
-    width: 480px;
-    height: 480px;
 }
 
 /* ==========================================================================

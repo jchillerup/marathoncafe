@@ -7,8 +7,8 @@ $(function() {
     
     var scoreboardview = new Scoreboard({ el: document.getElementById("scoreboard"), model: scores, jerseymodel: jerseys });
     
-    //    var loggerview = new Logger({model: scores});
-    //    $('#logContainer').append(loggerview.$el);
+    var loggerview = new Logger({model: scores});
+    $('#logContainer').append(loggerview.$el);
     
     var plotsview = new PlotsView({el: document.getElementById('plots')});
 
