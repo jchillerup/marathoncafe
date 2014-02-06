@@ -60,13 +60,13 @@ var POSView = Backbone.View.extend({
     }
 });
 
-$(function() {
-    var socket = io.connect('/');
-    var curScore = new ScoreModel(null, {socket: socket});
-    
+var socket = io.connect('/');
+var curScore = new ScoreModel(null, {socket: socket});    
+
+$(function() {    
     var kitchenView = new KitchenPicker({ el: document.getElementById("kitchens"), model: curScore });
-    
     var posView = new POSView({model: curScore});
+
     $('#display h1').after(posView.$el);
 
     $("#orders button").on('mousedown startdrag', function() {
@@ -78,3 +78,19 @@ $(function() {
         }
     });
 });
+
+
+function testPOS(interval) {
+    if(interval === undefined) {
+        interval = 1000;
+    }
+    
+    var buildings = ["GL", "ML", "NY"];
+    
+    function makeOrder() {
+        curScore.set({kitchen: buildings[Math.floor(Math.random()*buildings.length)]+Math.floor((Math.random()*7)+2), quantity: Math.floor((Math.random()*10)+1)});
+        curScore.submit();
+    }
+    
+    return setInterval(makeOrder, interval);
+}
