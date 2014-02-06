@@ -124,17 +124,6 @@ h1 {
     display: inline-block;
 }
 
-.yellow {
-    background: yellow;
-}
-
-.green {
-    background: green;
-}
-
-.dotted {
-    background: pink;
-}
 
 #scoreboard {
     width: 100%;
@@ -167,6 +156,41 @@ h1 {
     margin-top: 8px;
     margin-bottom: 0px;
 }
+
+
+.yellow {
+    background: #ff0;
+    color: #000;
+}
+
+.green {
+    background: #0f0;
+    color: #000;
+}
+
+.dotted {
+    background: #f00;
+}
+
+.yellow.green {
+    background: linear-gradient(to right, #ff0 50%, #0f0 50%);
+}
+
+.yellow.dotted {
+    background: linear-gradient(to right, #ff0 50%, #f00 50%);
+}
+
+.green.dotted {
+    background: linear-gradient(to right, #0f0 50%, #f00 50%);
+}
+
+.yellow.green.dotted {
+    background: linear-gradient(to right, #ff0 33%, #0f0 33%,
+                                          #0f0 66%, #f00 66%);
+    box-shadow: 0px 0px 60px 20px #dfc12a;
+}
+
+
 .points{display:none}
 .odometer {
     font-size:1.1em;

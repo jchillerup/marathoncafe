@@ -3,7 +3,7 @@ var Scoreboard = Backbone.View.extend({
     id: "scoreboard",
     children: [],
 
-    initialize: function() {
+    initialize: function(arg1, arg2) {
         this.model.on('change', _.bind(this.render, this));
         
         // Create all the kitchen widgets
@@ -46,6 +46,10 @@ var Scoreboard = Backbone.View.extend({
 	var padding = 10;
 
         this.$el.children().tsort('div.points', {order: 'desc'});
+        
+        // ensure yellow
+        $(".yellow").removeClass('yellow');
+        $(this.$el.children().get(0)).addClass('yellow');
 
         var $units = this.$el.children();
 	var totalWidth = this.$el.width();

@@ -5,9 +5,9 @@ $(function() {
     var jerseys = new Backbone.Model();
     var socket = io.connect();
     
-    var scoreboardview = new Scoreboard({ el: document.getElementById("scoreboard"), model: scores });
+    var scoreboardview = new Scoreboard({ el: document.getElementById("scoreboard"), model: scores, jerseymodel: jerseys });
     
-//    var loggerview = new Logger({model: scores});
+    //    var loggerview = new Logger({model: scores});
     //    $('#logContainer').append(loggerview.$el);
     
     var plotsview = new PlotsView({el: document.getElementById('plots')});
@@ -17,8 +17,16 @@ $(function() {
         jerseys.set(data.jerseys);
     });
     
+    // We're updating the yellow jersey more frequently than the others
     jerseys.on('change', function() {
-        console.log('NEW JERSEYS WHAT THE FUCK');
+        console.log('new jerseys');
+        console.log(jerseys.get('green'));
+
+        $('.green').removeClass('green');
+        $('.dotted').removeClass('dotted');
+
+        $("#score-" + jerseys.get('green')).addClass('green');
+        $("#score-" + jerseys.get('dotted')).addClass('dotted');
     });
 
     socket.on('reload', function(data) {
