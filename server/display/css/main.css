@@ -349,6 +349,10 @@ and (max-width : 500px) {
     .scoreboard-unit {
         width: 20%;
     }
+
+    #plots img {
+        width: 95%;
+    }
 }
 
 @media print,

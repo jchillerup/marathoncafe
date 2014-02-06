@@ -64,7 +64,7 @@ http.createServer(function(req, res) {
 
         break;
     default:
-        console.log('Did not understand this on the MGMT interface: ' + query);
+        console.log('Did not understand this on the MGMT interface: ' + JSON.stringify(query));
     }
 
     res.end(req.url);
