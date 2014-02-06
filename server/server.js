@@ -6,16 +6,23 @@ var connect = require('connect');
 var app = connect.createServer(connect.static('display'));
 var server = http.createServer(app).listen(8080);
 var io = require('socket.io').listen(server, {log:false});
-
+var fs = require('fs');
 
 var sqlite3 = require('sqlite3');
 var db = new sqlite3.Database('db.sqlite');
 
 var state = { cur_scores: { 'GL1': 0, 'GL2': 0, 'GL3': 0, 'GL4': 0, 'GL5': 0, 'GL6': 0, 'GL7': 0, 'GL8': 0, 'ML2': 0, 'ML3': 0, 'ML4': 0, 'ML5': 0, 'ML6': 0, 'ML7': 0, 'ML8': 0, 'NY2': 0, 'NY3': 0, 'NY4': 0, 'NY5': 0, 'NY6': 0, 'NY7': 0, 'NY8': 0 }, jerseys: {yellow: null, green: null, dotted: null}}; 
 
-
 // load state from sqlite
 db.serialize(function() { 
+    var buffer = "";
+    db.each('SELECT * FROM streger ORDER BY timestamp', function(err, row) {
+        buffer += row.kitchen + ";" + row.quantity + ";" + Math.round(row.timestamp/1000) + "\n";
+    }, function() {
+        console.log('writing file');
+        fs.writeFileSync("data.csv", buffer);
+    });
+    
     db.each('SELECT kitchen, SUM(quantity) count FROM streger GROUP BY kitchen;', function(err, row) {
         state.cur_scores[row.kitchen] = row.count;
     
@@ -33,6 +40,10 @@ io.sockets.on('connection', function (socket) {
         // update stored state
         // db.run('INSERT INTO streger VALUES (\''+data.kitchen+'\', '+quantity+', '+(new Date).getTime()+')');
         db.run('INSERT INTO streger VALUES (?,?,?)', [data.kitchen, quantity, (new Date).getTime()]);
+        
+        // Add to the CSV file
+        var buffer = data.kitchen + ";" + data.quantity + ";" + Math.round((new Date).getTime()/1000) + "\n";
+        fs.appendFileSync('data.csv', buffer);
 
         // update local state
         state.cur_scores[data.kitchen] += quantity;        
