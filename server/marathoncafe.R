@@ -1,12 +1,16 @@
 rm(list = ls()) # Clear workspace
-install_packages = 1
+install_packages = 0
 load_packages = 1
 print = 1
 database = "CSV" # "SQLite"
+reso <- 95 
+udkomt <- 0 # 0 = udkommenteret
 # setwd("~/Dropbox/Marathoncafe")
 
+
+
 # Packages:
-if (install_packages == 0){
+if (install_packages == 1){
   install.packages("data.table")
   install.packages("plotrix")
   install.packages("RSQLite")
@@ -14,15 +18,19 @@ if (install_packages == 0){
   install.packages("gridExtra")
   install.packages("ggplot2")
   install.packages("lattice")
+  install.packages("zoo")
+  install.packages("httpRequest")
   update.packages()}
 if (load_packages == 1){
   library(ggplot2) 
+  library(zoo) 
   library(lattice)
   library(grid)
   library(gridExtra)
-  library("RSQLite")
+  library(RSQLite)
   library(data.table) 
   library(plotrix)
+  library(httpRequest)  
 }
 
 if (database == "CSV"){
@@ -40,8 +48,8 @@ if (database == "CSV"){
 }
 
 names(data) <- c("ki","st","utime")
-data$ti <- as.POSIXct(data[,3], origin="1970-01-01 00:00:00",format="%Y-%m-%d %H:%M:%S")
 starttime = data$utime[1]
+data$ti <- as.POSIXct(data[,3], origin="1970-01-01 00:00:00",format="%Y-%m-%d %H:%M:%S")
 endtime = data$utime[nrow(data)]
 
 
@@ -51,6 +59,7 @@ ki <- c("GL1","GL2","GL3","GL4","GL5","GL6","GL7","GL8","ML2","ML3","ML4","ML5",
 st <- rep(0,22)
 tabtemp <- data.frame(ki,st)
 
+if (udkomt == 1){
 count <- data.table(data[,1:2])
 count <- count[ ,lapply(.SD, sum), by = ki]
 count <- count[order(count[,ki]),] # Sorting
@@ -64,9 +73,11 @@ if (length(NonNAindex) == 0){
 } else if (length(NonNAindex) > 0){
   count[NonNAindex,]$st = 0
 }
-if (print == 1){png(file = "display/plots/plot1_streger_sorted_after_kitchen.png")}
+if (print == udkomt){png(file = "display/plots/plot1.png",res=reso)}
 barplot(count$st,xlab="Koekken",ylab="Antal streger",names.arg = count[1:22,1],las=2,col=rainbow(23),main="Antal streger fordelt paa koekkener")
-if (print == 1){dev.off()}
+if (print == udkomt){dev.off()}
+}
+
 
 #####
 # Streger per k??kken 2
@@ -83,7 +94,7 @@ if (length(NonNAindex) == 0){
   count[NonNAindex,]$st = 0
 }
 count <- count[order(count[,"st"]),] # Sorting
-if (print == 1){png(file = "display/plots/plot2_streger_sorted_after_winner.png")}
+if (print == 1){png(file = "display/plots/plot2.png",res=reso)}
 barplot(count$st,xlab="Koekken",ylab="Antal streger",names.arg = count[1:22,1],las=2,col=rainbow(23),main="Antal streger fordelt paa koekkener")
 if (print == 1){dev.off()}
 
@@ -100,7 +111,7 @@ data$min <- data$min - min(data$min) + data$yhour*60
 
 data$cumst<-cumsum(data$st)
 
-if (print == 1){png(file = "display/plots/plot3_cumulated_minutes_for_hele_perioden.png")}
+if (print == 1){png(file = "display/plots/plot3.png",res=reso)}
 par(mar=c(6, 6, 4, 2) + 0.1)
 plot(data$min,data$cumst,type="l",col="blue",xaxt="n",las=1,ylab="",xlab="")
 abline(v=c(540,540+24*60),lty=2,col="red")
@@ -111,7 +122,7 @@ if(max(data$yhour) < 24) {
   hours <- c("15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00")
   axis(1, at=seq(0,2880,120), labels=hours,las = 2)
 }
-title(main="Kumulerede antal streger evalueret hvert minut \n for alle koekkener under hele marathoncafeen",xlab="Tidspunkt",mgp=c(4,1,0))
+title(main="Kumulerede antal streger paa minutbasis for\n alle koekkener under hele marathoncafeen",xlab="Tidspunkt",mgp=c(4,1,0))
 title(ylab="Antal streger",mgp=c(5,1,0))
 text(c(270,1440/2+540,2430),c(10,10,10), c("fredag","loerdag","soendag"))
 if (print == 1){dev.off()}
@@ -120,7 +131,8 @@ if (print == 1){dev.off()}
 ####
 # Kommuleret antal fordelt p?? timer
 data$cumst<-cumsum(data$st)
-if (print == 1){png(file = "display/plots/plot4_cumulated_timer_for_hele_perioden.png")}
+if (udkomt == 1){
+if (print == udkomt){png(file = "display/plots/plot4.png",res=reso)}
 par(mar=c(6, 6, 4, 2) + 0.1)
 plot(data$yhour,data$cumst,type="l",col="blue",xaxt="n",las=1,ylab="",xlab="")
 abline(v=c(9,9+24),lty=2,col="red")
@@ -134,8 +146,8 @@ if(max(data$yhour) < 24) {
 title(main="Kumulerede antal streger for alle koekkener \n for hele marathoncafeen fordelt paa timer",xlab="Tidspunkt",mgp=c(4,1,0))
 title(ylab="Antal streger",mgp=c(5,1,0))
 text(c(4.5,9+12,42),c(10,10,10), c("fredag","loerdag","soendag"))
-if (print == 1){dev.off()}
-
+if (print == udkomt){dev.off()}
+}
 
 
 
@@ -151,13 +163,13 @@ count <- data.frame(count)
 count <- count[,1:2]
 names(count) <- c("yhour","st")
 
-if (print == 1){png(file = "display/plots/plot5_antal_streger_fordelt_paa_timer.png")}
+if (print == 1){png(file = "display/plots/plot5.png",res=reso)}
 par(mar=c(5, 4.5, 4, 2) + 0.1)
 plot(count$st,type="l",col="blue",xaxt="n",las=1,ylab="",xlab="")
 abline(v=c(9,9+24),lty=2,col="red")
   hours <- c("15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00")
   axis(1, at=seq(0,48,2), labels=hours,las = 2)
-title(main="Antal streger fordelt paa timer for alle koekkener \n for hele marathoncafeen",xlab="Tidspunkt",mgp=c(4,1,0))
+title(main="Antal streger fordelt paa timer for alle \n koekkener for hele marathoncafeen",xlab="Tidspunkt",mgp=c(4,1,0))
 title(ylab="Antal streger",mgp=c(3.5,1,0))
 text(c(4.5,9+12,42),c(10,10,10), c("fredag","loerdag","soendag"))
 if (print == 1){dev.off()}
@@ -177,8 +189,8 @@ names(count) <- c("min","st")
 NonNAindex <- which(is.na(count$st))
 count[NonNAindex,]$st = 0
 
-# dev.off()
-if (print == 1){png(file = "display/plots/plot6_antal_streger_fordelt_paa_minutter_hele_periode.png")}
+if (udkomt == 1){
+if (print == udkomt){png(file = "display/plots/plot6.png",res=reso)}
 par(mar=c(5, 4.5, 4, 2) + 0.1)
 plot(count$st,col="red",xaxt="n",las=1,ylab="",xlab="",type="l")
 abline(v=c(540,540+24*60),lty=1,col="black")
@@ -187,10 +199,10 @@ axis(1, at=seq(0,2880,120), labels=hours,las = 2)
 title(main="Antal streger per minut for alle koekkener \n for hele marathoncafeen",xlab="Tidspunkt",mgp=c(4,1,0))
 title(ylab="Antal streger",mgp=c(3.5,1,0))
 text(c(270,1440/2+540,2430),c(10,10,10), c("fredag","loerdag","soendag"),col="black")
-if (print == 1){dev.off()}
+if (print == udkomt){dev.off()}
+}
 
-
-if (print == 1){png(file = "display/plots/plot7_antal_streger_fordelt_paa_minutter_2_timer.png")}
+if (print == 1){png(file = "display/plots/plot7.png",res=reso)}
 par(mar=c(5, 4.5, 4, 2) + 0.1)
 plot(count$st,type="l",col="blue",xaxt="n",las=1,ylab="",xlab="",xlim=c(max(data$min)-120,max(data$min)))
 abline(v=c(540,540+24*60),lty=2,col="red")
@@ -249,7 +261,7 @@ if (length(NonNAindex) == 0){
   cheats[NonNAindex,]$vagt = 0
 }
 
-if (print == 1){png(file = "display/plots/plot8_antal_streger_paa_egent_kokken.png")}
+if (print == 1){png(file = "display/plots/plot8.png",res=reso)}
 if (sum(cheats$vagt)==0){
   plot(0,col="white",xlab="",ylab="",xaxt="n",yaxt="n")  
   text(1,0,c("*This plot will be generated when data is available* \n (Antal streger sat paa det koekken med barvagten)"))
@@ -259,33 +271,44 @@ if (print == 1){dev.off()}
 
 
 
+start <- read.table("start.csv", sep=";", quote="\"") 
+start$V3 <- starttime
+names(start) <- c("ki","st","utime")
+
+
 
 ####
 # Kommuleret antal streger fordelt p?? minutter og k??kkener
-data$cumst<-cumsum(data$st)
 
-NY2 <- (data[which(data$ki == "NY2"),])
-NY3 <- (data[which(data$ki == "NY3"),])
-NY4 <- (data[which(data$ki == "NY4"),])
-NY5 <- (data[which(data$ki == "NY5"),])
-NY6 <- (data[which(data$ki == "NY6"),])
-NY7 <- (data[which(data$ki == "NY7"),])
-NY8 <- (data[which(data$ki == "NY8"),])
-ML2 <- (data[which(data$ki == "ML2"),])
-ML3 <- (data[which(data$ki == "ML3"),])
-ML4 <- (data[which(data$ki == "ML4"),])
-ML5 <- (data[which(data$ki == "ML5"),])
-ML6 <- (data[which(data$ki == "ML6"),])
-ML7 <- (data[which(data$ki == "ML7"),])
-ML8 <- (data[which(data$ki == "ML8"),])
-GL1 <- (data[which(data$ki == "GL1"),])
-GL2 <- (data[which(data$ki == "GL2"),])
-GL3 <- (data[which(data$ki == "GL3"),])
-GL4 <- (data[which(data$ki == "GL4"),])
-GL5 <- (data[which(data$ki == "GL5"),])
-GL6 <- (data[which(data$ki == "GL6"),])
-GL7 <- (data[which(data$ki == "GL7"),])
-GL8 <- (data[which(data$ki == "GL8"),])
+data$cumst<-cumsum(data$st)
+start[4:10] <- data[1,4:10,]  
+start$cumst <- 0
+datac <- rbind(start,data)
+
+
+
+NY2 <- (datac[which(datac$ki == "NY2"),])
+NY3 <- (datac[which(datac$ki == "NY3"),])
+NY4 <- (datac[which(datac$ki == "NY4"),])
+NY5 <- (datac[which(datac$ki == "NY5"),])
+NY6 <- (datac[which(datac$ki == "NY6"),])
+NY7 <- (datac[which(datac$ki == "NY7"),])
+NY8 <- (datac[which(datac$ki == "NY8"),])
+ML2 <- (datac[which(datac$ki == "ML2"),])
+ML3 <- (datac[which(datac$ki == "ML3"),])
+ML4 <- (datac[which(datac$ki == "ML4"),])
+ML5 <- (datac[which(datac$ki == "ML5"),])
+ML6 <- (datac[which(datac$ki == "ML6"),])
+ML7 <- (datac[which(datac$ki == "ML7"),])
+ML8 <- (datac[which(datac$ki == "ML8"),])
+GL1 <- (datac[which(datac$ki == "GL1"),])
+GL2 <- (datac[which(datac$ki == "GL2"),])
+GL3 <- (datac[which(datac$ki == "GL3"),])
+GL4 <- (datac[which(datac$ki == "GL4"),])
+GL5 <- (datac[which(datac$ki == "GL5"),])
+GL6 <- (datac[which(datac$ki == "GL6"),])
+GL7 <- (datac[which(datac$ki == "GL7"),])
+GL8 <- (datac[which(datac$ki == "GL8"),])
 NY2$cumst <- cumsum(NY2$st)
 NY3$cumst <- cumsum(NY3$st)
 NY4$cumst <- cumsum(NY4$st)
@@ -309,8 +332,8 @@ GL6$cumst <- cumsum(GL6$st)
 GL7$cumst <- cumsum(GL7$st)
 GL8$cumst <- cumsum(GL8$st)
 
-
-if (print == 1){png(file = "display/plots/plot9_cumulated_timer_for_hele_perioden_per_kokken.png")}
+if (data$min[length(data$min)] > 30){
+if (print == 1){png(file = "display/plots/plot9.png",res=reso)}
 par(mar=c(6, 5, 4, 2) + 0.1)
 plot(NY2$min,NY2$cumst,type="l",col=1,xaxt="n",las=1,ylab="",xlab="",ylim = c(0,maximum))
 points(NY3$min,NY3$cumst,type="l",col=2,xaxt="n",las=1,ylab="",xlab="")
@@ -336,9 +359,9 @@ points(GL7$min,GL7$cumst,type="l",lty=4,col=6,xaxt="n",las=1,ylab="",xlab="",lwd
 points(GL8$min,GL8$cumst,type="l",lty=4,col=7,xaxt="n",las=1,ylab="",xlab="",lwd=2)
 abline(v=c(540,540+24*60),lty=1,col="black")
 leg <- c("ML2","ML3","ML4","ML5","ML6","ML7","ML8","GL1","GL2","GL3","GL4","GL5","GL6","GL7","GL8")
-legend("topleft", inset=.05,leg, horiz=FALSE,lty=c(rep(2,7),rep(3,7)),col=c(1:7,1:7),ncol=2, cex=.75,lwd=2)
+legend("topleft", inset=.05,leg, horiz=FALSE,lty=c(rep(2,7),rep(3,7)),col=c(1:7,1:7),ncol=2, cex=.75,lwd=2,bg="transparent")
 leg <- c("NY2","NY3","NY4","NY5","NY6","NY7","NY8")
-legend("bottomright", inset=.05,leg, horiz=FALSE,lty=c(rep(1,8)),col=c(1:8),ncol=3, cex=.75)
+legend("bottomright", inset=.05,leg, horiz=FALSE,lty=c(rep(1,8)),col=c(1:8),ncol=3, cex=.75,bg="transparent")
 if(max(data$yhour) < 24) {
   hours <- c("15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00" ,"16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00")
   axis(1, at=seq(0,2880,60), labels=hours,las = 2)
@@ -350,13 +373,19 @@ title(main="Kumulerede antal streger per minut fordelt paa  \n koekkener for hel
 title(ylab="Antal streger",mgp=c(3.5,1,0))
 text(c(270,1440/2+540,2430),c(10,10,10), c("fredag","loerdag","soendag"))
 if (print == 1){dev.off()}
+} else if (data$min[length(data$min)] <= 30){
+  if (print == 1){png(file = "display/plots/plot9.png",res=reso)}
+  plot(0,col="white",xlab="",ylab="",xaxt="n",yaxt="n")  
+  text(1,0,c("This plot will be generated when after 30 minutes"))
+  if (print == 1){dev.off()}
+}
 
 
 
 
 
 
-count <- data.table(data[,1:2])
+count <- data.table(datac[,1:2])
 count <- count[ ,lapply(.SD, sum), by = ki]
 count <- data.frame(count)
 names(tabtemp) <- c("ki","st")
@@ -372,21 +401,21 @@ if (length(NonNAindex) == 0){
 count <- count[order(count[,"st"]),] # Sorting
 
 if (dim(count)[1] >= 3){
-  if (print == 1){png(file = "display/plots/plot10_cumulated_for_de_forende_kokkener_hele_periode.png")}  
+  if (print == 1){png(file = "display/plots/plot10.png",res=reso)}  
   nr1 <- count[dim(count)[1],]
   nr1 <- data.frame(lapply(nr1, as.character), stringsAsFactors=FALSE)[1]
   nr1 <- as.character(nr1)
-  datanr1 <- data[which(data$ki == nr1,),]
+  datanr1 <- datac[which(datac$ki == nr1,),]
   datanr1$cumst <- cumsum(datanr1$st)
   nr2 <- count[dim(count)[1]-1,]
   nr2 <- data.frame(lapply(nr2, as.character), stringsAsFactors=FALSE)[1]
   nr2 <- as.character(nr2)
-  datanr2 <- data[which(data$ki == nr2,),]
+  datanr2 <- datac[which(datac$ki == nr2,),]
   datanr2$cumst <- cumsum(datanr2$st)
   nr3 <- count[dim(count)[1]-2,]  
   nr3 <- data.frame(lapply(nr3, as.character), stringsAsFactors=FALSE)[1]
   nr3 <- as.character(nr3)  
-  datanr3 <- data[which(data$ki == nr3,),]
+  datanr3 <- datac[which(datac$ki == nr3,),]
   datanr3$cumst <- cumsum(datanr3$st)
   par(mar=c(6, 5, 4, 2) + 0.1)
   plot(datanr1$min,datanr1$cumst,type="l",col=1,xaxt="n",las=1,ylab="",xlab="",ylim = c(0,maximum))
@@ -394,7 +423,7 @@ if (dim(count)[1] >= 3){
   points(datanr3$min,datanr3$cumst,type="l",col=3,xaxt="n",las=1,ylab="",xlab="")  
   leg <- c(nr1,nr2,nr3)
   abline(v=c(540,540+24*60),lty=1,col="black")
-  legend("topleft", inset=.05,leg, horiz=FALSE,lty=1,col=c(1:3),ncol=1, cex=.90,lwd=1)
+  legend("topleft", inset=.05,leg, horiz=FALSE,lty=1,col=c(1:3),ncol=1, cex=.90,lwd=1,bg="transparent")
   if(max(data$yhour) < 24) {
     hours <- c("15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00" ,"16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00")
     axis(1, at=seq(0,2880,60), labels=hours,las = 2)
@@ -402,7 +431,7 @@ if (dim(count)[1] >= 3){
     hours <- c("15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00")
     axis(1, at=seq(0,2880,120), labels=hours,las = 2)
   }
-  title(main="Kumulerede antal streger per minut for de \n tre foerende koekkener for hele marathoncafeen",xlab="Tidspunkt",mgp=c(4,1,0))
+  title(main="Kumulerede antal streger per minut for de tre \n foerende koekkener for hele marathoncafeen",xlab="Tidspunkt",mgp=c(4,1,0))
   title(ylab="Antal streger",mgp=c(3.5,1,0))
   text(c(270,1440/2+540,2430),c(10,10,10), c("fredag","loerdag","soendag"))
   if (print == 1){dev.off()}  
@@ -439,96 +468,96 @@ GL7 <- GL7[,c("min","st","cumst")]
 GL8 <- GL8[,c("min","st","cumst")]
 
 
-if (length(GL1$min)==0){
+if (length(GL1$min)==1){
   GL1=data.frame(t(matrix(rep(0,8),4)))
   names(GL1)=c("min","st","cumst","momm")
 }
-if (length(GL2$min)==0){
+if (length(GL2$min)==1){
   GL2=data.frame(t(matrix(rep(0,8),4)))
   names(GL2)=c("min","st","cumst","momm")
 }
-if (length(GL3$min)==0){
+if (length(GL3$min)==1){
   GL3=data.frame(t(matrix(rep(0,8),4)))
   names(GL3)=c("min","st","cumst","momm")
 }
-if (length(GL4$min)==0){
+if (length(GL4$min)==1){
   GL4=data.frame(t(matrix(rep(0,8),4)))
   names(GL4)=c("min","st","cumst","momm")
 }
-if (length(GL5$min)==0){
+if (length(GL5$min)==1){
   GL5=data.frame(t(matrix(rep(0,8),4)))
   names(GL5)=c("min","st","cumst","momm")
 }
-if (length(GL6$min)==0){
+if (length(GL6$min)==1){
   GL6<-data.frame(t(matrix(rep(0,8),4)))
   names(GL6)=c("min","st","cumst","momm")
 }
-if (length(GL7$min)==0){
+if (length(GL7$min)==1){
   GL7=data.frame(t(matrix(rep(0,8),4)))
   names(GL7)=c("min","st","cumst","momm")
 }
-if (length(GL8$min)==0){
+if (length(GL8$min)==1){
   GL8=data.frame(t(matrix(rep(0,8),4)))
   names(GL8)=c("min","st","cumst","momm")
 }
-if (length(ML2$min)==0){
+if (length(ML2$min)==1){
   ML2=data.frame(t(matrix(rep(0,8),4)))
   names(ML2)=c("min","st","cumst","momm")
 }
-if (length(ML3$min)==0){
+if (length(ML3$min)==1){
   ML3=data.frame(t(matrix(rep(0,8),4)))
   names(ML3)=c("min","st","cumst","momm")
 }
-if (length(ML4$min)==0){
+if (length(ML4$min)==1){
   ML4=data.frame(t(matrix(rep(0,8),4)))
   names(ML4)=c("min","st","cumst","momm")
 }
-if (length(ML5$min)==0){
+if (length(ML5$min)==1){
   ML5=data.frame(t(matrix(rep(0,8),4)))
   names(ML5)=c("min","st","cumst","momm")
 }
-if (length(ML6$min)==0){
+if (length(ML6$min)==1){
   ML6=data.frame(t(matrix(rep(0,8),4)))
   names(ML6)=c("min","st","cumst","momm")
 }
-if (length(ML7$min)==0){
+if (length(ML7$min)==1){
   ML7=data.frame(t(matrix(rep(0,8),4)))
   names(ML7)=c("min","st","cumst","momm")
 }
-if (length(ML8$min)==0){
+if (length(ML8$min)==1){
   ML8=data.frame(t(matrix(rep(0,8),4)))
   names(ML8)=c("min","st","cumst","momm")
 }
-if (length(NY2$min)==0){
+if (length(NY2$min)==1){
   NY2=data.frame(t(matrix(rep(0,8),4)))
   names(NY2)=c("min","st","cumst","momm")
 }
-if (length(NY3$min)==0){
+if (length(NY3$min)==1){
   NY3=data.frame(t(matrix(rep(0,8),4)))
   names(NY3)=c("min","st","cumst","momm")
 }
-if (length(NY4$min)==0){
+if (length(NY4$min)==1){
   NY4=data.frame(t(matrix(rep(0,8),4)))
   names(NY4)=c("min","st","cumst","momm")
 }
-if (length(NY5$min)==0){
+if (length(NY5$min)==1){
   NY5=data.frame(t(matrix(rep(0,8),4)))
   names(NY5)=c("min","st","cumst","momm")
 }
-if (length(NY6$min)==0){
+if (length(NY6$min)==1){
   NY6=data.frame(t(matrix(rep(0,8),4)))
   names(NY6)=c("min","st","cumst","momm")
 }
-if (length(NY7$min)==0){
+if (length(NY7$min)==1){
   NY7=data.frame(t(matrix(rep(0,8),4)))
   names(NY7)=c("min","st","cumst","momm")
 }
-if (length(NY8$min)==0){
+if (length(NY8$min)==1){
   NY8=data.frame(t(matrix(rep(0,8),4)))
   names(NY8)=c("min","st","cumst","momm")
 }
 
-C <- -0.05
+C <- -0.0234
 NY2m <- data.frame(seq(0,dim(NY2)[1]-1,1),rep(0,dim(NY2)[1]))
 names(NY2m) <- c("min","st")
 NY2 <- NY2[,c("min","st")]
@@ -731,7 +760,7 @@ if (length(NonNAindex) == 0){
 } else if (length(NonNAindex) > 0){
   ML5m[NonNAindex,]$st = 0
 }
-ML5m <- data.table(ML4m)
+ML5m <- data.table(ML5m)
 ML5m <- ML5m[ ,lapply(.SD, sum), by = "ki"]
 ML5m$momm <- ML5m$st  
 for(i in 2:dim(ML5m)[1]-1) {
@@ -980,8 +1009,8 @@ momm <- c(GL1m$momm[length(GL1m$momm)],GL2m$momm[length(GL2m$momm)],GL3m$momm[le
 
 ki <- c("GL1","GL2","GL3","GL4","GL5","GL6","GL7","GL8","ML2","ML3","ML4","ML5","ML6","ML7","ML8","NY2","NY3","NY4","NY5","NY6","NY7","NY8")
 count <- data.frame(ki,momm)
-if (print == 1){png(file = "display/plots/plot11_hamringmomentum.png")}
-barplot(count$momm,xlab="*En form for 'hamrings-hastigheds-speedometer'",ylab="Hamringsmomentum",names.arg = count[1:22,1],las=2,col=rainbow(23),main="Hamringmomentum* fordelt paa koekkener \n med daempning paa 5 % per minut")
+if (print == 1){png(file = "display/plots/plot11.png",res=reso)}
+barplot(count$momm,xlab="*En form for 'hamrings-hastigheds-speedometer'",ylab="Hamringsmomentum",names.arg = count[1:22,1],las=2,col=rainbow(23),main="Hamringmomentum* fordelt paa koekkener \n med daempning paa 2.34% per minut")
 if (print == 1){dev.off()}
 
 
@@ -1007,7 +1036,7 @@ for(i in 2:dim(datam)[1]-1) {
 }  
 
 
-if (print == 1){png(file = "display/plots/plot12_hamringmomentum_for_alle.png")}
+if (print == 1){png(file = "display/plots/plot12.png",res=reso)}
 par(mar=c(5, 4.5, 4, 2) + 0.1)
 plot(datam$min,datam$momm,type="l",col="blue",xaxt="n",las=1,ylab="",xlab="")
 abline(v=c(540,540+24*60),lty=1,col="black")
@@ -1018,7 +1047,7 @@ if(max(data$min) < 1440) {
   hours <- c("15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00")
   axis(1, at=seq(0,2880,120), labels=hours,las = 2)
 }
-title(main="Hamringmomentum* for alle koekkener med \n daempning paa 5% per minut",mgp=c(4,1,0))
+title(main="Hamringmomentum* for alle koekkener med \n daempning paa 2.34% per minut",mgp=c(4,1,0))
 title(ylab="Hamringmomentum",mgp=c(3.5,1,0),xlab="*En form for 'hamrings-hastigheds-speedometer'")
 if (print == 1){dev.off()}
 
@@ -1048,13 +1077,13 @@ names(tableprint) <- c("Koekken","Streger","momentum")
 
 
 
-et1 <- data[which(data$min < 540),]
 
+et1 <- data[which(data$min < 540),]
 ki <- c("GL1","GL2","GL3","GL4","GL5","GL6","GL7","GL8","ML2","ML3","ML4","ML5","ML6","ML7","ML8","NY2","NY3","NY4","NY5","NY6","NY7","NY8")
 st <- rep(0,22)
 tabtemp <- data.frame(ki,st)
 
-et1 <- data.table(data[,1:2])
+et1 <- data.table(et1[,1:2])
 et1 <- et1[ ,lapply(.SD, sum), by = ki]
 et1 <- et1[order(et1[,ki]),] # Sorting
 et1 <- data.frame(et1)
@@ -1114,10 +1143,14 @@ if (length(NonNAindex) == 0){
 }
 names(et3) <- c("Koekken","Streger")
 tableprint <- merge(tableprint,et3, all = TRUE,by = c('Koekken'))
-names(tableprint) <- c("Koekken","Streger","Momentum","Etape 1","Etape 2","Etape 3")
+names(tableprint) <- c("Koekken","Streger","Momentum","Torsd.","Fred.","Lord.")
 tableprint$Momentum <- round(tableprint$Momentum)
 
-if (print == 1){png(file = "display/plots/plot13_oversigtstabel.png")}
+
+
+
+
+if (print == 1){png(file = "display/plots/plot13.png",res=reso-21)}
 grid.newpage() 
 pushViewport(viewport(layout.pos.col=2, layout.pos.row=2, clip="on"))
 grid.draw(tableGrob(tableprint, gp=gpar(fontsize=12, lwd=.5)))
@@ -1126,9 +1159,9 @@ if (print == 1){dev.off()}
 
 
 
-if (print == 1){png(file = "display/plots/plot14_hamringsmomentum_gra.png")}
+if (print == 1){png(file = "display/plots/plot14.png",res=reso)}
 par(mar=c(6, 5, 4, 2) + 0.1)
-plot(NY2m$ki,NY2m$momm,type="l",col=1,xaxt="n",las=1,ylab="",xlab="",ylim = c(0,max(datam$momm)))
+plot(NY2m$ki,NY2m$momm,type="l",col=1,xaxt="n",las=1,ylab="",xlab="",ylim = c(0,max(datam$momm)),xlim=c(0,max(data$min)))
 points(NY3m$ki,NY3m$momm,type="l",col=2,xaxt="n",las=1,ylab="",xlab="")
 points(NY4m$ki,NY4m$momm,type="l",col=3,xaxt="n",las=1,ylab="",xlab="")
 points(NY5m$ki,NY5m$momm,type="l",col=4,xaxt="n",las=1,ylab="",xlab="")
@@ -1151,10 +1184,10 @@ points(GL6m$ki,GL6m$momm,type="l",lty=4,col=5,xaxt="n",las=1,ylab="",xlab="",lwd
 points(GL7m$ki,GL7m$momm,type="l",lty=4,col=6,xaxt="n",las=1,ylab="",xlab="",lwd=2)
 points(GL8m$ki,GL8m$momm,type="l",lty=4,col=7,xaxt="n",las=1,ylab="",xlab="",lwd=2)
 abline(v=c(540,540+24*60),lty=1,col="black")
-leg <- c("ML2","ML3","ML4","ML5","ML6","ML7","ML8","GL1","GL2","GL3","GL4","GL5","GL6","GL7","GL8")
-legend("topleft", inset=.05,leg, horiz=FALSE,lty=c(rep(2,7),rep(3,7)),col=c(1:7,1:7),ncol=2, cex=.75,lwd=2)
-leg <- c("NY2","NY3","NY4","NY5","NY6","NY7","NY8")
-legend("bottomright", inset=.05,leg, horiz=FALSE,lty=c(rep(1,8)),col=c(1:8),ncol=3, cex=.75)
+leg <- c("ML2","ML3","ML4","ML5","ML6","ML7","ML8","GL1","GL2","GL3","GL4","GL5","GL6","GL7","GL8","NY2","NY3","NY4","NY5","NY6","NY7","NY8")
+legend("topleft", inset=.05,leg, horiz=FALSE,lty=c(rep(2,7),rep(3,7),rep(1,8)),col=c(1:7,1:7,1:8),ncol=3, cex=.8,lwd=2,bg="transparent")
+#leg <- c()
+#legend("bottomright", inset=.05,leg, horiz=FALSE,lty=c(rep(1,8)),col=c(1:8),ncol=3, cex=.75,bg="transparent")
 if(max(data$yhour) < 24) {
   hours <- c("15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00" ,"16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00")
   axis(1, at=seq(0,2880,60), labels=hours,las = 2)
@@ -1162,7 +1195,7 @@ if(max(data$yhour) < 24) {
   hours <- c("15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00")
   axis(1, at=seq(0,2880,120), labels=hours,las = 2)
 }
-title(main="Hamringmomentum per minut fordelt paa  \n koekkener for hele marathoncafeen",xlab="Tidspunkt",mgp=c(4,1,0))
+title(main="Hamringmomentum med daempingpaa \n 2.34% for hele marathoncafeen",xlab="Tidspunkt",mgp=c(4,1,0))
 title(ylab="Antal streger",mgp=c(3.5,1,0))
 text(c(270,1440/2+540,2430),c(10,10,10), c("fredag","loerdag","soendag"))
 if (print == 1){dev.off()}
@@ -1170,5 +1203,212 @@ if (print == 1){dev.off()}
 
 
 
+
+
+plot(GL1m$ki,GL1m$momm,type="l")
+x <- GL1m$ki
+y <- GL1m$momm
+id <- order(x)
+gron <- data.frame(max(GL1m$momm))
+prik <- sum(diff(x[id])*rollmean(y[id],2))
+GL1troje <- data.frame("GL1",gron,prik)
+names(GL1troje) <- c("Kokken","gron","prik")
+
+x <- GL2m$ki
+y <- GL2m$momm
+id <- order(x)
+gron <- data.frame(max(GL2m$momm))
+prik <- sum(diff(x[id])*rollmean(y[id],2))
+GL2troje <- data.frame("GL2",gron,prik)
+names(GL2troje) <- c("Kokken","gron","prik")
+
+x <- GL3m$ki
+y <- GL3m$momm
+id <- order(x)
+gron <- data.frame(max(GL3m$momm))
+prik <- sum(diff(x[id])*rollmean(y[id],2))
+GL3troje <- data.frame("GL3",gron,prik)
+names(GL3troje) <- c("Kokken","gron","prik")
+
+x <- GL4m$ki
+y <- GL4m$momm
+id <- order(x)
+gron <- data.frame(max(GL4m$momm))
+prik <- sum(diff(x[id])*rollmean(y[id],2))
+GL4troje <- data.frame("GL4",gron,prik)
+names(GL4troje) <- c("Kokken","gron","prik")
+
+x <- GL5m$ki
+y <- GL5m$momm
+id <- order(x)
+gron <- data.frame(max(GL5m$momm))
+prik <- sum(diff(x[id])*rollmean(y[id],2))
+GL5troje <- data.frame("GL5",gron,prik)
+names(GL5troje) <- c("Kokken","gron","prik")
+
+x <- GL6m$ki
+y <- GL6m$momm
+id <- order(x)
+gron <- data.frame(max(GL6m$momm))
+prik <- sum(diff(x[id])*rollmean(y[id],2))
+GL6troje <- data.frame("GL6",gron,prik)
+names(GL6troje) <- c("Kokken","gron","prik")
+
+x <- GL7m$ki
+y <- GL7m$momm
+id <- order(x)
+gron <- data.frame(max(GL7m$momm))
+prik <- sum(diff(x[id])*rollmean(y[id],2))
+GL7troje <- data.frame("GL7",gron,prik)
+names(GL7troje) <- c("Kokken","gron","prik")
+
+x <- GL8m$ki
+y <- GL8m$momm
+id <- order(x)
+gron <- data.frame(max(GL8m$momm))
+prik <- sum(diff(x[id])*rollmean(y[id],2))
+GL8troje <- data.frame("GL8",gron,prik)
+names(GL8troje) <- c("Kokken","gron","prik")
+
+x <- ML2m$ki
+y <- ML2m$momm
+id <- order(x)
+gron <- data.frame(max(ML2m$momm))
+prik <- sum(diff(x[id])*rollmean(y[id],2))
+ML2troje <- data.frame("ML2",gron,prik)
+names(ML2troje) <- c("Kokken","gron","prik")
+
+x <- ML3m$ki
+y <- ML3m$momm
+id <- order(x)
+gron <- data.frame(max(ML3m$momm))
+prik <- sum(diff(x[id])*rollmean(y[id],2))
+ML3troje <- data.frame("ML3",gron,prik)
+names(ML3troje) <- c("Kokken","gron","prik")
+
+x <- ML4m$ki
+y <- ML4m$momm
+id <- order(x)
+gron <- data.frame(max(ML4m$momm))
+prik <- sum(diff(x[id])*rollmean(y[id],2))
+ML4troje <- data.frame("ML4",gron,prik)
+names(ML4troje) <- c("Kokken","gron","prik")
+
+x <- ML5m$ki
+y <- ML5m$momm
+id <- order(x)
+gron <- data.frame(max(ML5m$momm))
+prik <- sum(diff(x[id])*rollmean(y[id],2))
+ML5troje <- data.frame("ML5",gron,prik)
+names(ML5troje) <- c("Kokken","gron","prik")
+
+x <- ML6m$ki
+y <- ML6m$momm
+id <- order(x)
+gron <- data.frame(max(ML6m$momm))
+prik <- sum(diff(x[id])*rollmean(y[id],2))
+ML6troje <- data.frame("ML6",gron,prik)
+names(ML6troje) <- c("Kokken","gron","prik")
+
+x <- ML7m$ki
+y <- ML7m$momm
+id <- order(x)
+gron <- data.frame(max(ML7m$momm))
+prik <- sum(diff(x[id])*rollmean(y[id],2))
+ML7troje <- data.frame("ML7",gron,prik)
+names(ML7troje) <- c("Kokken","gron","prik")
+
+x <- ML8m$ki
+y <- ML8m$momm
+id <- order(x)
+gron <- data.frame(max(ML8m$momm))
+prik <- sum(diff(x[id])*rollmean(y[id],2))
+ML8troje <- data.frame("ML8",gron,prik)
+names(ML8troje) <- c("Kokken","gron","prik")
+
+x <- NY2m$ki
+y <- NY2m$momm
+id <- order(x)
+gron <- data.frame(max(NY2m$momm))
+prik <- sum(diff(x[id])*rollmean(y[id],2))
+NY2troje <- data.frame("NY2",gron,prik)
+names(NY2troje) <- c("Kokken","gron","prik")
+
+x <- ML3m$ki
+y <- ML3m$momm
+id <- order(x)
+gron <- data.frame(max(ML3m$momm))
+prik <- sum(diff(x[id])*rollmean(y[id],2))
+ML3troje <- data.frame("ML3",gron,prik)
+names(ML3troje) <- c("Kokken","gron","prik")
+
+x <- NY3m$ki
+y <- NY3m$momm
+id <- order(x)
+gron <- data.frame(max(NY3m$momm))
+prik <- sum(diff(x[id])*rollmean(y[id],2))
+NY3troje <- data.frame("NY3",gron,prik)
+names(NY3troje) <- c("Kokken","gron","prik")
+
+x <- NY4m$ki
+y <- NY4m$momm
+id <- order(x)
+gron <- data.frame(max(NY4m$momm))
+prik <- sum(diff(x[id])*rollmean(y[id],2))
+NY4troje <- data.frame("NY4",gron,prik)
+names(NY4troje) <- c("Kokken","gron","prik")
+
+x <- NY5m$ki
+y <- NY5m$momm
+id <- order(x)
+gron <- data.frame(max(NY5m$momm))
+prik <- sum(diff(x[id])*rollmean(y[id],2))
+NY5troje <- data.frame("NY5",gron,prik)
+names(NY5troje) <- c("Kokken","gron","prik")
+
+x <- NY6m$ki
+y <- NY6m$momm
+id <- order(x)
+gron <- data.frame(max(NY6m$momm))
+prik <- sum(diff(x[id])*rollmean(y[id],2))
+NY6troje <- data.frame("NY6",gron,prik)
+names(NY6troje) <- c("Kokken","gron","prik")
+
+x <- NY7m$ki
+y <- NY7m$momm
+id <- order(x)
+gron <- data.frame(max(NY7m$momm))
+prik <- sum(diff(x[id])*rollmean(y[id],2))
+NY7troje <- data.frame("NY7",gron,prik)
+names(NY7troje) <- c("Kokken","gron","prik")
+
+x <- NY8m$ki
+y <- NY8m$momm
+id <- order(x)
+gron <- data.frame(max(NY8m$momm))
+prik <- sum(diff(x[id])*rollmean(y[id],2))
+NY8troje <- data.frame("NY8",gron,prik)
+names(NY8troje) <- c("Kokken","gron","prik")
+
+troje <- rbind(GL1troje,GL2troje,GL3troje,GL4troje,GL5troje,GL6troje,GL7troje,GL8troje,ML2troje,ML3troje,ML4troje,ML5troje,ML6troje,ML7troje,ML8troje,NY2troje,NY3troje,NY4troje,NY5troje,NY6troje,NY7troje,NY8troje)
+
+trojeprik <- troje[order(troje[,"prik"]),] # Sorting
+trojegron <- troje[order(troje[,"gron"]),] # Sorting
+
+if (print == 1){png(file = "display/plots/plot15.png",res=reso)}
+barplot(troje$gron,xlab="*gives til det koekken med det stoerst opnaaede momentum",ylab="Maximalt opnaaet momentum",names.arg = troje[1:22,1],las=2,col=rainbow(23),main="Pointstillingen i konkurrencen \n om den groenne troeje*")
+if (print == 1){dev.off()}
+
+if (print == 1){png(file = "display/plots/plot16.png",res=reso)}
+barplot(troje$gron,xlab="*gives til det koekken med det stoerste areal under momentumkurven",ylab="Areal under momentum kurve",names.arg = troje[1:22,1],las=2,col=rainbow(23),main="Pointstillingen i konkurrencen \n om den prikkede troeje*")
+if (print == 1){dev.off()}
+
+
+a<-c("jersey/yellow=",as.character(count[which(count$st == max(count$st)),1]))
+b<-c("/green=",as.character(troje[which(troje$gron == max(troje$gron)),1]))
+c<-c("/dotted=",as.character(troje[which(troje$prik == max(troje$prik)),1]))
+a<-paste(a,collapse="");b<-paste(b,collapse="");c<-paste(c,collapse="")
+JC<-paste(c(a,b),collapse="");JC<-paste(c(JC,c),collapse="")
+getToHost("localhost",JC,"", port=8081)
 
 
