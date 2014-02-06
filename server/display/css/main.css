@@ -345,6 +345,10 @@ and (max-width : 500px) {
     #scoreboard {
         width: 100%;
     }
+
+    .scoreboard-unit {
+        width: 20%;
+    }
 }
 
 @media print,
