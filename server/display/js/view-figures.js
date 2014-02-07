@@ -1,6 +1,6 @@
 var PlotsView = Backbone.View.extend({
     id: "plots",
-    num_plots: 15,
+    num_plots: 14,
     cur_plot: 0,
     $cur_img: null,
 
@@ -14,7 +14,7 @@ var PlotsView = Backbone.View.extend({
         this.insertPic();
         this.insertPic();
         this.advance();
-        setInterval(_.bind(this.advance, this), 10000);
+        setInterval(_.bind(this.advance, this), 15000);
     },
     
     insertPic: function() {
