@@ -13,18 +13,25 @@ var fs = require('fs');
 var sqlite3 = require('sqlite3');
 var db = new sqlite3.Database('db.sqlite');
 
+var first = true;
+
 var state = { cur_scores: { 'GL1': 0, 'GL2': 0, 'GL3': 0, 'GL4': 0, 'GL5': 0, 'GL6': 0, 'GL7': 0, 'GL8': 0, 'ML2': 0, 'ML3': 0, 'ML4': 0, 'ML5': 0, 'ML6': 0, 'ML7': 0, 'ML8': 0, 'NY2': 0, 'NY3': 0, 'NY4': 0, 'NY5': 0, 'NY6': 0, 'NY7': 0, 'NY8': 0 }, jerseys: {yellow: null, green: null, dotted: null}}; 
 
 // load state from sqlite
 db.serialize(function() { 
     var buffer = "";
     
-    for (var kitchen in state.cur_scores) {
-        buffer += kitchen+";1;1391781601\n";
-        buffer += kitchen+";1;1391781601\n";
-    }
-
     db.each('SELECT * FROM streger ORDER BY timestamp', function(err, row) {
+        if (first) {
+            for (var kitchen in state.cur_scores) {
+                // 1391781601
+                
+                buffer += kitchen+";1;"+Math.round(row.timestamp/1000)+"\n";
+                buffer += kitchen+";1;"+Math.round(row.timestamp/1000)+"\n";
+            }
+
+            first = false;
+        }
         buffer += row.kitchen + ";" + row.quantity + ";" + Math.round(row.timestamp/1000) + "\n";
     }, function() {
         console.log('writing file');
@@ -43,6 +50,18 @@ io.sockets.on('connection', function (socket) {
     socket.emit('state', state);
     
     socket.on('streg', function(data) {
+        if (first) {
+            for (var kitchen in state.cur_scores) {
+                // 1391781601
+                
+                buffer += kitchen+";1;"+ Math.round((new Date).getTime()/1000) + "\n";
+                buffer += kitchen+";1;"+ Math.round((new Date).getTime()/1000) + "\n";
+            }
+
+            first = false;
+        }
+        
+
         var quantity = parseFloat(data.quantity);
         
         // update stored state
@@ -52,7 +71,7 @@ io.sockets.on('connection', function (socket) {
         // Add to the CSV file
         var buffer = data.kitchen + ";" + data.quantity + ";" + Math.round((new Date).getTime()/1000) + "\n";
         fs.appendFileSync('data.csv', buffer);
-
+        
         // update local state
         state.cur_scores[data.kitchen] += quantity;        
 
