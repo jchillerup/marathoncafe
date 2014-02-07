@@ -34,8 +34,8 @@ if (load_packages == 1){
 }
 
 if (database == "CSV"){
-  print("Remember to set file location")
-  data <- read.table("data.csv", sep=";", quote="\"")  
+  print("Remember to set file location")  
+  data <- read.table("data.csv", sep=";", quote="\"")    
 } else if (database == "SQLite") {
   con <- dbConnect(drv="SQLite", dbname="db.sqlite")
   tables <- dbListTables(con)
@@ -1005,7 +1005,6 @@ if (print == 1){png(file = "display/plots/plot8.png",res=reso)}
 barplot(count$momm,xlab="*En form for 'hamrings-hastigheds-speedometer'",ylab="Hamringsmomentum",names.arg = count[1:22,1],las=2,col=rainbow(23),main="Hamringmomentum* paa koekkenerbasis \n med daempning paa 2.34% per minut")
 if (print == 1){dev.off()}
 
-
 # Dette skal laves paa en tilsvarende maade.
 
 datam <- data.frame(seq(0,max(data$min)-1),rep(0,max(data$min)))
@@ -1404,21 +1403,4 @@ JC<-paste(c(a,b),collapse="");JC<-paste(c(JC,c),collapse="")
 
 getToHost("127.0.0.1",JC,"", port=8081)
 
-
-if (print == 1){png(file = "display/plots/plot14.png",res=reso)}
-plot(0,col="white",xlab="",ylab="",xaxt="n",yaxt="n")  
-text(1,0,c(
-"Hamringsmomentum er en maade at maale den hastighed hvormed du drik- 
-ker. Dit koekkens streger udgoer en maengde, som reduceres med 2.34% per 
-minut. Hoeje hamringsmomentum falder dermed hurtigere end lave hamrings-
-momentum. Et koekkens stregmaengde er reduceret med 50% efter 30 min. \n
-Den groenne troje gives til det koekken, som har opnaaet den hoejste vaer-
-di i hamringsmomentum i loebet af weekenden. Den groenne troje gives der-
-med til marathoncafeens spurtkonger. \n
-Den prikkede bjergtroeje gives til det koekken som har det stoerste areal
-under hamringsmomentumkurven. For at opn?? dette kraever det, at man hol-
-der et jaevnt haardt tempo gennem hele marathoncafeen. Denne troeje er 
-meget praestigefyld.\n
-Dette program er lavet af JC 620 og Christian 755"),cex=0.6)
-if (print == 1){dev.off()}
 
