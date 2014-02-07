@@ -57,7 +57,8 @@ io.sockets.on('connection', function (socket) {
                 buffer += kitchen+";1;"+ Math.round((new Date).getTime()/1000) + "\n";
                 buffer += kitchen+";1;"+ Math.round((new Date).getTime()/1000) + "\n";
             }
-
+            
+            fs.writeFileSync("data.csv", buffer);
             first = false;
         }
         
