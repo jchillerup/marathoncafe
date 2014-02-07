@@ -1,13 +1,11 @@
 rm(list = ls()) # Clear workspace
 install_packages = 0
-load_packages = 0
+load_packages = 1
 print = 1
 database = "CSV" # "SQLite"
 reso <- 91
 udkomt <- 0 # 0 = udkommenteret
 # setwd("~/Dropbox/Marathoncafe")
-
-
 
 # Packages:
 if (install_packages == 1){
@@ -268,7 +266,7 @@ if (sum(cheats$vagt)==0){
 } else {barplot(cheats$vagt,xlab="Koekken",ylab="Antal streger",names.arg = cheats[1:22,1],las=3,col=rainbow(23),main="Antal streger sat paa det koekken med barvagten")}
 if (print == 1){dev.off()}
 
-start <- read.table("data.csv", sep=";", quote="\"") 
+start <- read.table("start.csv", sep=";", quote="\"") 
 start$V3 <- starttime
 names(start) <- c("ki","st","utime")
 
