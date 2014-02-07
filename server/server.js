@@ -2,6 +2,8 @@ var http = require('http');
 var url = require('url');
 var qs = require('querystring');
 var connect = require('connect');
+var sys = require('sys');
+var exec = require('child_process').exec;
 
 var app = connect.createServer(connect.static('display'));
 var server = http.createServer(app).listen(8080);
@@ -16,6 +18,12 @@ var state = { cur_scores: { 'GL1': 0, 'GL2': 0, 'GL3': 0, 'GL4': 0, 'GL5': 0, 'G
 // load state from sqlite
 db.serialize(function() { 
     var buffer = "";
+    
+    for (var kitchen in state.cur_scores) {
+        buffer += kitchen+";1;1391781601\n";
+        buffer += kitchen+";1;1391781601\n";
+    }
+
     db.each('SELECT * FROM streger ORDER BY timestamp', function(err, row) {
         buffer += row.kitchen + ";" + row.quantity + ";" + Math.round(row.timestamp/1000) + "\n";
     }, function() {
@@ -82,3 +90,11 @@ http.createServer(function(req, res) {
 
 }).listen(8081);
 
+
+setInterval(function() {
+    console.log("Runing R");
+    exec("R --vanilla < marathoncafe.R", function(error, stdout, stderr) {
+        console.log('done');
+    });
+    
+}, 5000);
