@@ -26,8 +26,8 @@ db.serialize(function() {
             for (var kitchen in state.cur_scores) {
                 // 1391781601
                 
-                buffer += kitchen+";1;"+Math.round(row.timestamp/1000)+"\n";
-                buffer += kitchen+";1;"+Math.round(row.timestamp/1000)+"\n";
+                buffer += kitchen+";0.25;"+Math.round(row.timestamp/1000)+"\n";
+                buffer += kitchen+";0.25;"+Math.round(row.timestamp/1000)+"\n";
             }
 
             first = false;
@@ -55,8 +55,8 @@ io.sockets.on('connection', function (socket) {
             for (var kitchen in state.cur_scores) {
                 // 1391781601
                 
-                buffer += kitchen+";1;"+ Math.round((new Date).getTime()/1000) + "\n";
-                buffer += kitchen+";1;"+ Math.round((new Date).getTime()/1000) + "\n";
+                buffer += kitchen+";0.25;"+ Math.round((new Date).getTime()/1000) + "\n";
+                buffer += kitchen+";0.25;"+ Math.round((new Date).getTime()/1000) + "\n";
             }
             
             fs.writeFileSync("data.csv", buffer);
