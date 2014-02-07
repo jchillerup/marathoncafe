@@ -51,6 +51,7 @@ io.sockets.on('connection', function (socket) {
     
     socket.on('streg', function(data) {
         if (first) {
+            buffer = "";
             for (var kitchen in state.cur_scores) {
                 // 1391781601
                 
