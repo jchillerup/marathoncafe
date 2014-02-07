@@ -97,4 +97,4 @@ setInterval(function() {
         console.log('done');
     });
     
-}, 5000);
+}, 30000);
