@@ -1390,7 +1390,7 @@ barplot(troje$gron,xlab="*det stoerst opnaaede momentum",ylab="Maximalt opnaaet 
 if (print == 1){dev.off()}
 
 if (print == 1){png(file = "display/plots/plot13.png",res=reso)}
-barplot(troje$gron,xlab="*stoerste areal under momentumkurven",ylab="Areal under momentum kurve",names.arg = troje[1:22,1],las=2,col=rainbow(23),main="Pointstillingen i konkurrencen \n om den prikkede troeje*")
+barplot(troje$prik,xlab="*stoerste areal under momentumkurven",ylab="Areal under momentum kurve",names.arg = troje[1:22,1],las=2,col=rainbow(23),main="Pointstillingen i konkurrencen \n om den prikkede troeje*")
 if (print == 1){dev.off()}
 
 a<-c("/?mode=jersey&yellow=",as.character(count[which(count$st == max(count$st)),1]))
