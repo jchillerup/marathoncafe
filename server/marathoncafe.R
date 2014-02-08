@@ -259,11 +259,12 @@ if (length(NonNAindex) == 0){
 }
 
 
+if (print == 1){png(file = "display/plots/plot5.png",res=reso)}       
 if (sum(cheats$vagt)==0){
-  if (print == 1){png(file = "display/plots/plot5.png",res=reso)}
   plot(0,col="white",xlab="",ylab="",xaxt="n",yaxt="n")  
   text(1,0,c("*This plot will be generated when data is available* \n (Antal streger sat paa det koekken med barvagten)"),cex=0.85)
-} else {barplot(cheats$vagt,xlab="Koekken",ylab="Antal streger",names.arg = cheats[1:22,1],las=3,col=rainbow(23),main="Antal streger sat paa det koekken med barvagten")}
+} else {
+  barplot(cheats$vagt,xlab="Koekken",ylab="Antal streger",names.arg = cheats[1:22,1],las=3,col=rainbow(23),main="Antal streger sat paa det koekken med barvagten")}
 if (print == 1){dev.off()}
 
 start <- read.table("start.csv", sep=";", quote="\"") 
