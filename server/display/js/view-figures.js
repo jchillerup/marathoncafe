@@ -14,7 +14,7 @@ var PlotsView = Backbone.View.extend({
         this.insertPic();
         this.insertPic();
         this.advance();
-        setInterval(_.bind(this.advance, this), 15000);
+        setInterval(_.bind(this.advance, this), 25000);
     },
     
     insertPic: function() {
