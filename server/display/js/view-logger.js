@@ -24,6 +24,7 @@ function getTimestamp() {
 var Logger = Backbone.View.extend({
     tagName: "ul",
     id: "logList",
+    maxelements: 1,
     
     initialize: function() {
         this.model.on('change', _.bind(this.newLogEntry, this));
@@ -38,14 +39,13 @@ var Logger = Backbone.View.extend({
             var $obj = $("<li>").html("<span class=\"timestamp\">" + getTimestamp() + "</span> " + kitchen+ ": "+ diff + " streger.");
 
             this.$el.prepend($obj.fadeIn());
-            
-            this.render();
         }
+        this.render();
     },
 
     render: function() {
-        while (this.$el.children().length > 15) {
-            $(this.$el.children()[15]).fadeOut().remove();
+        while (this.$el.children().length > this.maxelements) {
+            $(this.$el.children()[this.maxelements]).fadeOut().remove();
         }
     }
 });
