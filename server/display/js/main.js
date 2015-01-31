@@ -19,9 +19,6 @@ $(function() {
     
     // We're updating the yellow jersey more frequently than the others
     jerseys.on('change', function() {
-        console.log('new jerseys');
-        console.log(jerseys.get('green'));
-
         $('.green').removeClass('green');
         $('.dotted').removeClass('dotted');
 

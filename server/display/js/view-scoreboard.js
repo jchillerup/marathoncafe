@@ -30,22 +30,15 @@ var Scoreboard = Backbone.View.extend({
         }
         
         $(window).resize(_.bind(this.render, this));
-        
-        $(_.bind(function() {
-            setTimeout(this.enableEffects, 2000);
-        }, this));
-        
+                
         this.render();
+
     },
-    enableEffects: function() {
-        console.log('enabling effects');
-        $(".scoreboard-unit").addClass('animated');
-        this.render();
-    },
+
     render: function() {
 	var padding = 10;
 
-        this.$el.children().tsort('div.points', {order: 'desc'});
+        this.$el.children().tsort('div.points', {order: 'desc'}, 'h2');
         
         // ensure yellow
         $(".yellow").removeClass('yellow');
@@ -91,19 +84,18 @@ var ScoreboardUnit = Backbone.View.extend({
         this.model.on('change:'+this.kitchen_id, _.bind(this.render, this));
         
         this.$el.html("<h2>"+this.kitchen_id +"</h2><div class=\"points\">0</div><div class=\"odometer\">0</span>");
-        
+        this.$el.addClass('animated');
+
         $(window).resize(_.bind(this.ensureRound, this));
         
         // Ensure that the CSS matches up
         $(function() {
             this.render();
-        }, this);
+        }, this);        
     },
     render: function() {
         
         if (this.renderCount > 1) {
-            console.log('highlighting');
-
             this.$el.removeClass('animated').effect('highlight', 'fast').addClass('animated');
         }
 
@@ -112,6 +104,7 @@ var ScoreboardUnit = Backbone.View.extend({
         
         this.renderCount++;
         this.ensureRound();
+        
     },
     
     ensureRound: function() {
