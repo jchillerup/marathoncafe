@@ -43,7 +43,6 @@ var Scoreboard = Backbone.View.extend({
         this.render();
     },
     render: function() {
-        console.log("scoreboard render");
 	var padding = 10;
 
         this.$el.children().tsort('div.points', {order: 'desc'});
@@ -55,8 +54,9 @@ var Scoreboard = Backbone.View.extend({
         var $units = this.$el.children();
 	var totalWidth = this.$el.width();
 	var cols = Math.floor( totalWidth / ($units.width() + padding) );
-        
-        this.$el.css('height', (Math.ceil(22 / cols) * (80 + padding))+ padding + "px");
+        var height = (Math.ceil(22 / cols) * (80 + padding))+ padding + "px";
+        console.log("height: "+ height);
+        this.$el.css('height', height);
 
 	$units.each(function(index) {
 	    var width = $(this).width();
@@ -92,9 +92,12 @@ var ScoreboardUnit = Backbone.View.extend({
         
         this.$el.html("<h2>"+this.kitchen_id +"</h2><div class=\"points\">0</div><div class=\"odometer\">0</span>");
         
-        this.render();
-        
         $(window).resize(_.bind(this.ensureRound, this));
+        
+        // Ensure that the CSS matches up
+        $(function() {
+            this.render();
+        }, this);
     },
     render: function() {
         
