@@ -24,8 +24,6 @@ db.serialize(function() {
     db.each('SELECT * FROM streger ORDER BY timestamp', function(err, row) {
         if (first) {
             for (var kitchen in state.cur_scores) {
-                // 1391781601
-                
                 buffer += kitchen+";0.25;"+Math.round(row.timestamp/1000)+"\n";
                 buffer += kitchen+";0.25;"+Math.round(row.timestamp/1000)+"\n";
             }
@@ -50,6 +48,8 @@ io.sockets.on('connection', function (socket) {
     socket.emit('state', state);
     
     socket.on('streg', function(data) {
+        var sender = socket.manager.handshaken[socket.id].address.address;
+
         if (first) {
             buffer = "";
             for (var kitchen in state.cur_scores) {
@@ -67,8 +67,7 @@ io.sockets.on('connection', function (socket) {
         var quantity = parseFloat(data.quantity);
         
         // update stored state
-        // db.run('INSERT INTO streger VALUES (\''+data.kitchen+'\', '+quantity+', '+(new Date).getTime()+')');
-        db.run('INSERT INTO streger VALUES (?,?,?)', [data.kitchen, quantity, (new Date).getTime()]);
+        db.run('INSERT INTO streger VALUES (?,?,?,?)', [data.kitchen, quantity, (new Date).getTime(), sender]);
         
         // Add to the CSV file
         var buffer = data.kitchen + ";" + data.quantity + ";" + Math.round((new Date).getTime()/1000) + "\n";
