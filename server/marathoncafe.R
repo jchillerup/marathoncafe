@@ -1,13 +1,10 @@
+# Barvagter 
+
 rm(list = ls()) # Clear workspace
+print = 1
 install_packages = 0
 load_packages = 1
-print = 1
-database = "CSV" # "SQLite"
-reso <- 91
-udkomt <- 0 # 0 = udkommenteret
-# setwd("~/Dropbox/Marathoncafe")
 
-# Packages:
 if (install_packages == 1){
   install.packages("data.table")
   install.packages("plotrix")
@@ -20,65 +17,28 @@ if (install_packages == 1){
   install.packages("httpRequest")
   update.packages()}
 if (load_packages == 1){
-  library(ggplot2) 
-  library(zoo) 
-  library(lattice)
-  library(grid)
-  library(gridExtra)
-  library(RSQLite)
   library(data.table) 
   library(plotrix)
-  library(httpRequest)  
-}
-
-if (database == "CSV"){
-  print("Remember to set file location")  
-  data <- read.table("data.csv", sep=";", quote="\"")    
-} else if (database == "SQLite") {
-  con <- dbConnect(drv="SQLite", dbname="db.sqlite")
-  tables <- dbListTables(con)
-  tables <- tables[tables != "sqlite_sequence"]
-  lDataFrames <- vector("list", length=length(tables))
-  for (i in seq(along=tables)) {
-    lDataFrames[[i]] <- dbGetQuery(conn=con, statement=paste("SELECT * FROM '", tables[[i]], "'", sep=""))
-  }
-  data <- data.frame(lDataFrames)
-}
-
+  library(RSQLite)
+  library(grid)
+  library(gridExtra)
+  library(ggplot2) 
+  library(lattice)
+  library(zoo) 
+  library(httpRequest)}
+data <- read.table("data.csv", sep=";", quote="\"")    
 names(data) <- c("ki","st","utime")
 starttime = data$utime[1]
 data$ti <- as.POSIXct(data[,3], origin="1970-01-01 00:00:00",format="%Y-%m-%d %H:%M:%S")
 endtime = data$utime[nrow(data)]
-
+reso <- 91
+udkomt <- 0 # 0 = udkommenteret
 
 #####
 # Streger per k??kken
 ki <- c("GL1","GL2","GL3","GL4","GL5","GL6","GL7","GL8","ML2","ML3","ML4","ML5","ML6","ML7","ML8","NY2","NY3","NY4","NY5","NY6","NY7","NY8")
 st <- rep(0,22)
 tabtemp <- data.frame(ki,st)
-
-# if (udkomt == 1){
-# count <- data.table(data[,1:2])
-# count <- count[ ,lapply(.SD, sum), by = ki]
-# count <- count[order(count[,ki]),] # Sorting
-# count <- data.frame(count)
-# count <- merge(count, tabtemp, all = TRUE,by = c('ki'))
-# count <- count[,1:2]
-# names(count) <- c("ki","st")
-# NonNAindex <- which(is.na(count$st))
-# if (length(NonNAindex) == 0){  
-#   print("Do nothing")
-# } else if (length(NonNAindex) > 0){
-#   count[NonNAindex,]$st = 0
-# }
-# if (print == udkomt){png(file = "display/plots/plot1.png",res=reso)}
-# barplot(count$st,xlab="Koekken",ylab="Antal streger",names.arg = count[1:22,1],las=2,col=rainbow(23),main="Antal streger fordelt paa koekkener")
-# if (print == udkomt){dev.off()}
-# }
-
-
-#####
-# Streger per k??kken 2
 count <- data.table(data[,1:2])
 count <- count[ ,lapply(.SD, sum), by = ki]
 count <- data.frame(count)
@@ -87,13 +47,14 @@ count <- count[,1:2]
 names(count) <- c("ki","st")
 NonNAindex <- which(is.na(count$st))
 if (length(NonNAindex) == 0){  
-  print("Do nothing")
+
 } else if (length(NonNAindex) > 0){
   count[NonNAindex,]$st = 0
 }
 count <- count[order(count[,"st"]),] # Sorting
 if (print == 1){png(file = "display/plots/plot1.png",res=reso)}
-barplot(count$st,xlab="Koekken",ylab="Antal streger",names.arg = count[1:22,1],las=2,col=rainbow(23),main="Antal streger fordelt \n paa koekkener")
+barplot(count$st,xlab="",ylab="Antal streger",names.arg = count[1:22,1],las=2,col=rainbow(23),main="Antal streger fordelt paa koekkener", font.main = 1)
+title(xlab=paste("Present plots were generated: ",Sys.time()))
 if (print == 1){dev.off()}
 
 maximum <- count[dim(count)[1],2]
@@ -109,8 +70,8 @@ data$min <- data$min - min(data$min) + data$yhour*60
 data$cumst<-cumsum(data$st)
 
 if (print == 1){png(file = "display/plots/plot2.png",res=reso)}
-par(mar=c(6, 6, 4, 2) + 0.1)
-plot(data$min,data$cumst,type="l",col="blue",xaxt="n",las=1,ylab="",xlab="",cex=0.9)
+par(mar=c(6, 5, 4, 2) + 0.1)
+plot(data$min,data$cumst,type="l",col="blue",xaxt="n",las=1,ylab="",xlab="",cex=0.8)
 abline(v=c(540,540+24*60),lty=2,col="red")
 if(max(data$yhour) < 24) {
   hours <- c("15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00" ,"16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00")
@@ -119,8 +80,8 @@ if(max(data$yhour) < 24) {
   hours <- c("15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00")
   axis(1, at=seq(0,2880,120), labels=hours,las = 2)
 }
-title(main="Kumulerede antal streger paa minut- \nbasis under hele marathoncafeen",xlab="Tidspunkt",mgp=c(4,1,0))
-title(ylab="Antal streger",mgp=c(5,1,0))
+title(main="Kumulerede antal streger paa minut- \nbasis under hele marathoncafeen",xlab="Tidspunkt",mgp=c(4,1,0), font.main = 1)
+title(ylab="Antal streger",mgp=c(3.5,1,0))
 text(c(270,1440/2+540,2430),c(10,10,10), c("fredag","loerdag","soendag"))
 if (print == 1){dev.off()}
 
@@ -166,7 +127,7 @@ plot(count$st,type="l",col="blue",xaxt="n",las=1,ylab="",xlab="")
 abline(v=c(9,9+24),lty=2,col="red")
   hours <- c("15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00")
   axis(1, at=seq(0,48,2), labels=hours,las = 2)
-title(main="Antal streger fordelt paa timer for alle \n koekkener for hele marathoncafeen",xlab="Tidspunkt",mgp=c(4,1,0))
+title(main="Antal streger fordelt paa timer for alle \n koekkener for hele marathoncafeen",xlab="",mgp=c(3,1,0), font.main = 1)
 title(ylab="Antal streger",mgp=c(3.5,1,0))
 text(c(4.5,9+12,42),c(10,10,10), c("fredag","loerdag","soendag"))
 if (print == 1){dev.off()}
@@ -199,20 +160,31 @@ count[NonNAindex,]$st = 0
 # if (print == udkomt){dev.off()}
 # }
 
+if (max(count$min)>120){
+count120 <- count[max(count$min-120):max(count$min),]
 if (print == 1){png(file = "display/plots/plot4.png",res=reso)}
 par(mar=c(5, 4.5, 4, 2) + 0.1)
-plot(count$st,type="l",col="blue",xaxt="n",las=1,ylab="",xlab="",xlim=c(max(data$min)-120,max(data$min)))
+plot(count120$st,type="l",col="blue",xaxt="n",las=1,ylab="",xlab="")
 abline(v=c(540,540+24*60),lty=2,col="red")
 hours <- c("15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00" ,"16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00")
 axis(1, at=seq(0,2880,60), labels=hours,las = 2)
-title(main="Antal streger for alle koekkkener \n per minut de seneste to timer",xlab="Tidspunkt",mgp=c(4,1,0))
-title(ylab="Antal streger",mgp=c(3.5,1,0))
+title(main="Antal streger for alle koekkkener \n per minut de seneste to timer",xlab=paste("Tidspunkt (plots were generated: ",Sys.time(),")",sep=""),mgp=c(4,1,0), font.main = 1)
+title(ylab="Antal streger",mgp=c(3.5,1,0))    
 text(c(270,1440/2+540,2430),c(10,10,10), c("fredag","loerdag","soendag"))
 if (print == 1){dev.off()}
+} else {
+  if (print == 1){png(file = "display/plots/plot4.png",res=reso)}
+  plot(0,col="white",xlab="",ylab="",xaxt="n",yaxt="n")  
+  text(1,0,c("This plot will be generated when data is available \n Streger de seneste 120 minutter"),cex=0.85)
+  text(1,-0.5,paste("Present plots were generated: ",Sys.time()),cex=0.85)
+  if (print == 1){dev.off()}
+}
+
 
 
 ##
 # Barvagt plot - antal streger p?? egent k??kken. 
+# HER SKAL MAN SKRIVE BARVAGTER IND! 
 barvagt <- c("Personalet","G1","M7","M4","N5","G8","G3","N8","N7","G6","Festival","G5","M6","N6","G4","G1","Revyen","Cafeen")
 tidspunkt <- c(4*60,3*60,2.5*60,2.5*60,2.5*60,2.5*60,3*60,3*60,120,120,120,180,2.5*60,2.5*60,2.5*60,2.5*60,180,180)
 tidspunkt <- cumsum(tidspunkt)
@@ -247,7 +219,7 @@ count <- count[order(count[,vagt]),] # Sorting
 count <- data.frame(count)
 count <- count[-1,]
 tabtemp <- data.frame(vagt,st)
-count <- merge(count, tabtemp, all = TRUE,by = c('vagt'))
+count <- merge(count, tabtemp, all = TRUE,by = c("vagt"))
 count <- count[,1:2]
 cheats <- count
 names(cheats) <- c("ki","vagt")
@@ -262,22 +234,32 @@ if (length(NonNAindex) == 0){
 if (print == 1){png(file = "display/plots/plot5.png",res=reso)}       
 if (sum(cheats$vagt)==0){
   plot(0,col="white",xlab="",ylab="",xaxt="n",yaxt="n")  
-  text(1,0,c("*This plot will be generated when data is available* \n (Antal streger sat paa det koekken med barvagten)"),cex=0.85)
+  text(1,0,c("This plot will be generated when data is available \n Antal streger sat paa det koekken med barvagten"),cex=0.85)
+  text(1,-0.5,paste("Present plots were generated: ",Sys.time()),cex=0.85)
 } else {
-  barplot(cheats$vagt,xlab="Koekken",ylab="Antal streger",names.arg = cheats[1:22,1],las=3,col=rainbow(23),main="Antal streger sat paa det koekken med barvagten")}
+  barplot(cheats$vagt,ylab="Antal streger",names.arg = cheats[1:22,1],las=3,col=rainbow(23),main="Antal streger sat paa \n det koekken med barvagten", font.main = 1)
+  title(xlab=paste("Plots generated: ",Sys.time(),sep=""))
+}
 if (print == 1){dev.off()}
 
-start <- read.table("start.csv", sep=";", quote="\"") 
-start$V3 <- starttime
-names(start) <- c("ki","st","utime")
 
 ####
 # Kommuleret antal streger fordelt p?? minutter og k??kkener
 
+start <- read.table("start.csv", sep=";", quote="\"") 
+start2 <- read.table("start.csv", sep=";", quote="\"") 
+start$V3 <- starttime
+start2$V3 <- starttime
+names(start) <- c("ki","st","utime")
+names(start2) <- c("ki","st","utime")
+
+
 data$cumst<-cumsum(data$st)
-start[4:10] <- data[1,4:10,]  
+start[4:10] <- data[1,4:10,]
+start2[4:10] <- data[1,4:10,]
+start2$min <- max(data$min)
 start$cumst <- 0
-datac <- rbind(start,data)
+datac <- rbind(start,data,start2)
 
 NY2 <- (datac[which(datac$ki == "NY2"),])
 NY3 <- (datac[which(datac$ki == "NY3"),])
@@ -326,11 +308,13 @@ GL8$cumst <- cumsum(GL8$st)
 
 temporary <- c(NY2$cumst,NY3$cumst,NY4$cumst,NY5$cumst,NY6$cumst,NY7$cumst,NY8$cumst,ML2$cumst,ML3$cumst,ML4$cumst,ML5$cumst,ML6$cumst,ML7$cumst,ML8$cumst,GL1$cumst,GL2$cumst,GL3$cumst,GL4$cumst,GL5$cumst,GL6$cumst,GL7$cumst,GL8$cumst)
 temporary <- max(temporary)
+temporary2 <- c(NY2$min,NY3$min,NY4$min,NY5$min,NY6$min,NY7$min,NY8$min,ML2$min,ML3$min,ML4$min,ML5$min,ML6$min,ML7$min,ML8$min,GL1$min,GL2$min,GL3$min,GL4$min,GL5$min,GL6$min,GL7$min,GL8$min)
+temporary2 <- max(temporary2)
 
 if (data$min[length(data$min)] > 30){
 if (print == 1){png(file = "display/plots/plot6.png",res=reso)}
 par(mar=c(6, 5, 4, 2) + 0.1)
-plot(NY2$min,NY2$cumst,type="l",col=1,xaxt="n",las=1,ylab="",xlab="",ylim = c(0,temporary))
+plot(NY2$min,NY2$cumst,type="l",col=1,xaxt="n",las=1,ylab="",xlab="",ylim = c(0,temporary),xlim=c(0,temporary2))
 points(NY3$min,NY3$cumst,type="l",col=2,xaxt="n",las=1,ylab="",xlab="")
 points(NY4$min,NY4$cumst,type="l",col=3,xaxt="n",las=1,ylab="",xlab="")
 points(NY5$min,NY5$cumst,type="l",col=4,xaxt="n",las=1,ylab="",xlab="")
@@ -344,19 +328,17 @@ points(ML5$min,ML5$cumst,type="l",lty=2,col=4,xaxt="n",las=1,ylab="",xlab="",lwd
 points(ML6$min,ML6$cumst,type="l",lty=2,col=5,xaxt="n",las=1,ylab="",xlab="",lwd=2)
 points(ML7$min,ML7$cumst,type="l",lty=2,col=6,xaxt="n",las=1,ylab="",xlab="",lwd=2)
 points(ML8$min,ML8$cumst,type="l",lty=2,col=7,xaxt="n",las=1,ylab="",xlab="",lwd=2)
-points(GL1$min,GL1$cumst,type="l",lty=3,col=1,xaxt="n",las=1,ylab="",xlab="",lwd=2)
-points(GL2$min,GL2$cumst,type="l",lty=4,col=1,xaxt="n",las=1,ylab="",xlab="",lwd=2)
-points(GL3$min,GL3$cumst,type="l",lty=4,col=2,xaxt="n",las=1,ylab="",xlab="",lwd=2)
-points(GL4$min,GL4$cumst,type="l",lty=4,col=3,xaxt="n",las=1,ylab="",xlab="",lwd=2)
-points(GL5$min,GL5$cumst,type="l",lty=4,col=4,xaxt="n",las=1,ylab="",xlab="",lwd=2)
-points(GL6$min,GL6$cumst,type="l",lty=4,col=5,xaxt="n",las=1,ylab="",xlab="",lwd=2)
-points(GL7$min,GL7$cumst,type="l",lty=4,col=6,xaxt="n",las=1,ylab="",xlab="",lwd=2)
-points(GL8$min,GL8$cumst,type="l",lty=4,col=7,xaxt="n",las=1,ylab="",xlab="",lwd=2)
+points(GL1$min,GL1$cumst,type="l",lty=4,col=1,xaxt="n",las=1,ylab="",xlab="",lwd=2)
+points(GL2$min,GL2$cumst,type="l",lty=4,col=2,xaxt="n",las=1,ylab="",xlab="",lwd=2)
+points(GL3$min,GL3$cumst,type="l",lty=4,col=3,xaxt="n",las=1,ylab="",xlab="",lwd=2)
+points(GL4$min,GL4$cumst,type="l",lty=4,col=4,xaxt="n",las=1,ylab="",xlab="",lwd=2)
+points(GL5$min,GL5$cumst,type="l",lty=4,col=5,xaxt="n",las=1,ylab="",xlab="",lwd=2)
+points(GL6$min,GL6$cumst,type="l",lty=4,col=6,xaxt="n",las=1,ylab="",xlab="",lwd=2)
+points(GL7$min,GL7$cumst,type="l",lty=4,col=7,xaxt="n",las=1,ylab="",xlab="",lwd=2)
+points(GL8$min,GL8$cumst,type="l",lty=4,col=8,xaxt="n",las=1,ylab="",xlab="",lwd=2)
 abline(v=c(540,540+24*60),lty=1,col="black")
-leg <- c("ML2","ML3","ML4","ML5","ML6","ML7","ML8","GL1","GL2","GL3","GL4","GL5","GL6","GL7","GL8")
-legend("topleft", inset=.05,leg, horiz=FALSE,lty=c(rep(2,7),rep(3,7)),col=c(1:7,1:7),ncol=2, cex=.75,lwd=2,bg="transparent")
-leg <- c("NY2","NY3","NY4","NY5","NY6","NY7","NY8")
-legend("bottomright", inset=.05,leg, horiz=FALSE,lty=c(rep(1,8)),col=c(1:8),ncol=3, cex=.75,bg="transparent")
+leg <- c("NY2","NY3","NY4","NY5","NY6","NY7","NY8","ML2","ML3","ML4","ML5","ML6","ML7","ML8","GL1","GL2","GL3","GL4","GL5","GL6","GL7","GL8")
+legend("topleft", inset=.05,leg, horiz=FALSE,lty=c(rep(1,7),rep(2,7),rep(4,8)),col=c(1:7,1:7,1:8),ncol=3, cex=.75,lwd=2,bg="transparent")
 if(max(data$yhour) < 24) {
   hours <- c("15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00" ,"16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00")
   axis(1, at=seq(0,2880,60), labels=hours,las = 2)
@@ -364,14 +346,15 @@ if(max(data$yhour) < 24) {
   hours <- c("15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00")
   axis(1, at=seq(0,2880,120), labels=hours,las = 2)
 }
-title(main="Kumulerede antal streger fordelt paa \n koekkener for hele marathoncafeen",mgp=c(4,1,0),cex=0.9)
-title(ylab="Antal streger",xlab="Tidspunkt",mgp=c(3.5,1,0))
+title(main="Kumulerede antal streger fordelt paa \n koekkener for hele marathoncafeen",mgp=c(4,1,0),cex=0.8,font.main=1)
+title(ylab="Antal streger")
 text(c(270,1440/2+540,2430),c(10,10,10), c("fredag","loerdag","soendag"))
 if (print == 1){dev.off()}
 } else if (data$min[length(data$min)] <= 30){
   if (print == 1){png(file = "display/plots/plot6.png",res=reso)}
   plot(0,col="white",xlab="",ylab="",xaxt="n",yaxt="n")  
-  text(1,0,c("This plot will be generated when \n after 30 minutes"))
+  text(1,0,c("This plot will be generated \n after 30 minutes"))
+  text(1,-0.5,paste("Present plots were generated: ",Sys.time()),cex=0.85)
   if (print == 1){dev.off()}
 }
 
@@ -390,7 +373,7 @@ if (length(NonNAindex) == 0){
 }
 count <- count[order(count[,"st"]),] # Sorting
 
-if (dim(count)[1] >= 3){
+if (dim(count)[1] >= 5){
   if (print == 1){png(file = "display/plots/plot7.png",res=reso)}  
   nr1 <- count[dim(count)[1],]
   nr1 <- data.frame(lapply(nr1, as.character), stringsAsFactors=FALSE)[1]
@@ -407,13 +390,25 @@ if (dim(count)[1] >= 3){
   nr3 <- as.character(nr3)  
   datanr3 <- datac[which(datac$ki == nr3,),]
   datanr3$cumst <- cumsum(datanr3$st)
-  par(mar=c(6, 5, 4, 2) + 0.1)
+  nr4 <- count[dim(count)[1]-3,]
+  nr4 <- data.frame(lapply(nr4, as.character), stringsAsFactors=FALSE)[1]
+  nr4 <- as.character(nr4)
+  datanr4 <- datac[which(datac$ki == nr4,),]
+  datanr4$cumst <- cumsum(datanr4$st)
+  nr5 <- count[dim(count)[1]-4,]
+  nr5 <- data.frame(lapply(nr5, as.character), stringsAsFactors=FALSE)[1]
+  nr5 <- as.character(nr5)
+  datanr5 <- datac[which(datac$ki == nr5,),]
+  datanr5$cumst <- cumsum(datanr5$st)
+  par(mar=c(5, 5, 4, 2) + 0.1)
   plot(datanr1$min,datanr1$cumst,type="l",col=1,xaxt="n",las=1,ylab="",xlab="",ylim = c(0,temporary))
   points(datanr2$min,datanr2$cumst,type="l",col=2,xaxt="n",las=1,ylab="",xlab="")
   points(datanr3$min,datanr3$cumst,type="l",col=3,xaxt="n",las=1,ylab="",xlab="")  
-  leg <- c(nr1,nr2,nr3)
+  points(datanr4$min,datanr4$cumst,type="l",col=4,xaxt="n",las=1,ylab="",xlab="")  
+  points(datanr5$min,datanr5$cumst,type="l",col=5,xaxt="n",las=1,ylab="",xlab="")  
+  leg <- c(nr1,nr2,nr3,nr4,nr5)
   abline(v=c(540,540+24*60),lty=1,col="black")
-  legend("topleft", inset=.05,leg, horiz=FALSE,lty=1,col=c(1:3),ncol=1, cex=.90,lwd=1,bg="transparent")
+  legend("topleft", inset=.05,leg, horiz=FALSE,lty=1,col=c(1:5),ncol=2, cex=.90,lwd=1,bg="transparent")
   if(max(data$yhour) < 24) {
     hours <- c("15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00" ,"16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00")
     axis(1, at=seq(0,2880,60), labels=hours,las = 2)
@@ -421,14 +416,15 @@ if (dim(count)[1] >= 3){
     hours <- c("15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00")
     axis(1, at=seq(0,2880,120), labels=hours,las = 2)
   }
-  title(main="Kumulerede antal streger per minut for de tre \n foerende koekkener for hele marathoncafeen",xlab="Tidspunkt",mgp=c(4,1,0))
-  title(ylab="Antal streger",mgp=c(3.5,1,0))
+  title(main="Kumulerede antal streger per minut for de tre \n foerende koekkener for hele marathoncafeen",mgp=c(3,1,0), font.main = 1)
+  title(ylab="Antal streger",mgp=c(3.1,1,0))
   text(c(270,1440/2+540,2430),c(10,10,10), c("fredag","loerdag","soendag"))
   if (print == 1){dev.off()}  
 } else if (dim(count)[1] < 3){
   if (print == 1){png(file = "display/plots/plot7.png",res=reso)}  
   plot(0,col="white",xlab="",ylab="",xaxt="n",yaxt="n")  
   text(1,0,c("This plot will be generated when \n data is available"))
+  text(1,-0.5,paste("Present plots were generated: ",Sys.time()),cex=0.85)
   if (print == 1){dev.off()}
 }
 
@@ -998,10 +994,12 @@ momm <- c(GL1m$momm[length(GL1m$momm)],GL2m$momm[length(GL2m$momm)],GL3m$momm[le
           ML2m$momm[length(ML2m$momm)],ML3m$momm[length(ML3m$momm)],ML4m$momm[length(ML4m$momm)],ML5m$momm[length(ML5m$momm)],ML6m$momm[length(ML6m$momm)],ML7m$momm[length(ML7m$momm)],ML8m$momm[length(ML8m$momm)],
           NY2m$momm[length(NY2m$momm)],NY3m$momm[length(NY3m$momm)],NY4m$momm[length(NY4m$momm)],NY5m$momm[length(NY5m$momm)],NY6m$momm[length(NY6m$momm)],NY7m$momm[length(NY7m$momm)],NY8m$momm[length(NY8m$momm)])
 
+
 ki <- c("GL1","GL2","GL3","GL4","GL5","GL6","GL7","GL8","ML2","ML3","ML4","ML5","ML6","ML7","ML8","NY2","NY3","NY4","NY5","NY6","NY7","NY8")
 count <- data.frame(ki,momm)
+
 if (print == 1){png(file = "display/plots/plot8.png",res=reso)}
-barplot(count$momm,xlab="*En form for 'hamrings-hastigheds-speedometer'",ylab="Hamringsmomentum",names.arg = count[1:22,1],las=2,col=rainbow(23),main="Hamringmomentum* paa koekkenerbasis \n med daempning paa 2.34% per minut")
+barplot(count$momm,xlab="*En form for 'hamrings-hastigheds-speedometer'",ylab="Hamringsmomentum",names.arg = count[1:22,1],las=2,col=rainbow(23),main="Hamringsmomentum* paa koekkenerbasis \n med daempning paa 2.34% per minut", font.main = 1)
 if (print == 1){dev.off()}
 
 # Dette skal laves paa en tilsvarende maade.
@@ -1037,8 +1035,9 @@ if(max(data$min) < 1440) {
   hours <- c("15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00")
   axis(1, at=seq(0,2880,120), labels=hours,las = 2)
 }
-title(main="Hamringmomentum* for daemp- \n ning paa 2.34% per minut",mgp=c(4,1,0))
-title(ylab="Hamringmomentum",mgp=c(3.5,1,0),xlab="*En form for 'hamrings-hastigheds-speedometer'")
+title(main="Hamringmomentum* for daempning \n paa 2.34% per minut",mgp=c(4,1,0), font.main = 1)
+title(ylab="Hamringmomentum",mgp=c(3.0,1,0))
+title(mgp=c(3.5,1,0),xlab="*En form for 'hamrings-hastigheds-speedometer'")
 if (print == 1){dev.off()}
 
 
@@ -1140,7 +1139,7 @@ tableprint$Momentum <- round(tableprint$Momentum)
 
 
 
-if (print == 1){png(file = "display/plots/plot10.png",res=reso-21)}
+if (print == 1){png(file = "display/plots/plot10.png",res=reso-22)}
 grid.newpage() 
 pushViewport(viewport(layout.pos.col=2, layout.pos.row=2, clip="on"))
 grid.draw(tableGrob(tableprint, gp=gpar(fontsize=12, lwd=.5)))
@@ -1158,26 +1157,24 @@ points(NY5m$ki,NY5m$momm,type="l",col=4,xaxt="n",las=1,ylab="",xlab="")
 points(NY6m$ki,NY6m$momm,type="l",col=5,xaxt="n",las=1,ylab="",xlab="")
 points(NY7m$ki,NY7m$momm,type="l",col=6,xaxt="n",las=1,ylab="",xlab="")
 points(NY8m$ki,NY8m$momm,type="l",col=7,xaxt="n",las=1,ylab="",xlab="")
-points(ML2m$ki,ML2m$momm,type="l",lty=2,col=1,xaxt="n",las=1,ylab="",xlab="",lwd=2)
-points(ML3m$ki,ML3m$momm,type="l",lty=2,col=2,xaxt="n",las=1,ylab="",xlab="",lwd=2)
-points(ML4m$ki,ML4m$momm,type="l",lty=2,col=3,xaxt="n",las=1,ylab="",xlab="",lwd=2)
-points(ML5m$ki,ML5m$momm,type="l",lty=2,col=4,xaxt="n",las=1,ylab="",xlab="",lwd=2)
-points(ML6m$ki,ML6m$momm,type="l",lty=2,col=5,xaxt="n",las=1,ylab="",xlab="",lwd=2)
-points(ML7m$ki,ML7m$momm,type="l",lty=2,col=6,xaxt="n",las=1,ylab="",xlab="",lwd=2)
-points(ML8m$ki,ML8m$momm,type="l",lty=2,col=7,xaxt="n",las=1,ylab="",xlab="",lwd=2)
-points(GL1m$ki,GL1m$momm,type="l",lty=3,col=1,xaxt="n",las=1,ylab="",xlab="",lwd=2)
-points(GL2m$ki,GL2m$momm,type="l",lty=4,col=1,xaxt="n",las=1,ylab="",xlab="",lwd=2)
-points(GL3m$ki,GL3m$momm,type="l",lty=4,col=2,xaxt="n",las=1,ylab="",xlab="",lwd=2)
-points(GL4m$ki,GL4m$momm,type="l",lty=4,col=3,xaxt="n",las=1,ylab="",xlab="",lwd=2)
-points(GL5m$ki,GL5m$momm,type="l",lty=4,col=4,xaxt="n",las=1,ylab="",xlab="",lwd=2)
-points(GL6m$ki,GL6m$momm,type="l",lty=4,col=5,xaxt="n",las=1,ylab="",xlab="",lwd=2)
-points(GL7m$ki,GL7m$momm,type="l",lty=4,col=6,xaxt="n",las=1,ylab="",xlab="",lwd=2)
-points(GL8m$ki,GL8m$momm,type="l",lty=4,col=7,xaxt="n",las=1,ylab="",xlab="",lwd=2)
+points(ML2m$ki,ML2m$momm,type="l",lty=2,col=1,xaxt="n",las=1,ylab="",xlab="")
+points(ML3m$ki,ML3m$momm,type="l",lty=2,col=2,xaxt="n",las=1,ylab="",xlab="")
+points(ML4m$ki,ML4m$momm,type="l",lty=2,col=3,xaxt="n",las=1,ylab="",xlab="")
+points(ML5m$ki,ML5m$momm,type="l",lty=2,col=4,xaxt="n",las=1,ylab="",xlab="")
+points(ML6m$ki,ML6m$momm,type="l",lty=2,col=5,xaxt="n",las=1,ylab="",xlab="")
+points(ML7m$ki,ML7m$momm,type="l",lty=2,col=6,xaxt="n",las=1,ylab="",xlab="")
+points(ML8m$ki,ML8m$momm,type="l",lty=2,col=7,xaxt="n",las=1,ylab="",xlab="")
+points(GL1m$ki,GL1m$momm,type="l",lty=4,col=1,xaxt="n",las=1,ylab="",xlab="")
+points(GL2m$ki,GL2m$momm,type="l",lty=4,col=2,xaxt="n",las=1,ylab="",xlab="")
+points(GL3m$ki,GL3m$momm,type="l",lty=4,col=3,xaxt="n",las=1,ylab="",xlab="")
+points(GL4m$ki,GL4m$momm,type="l",lty=4,col=4,xaxt="n",las=1,ylab="",xlab="")
+points(GL5m$ki,GL5m$momm,type="l",lty=4,col=5,xaxt="n",las=1,ylab="",xlab="")
+points(GL6m$ki,GL6m$momm,type="l",lty=4,col=6,xaxt="n",las=1,ylab="",xlab="")
+points(GL7m$ki,GL7m$momm,type="l",lty=4,col=7,xaxt="n",las=1,ylab="",xlab="")
+points(GL8m$ki,GL8m$momm,type="l",lty=4,col=8,xaxt="n",las=1,ylab="",xlab="")
 abline(v=c(540,540+24*60),lty=1,col="black")
-leg <- c("ML2","ML3","ML4","ML5","ML6","ML7","ML8","GL1","GL2","GL3","GL4","GL5","GL6","GL7","GL8","NY2","NY3","NY4","NY5","NY6","NY7","NY8")
-legend("topleft", inset=.05,leg, horiz=FALSE,lty=c(rep(2,7),rep(3,7),rep(1,8)),col=c(1:7,1:7,1:8),ncol=3, cex=.8,lwd=2,bg="transparent")
-#leg <- c()
-#legend("bottomright", inset=.05,leg, horiz=FALSE,lty=c(rep(1,8)),col=c(1:8),ncol=3, cex=.75,bg="transparent")
+leg <- c("NY2","NY3","NY4","NY5","NY6","NY7","NY8","ML2","ML3","ML4","ML5","ML6","ML7","ML8","GL1","GL2","GL3","GL4","GL5","GL6","GL7","GL8")
+legend("topleft", inset=.05,leg, horiz=FALSE,lty=c(rep(1,7),rep(2,7),rep(4,8)),col=c(1:7,1:7,1:8),ncol=3, cex=.8,lwd=1,bg="transparent")
 if(max(data$yhour) < 24) {
   hours <- c("15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00" ,"16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00")
   axis(1, at=seq(0,2880,60), labels=hours,las = 2)
@@ -1185,14 +1182,10 @@ if(max(data$yhour) < 24) {
   hours <- c("15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00")
   axis(1, at=seq(0,2880,120), labels=hours,las = 2)
 }
-title(main="Hamringmomentum med daemping \n paa 2.34% for hele marathoncafeen",xlab="Tidspunkt",mgp=c(4,1,0))
+title(main="Hamringmomentum med daemping \n paa 2.34% for hele marathoncafeen",xlab="Tidspunkt",mgp=c(4,1,0), font.main = 1)
 title(ylab="Antal streger",mgp=c(3.5,1,0))
 text(c(270,1440/2+540,2430),c(10,10,10), c("fredag","loerdag","soendag"))
 if (print == 1){dev.off()}
-
-
-
-
 
 
 
@@ -1386,11 +1379,11 @@ trojeprik <- troje[order(troje[,"prik"]),] # Sorting
 trojegron <- troje[order(troje[,"gron"]),] # Sorting
 
 if (print == 1){png(file = "display/plots/plot12.png",res=reso)}
-barplot(troje$gron,xlab="*det stoerst opnaaede momentum",ylab="Maximalt opnaaet momentum",names.arg = troje[1:22,1],las=2,col=rainbow(23),main="Pointstillingen i konkurrencen \n om den groenne troeje*")
+barplot(troje$gron,xlab="*det stoerst opnaaede momentum",ylab="Maximalt opnaaet momentum",names.arg = troje[1:22,1],las=2,col=rainbow(23),main="Pointstillingen i konkurrencen \n om den groenne troeje*", font.main = 1)
 if (print == 1){dev.off()}
 
 if (print == 1){png(file = "display/plots/plot13.png",res=reso)}
-barplot(troje$prik,xlab="*stoerste areal under momentumkurven",ylab="Areal under momentum kurve",names.arg = troje[1:22,1],las=2,col=rainbow(23),main="Pointstillingen i konkurrencen \n om den prikkede troeje*")
+barplot(troje$prik/1e4,xlab="*stoerste areal under momentumkurven",ylab="Areal under momentum kurve (*1e4)",names.arg = troje[1:22,1],las=2,col=rainbow(23),main="Pointstillingen i konkurrencen \n om den prikkede troeje*", font.main = 1)
 if (print == 1){dev.off()}
 
 a<-c("/?mode=jersey&yellow=",as.character(count[which(count$st == max(count$st)),1]))
@@ -1401,5 +1394,4 @@ JC<-paste(c(a,b),collapse="");JC<-paste(c(JC,c),collapse="")
 
 
 getToHost("127.0.0.1",JC,"", port=8081)
-
 
