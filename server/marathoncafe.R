@@ -1,7 +1,7 @@
 # Barvagter 
 
 rm(list = ls()) # Clear workspace
-print = 1
+print = 0
 install_packages = 0
 load_packages = 1
 
@@ -26,7 +26,7 @@ if (load_packages == 1){
   library(lattice)
   library(zoo) 
   library(httpRequest)}
-data <- read.table("data.csv", sep=";", quote="\"")    
+data <- read.table("data2014.csv", sep=";", quote="\"")    
 names(data) <- c("ki","st","utime")
 starttime = data$utime[1]
 data$ti <- as.POSIXct(data[,3], origin="1970-01-01 00:00:00",format="%Y-%m-%d %H:%M:%S")
@@ -545,7 +545,7 @@ if (length(NY8$min)==1){
 }
 
 C <- -0.0234
-NY2m <- data.frame(seq(0,dim(NY2)[1]-1,1),rep(0,dim(NY2)[1]))
+NY2m <- data.frame(seq(0,max(data$min)),rep(0,max(data$min)+1))
 names(NY2m) <- c("min","st")
 NY2 <- NY2[,c("min","st")]
 NY2m <- merge(NY2m, NY2, all = TRUE,by = c('min'))
@@ -564,7 +564,7 @@ for(i in 2:dim(NY2m)[1]-1) {
   NY2m$momm[i+1]<-(NY2m$mom[i]+NY2m$st[i])*exp(C)
 }  
 
-NY3m <- data.frame(seq(0,dim(NY3)[1]-1,1),rep(0,dim(NY3)[1]))
+NY3m <- data.frame(seq(0,max(data$min)),rep(0,max(data$min)+1))
 names(NY3m) <- c("min","st")
 NY3 <- NY3[,c("min","st")]
 NY3m <- merge(NY3m, NY3, all = TRUE,by = c('min'))
@@ -583,7 +583,7 @@ for(i in 2:dim(NY3m)[1]-1) {
 NY3m$momm[i+1]<-(NY3m$mom[i]+NY3m$st[i])*exp(C)
 }  
 
-NY4m <- data.frame(seq(0,dim(NY4)[1]-1,1),rep(0,dim(NY4)[1]))
+NY4m <-data.frame(seq(0,max(data$min)),rep(0,max(data$min)+1))
 names(NY4m) <- c("min","st")
 NY4 <- NY4[,c("min","st")]
 NY4m <- merge(NY4m, NY4, all = TRUE,by = c('min'))
@@ -602,7 +602,7 @@ for(i in 2:dim(NY4m)[1]-1) {
   NY4m$momm[i+1]<-(NY4m$mom[i]+NY4m$st[i])*exp(C)
 }  
 
-NY5m <- data.frame(seq(0,dim(NY5)[1]-1,1),rep(0,dim(NY5)[1]))
+NY5m <- data.frame(seq(0,max(data$min)),rep(0,max(data$min)+1))
 names(NY5m) <- c("min","st")
 NY5 <- NY5[,c("min","st")]
 NY5m <- merge(NY5m, NY5, all = TRUE,by = c('min'))
@@ -621,7 +621,7 @@ for(i in 2:dim(NY5m)[1]-1) {
   NY5m$momm[i+1]<-(NY5m$mom[i]+NY5m$st[i])*exp(C)
 }  
 
-NY6m <- data.frame(seq(0,dim(NY6)[1]-1,1),rep(0,dim(NY6)[1]))
+NY6m <- data.frame(seq(0,max(data$min)),rep(0,max(data$min)+1))
 names(NY6m) <- c("min","st")
 NY6 <- NY6[,c("min","st")]
 NY6m <- merge(NY6m, NY6, all = TRUE,by = c('min'))
@@ -640,7 +640,7 @@ for(i in 2:dim(NY6m)[1]-1) {
   NY6m$momm[i+1]<-(NY6m$mom[i]+NY6m$st[i])*exp(C)
 }  
 
-NY7m <- data.frame(seq(0,dim(NY7)[1]-1,1),rep(0,dim(NY7)[1]))
+NY7m <- data.frame(seq(0,max(data$min)),rep(0,max(data$min)+1))
 names(NY7m) <- c("min","st")
 NY7 <- NY7[,c("min","st")]
 NY7m <- merge(NY7m, NY7, all = TRUE,by = c('min'))
@@ -659,7 +659,7 @@ for(i in 2:dim(NY7m)[1]-1) {
   NY7m$momm[i+1]<-(NY7m$mom[i]+NY7m$st[i])*exp(C)
 }  
 
-NY8m <- data.frame(seq(0,dim(NY8)[1]-1,1),rep(0,dim(NY8)[1]))
+NY8m <- data.frame(seq(0,max(data$min)),rep(0,max(data$min)+1))
 names(NY8m) <- c("min","st")
 NY8 <- NY8[,c("min","st")]
 NY8m <- merge(NY8m, NY8, all = TRUE,by = c('min'))
@@ -678,7 +678,7 @@ for(i in 2:dim(NY8m)[1]-1) {
   NY8m$momm[i+1]<-(NY8m$mom[i]+NY8m$st[i])*exp(C)
 }  
 
-ML2m <- data.frame(seq(0,dim(ML2)[1]-1,1),rep(0,dim(ML2)[1]))
+ML2m <- data.frame(seq(0,max(data$min)),rep(0,max(data$min)+1))
 names(ML2m) <- c("min","st")
 ML2 <- ML2[,c("min","st")]
 ML2m <- merge(ML2m, ML2, all = TRUE,by = c('min'))
@@ -697,7 +697,7 @@ for(i in 2:dim(ML2m)[1]-1) {
   ML2m$momm[i+1]<-(ML2m$mom[i]+ML2m$st[i])*exp(C)
 }  
 
-ML3m <- data.frame(seq(0,dim(ML3)[1]-1,1),rep(0,dim(ML3)[1]))
+ML3m <- data.frame(seq(0,max(data$min)),rep(0,max(data$min)+1))
 names(ML3m) <- c("min","st")
 ML3 <- ML3[,c("min","st")]
 ML3m <- merge(ML3m, ML3, all = TRUE,by = c('min'))
@@ -716,7 +716,7 @@ for(i in 2:dim(ML3m)[1]-1) {
   ML3m$momm[i+1]<-(ML3m$mom[i]+ML3m$st[i])*exp(C)
 }  
 
-ML4m <- data.frame(seq(0,dim(ML4)[1]-1,1),rep(0,dim(ML4)[1]))
+ML4m <- data.frame(seq(0,max(data$min)),rep(0,max(data$min)+1))
 names(ML4m) <- c("min","st")
 ML4 <- ML4[,c("min","st")]
 ML4m <- merge(ML4m, ML4, all = TRUE,by = c('min'))
@@ -735,7 +735,7 @@ for(i in 2:dim(ML4m)[1]-1) {
   ML4m$momm[i+1]<-(ML4m$mom[i]+ML4m$st[i])*exp(C)
 }  
 
-ML5m <- data.frame(seq(0,dim(ML5)[1]-1,1),rep(0,dim(ML5)[1]))
+ML5m <- data.frame(seq(0,max(data$min)),rep(0,max(data$min)+1))
 names(ML5m) <- c("min","st")
 ML5 <- ML5[,c("min","st")]
 ML5m <- merge(ML5m, ML5, all = TRUE,by = c('min'))
@@ -754,7 +754,7 @@ for(i in 2:dim(ML5m)[1]-1) {
   ML5m$momm[i+1]<-(ML5m$mom[i]+ML5m$st[i])*exp(C)
 }  
 
-ML6m <- data.frame(seq(0,dim(ML6)[1]-1,1),rep(0,dim(ML6)[1]))
+ML6m <- data.frame(seq(0,max(data$min)),rep(0,max(data$min)+1))
 names(ML6m) <- c("min","st")
 ML6 <- ML6[,c("min","st")]
 ML6m <- merge(ML6m, ML6, all = TRUE,by = c('min'))
@@ -773,7 +773,7 @@ for(i in 2:dim(ML6m)[1]-1) {
   ML6m$momm[i+1]<-(ML6m$mom[i]+ML6m$st[i])*exp(C)
 }  
 
-ML7m <- data.frame(seq(0,dim(ML7)[1]-1,1),rep(0,dim(ML7)[1]))
+ML7m <- data.frame(seq(0,max(data$min)),rep(0,max(data$min)+1))
 names(ML7m) <- c("min","st")
 ML7 <- ML7[,c("min","st")]
 ML7m <- merge(ML7m, ML7, all = TRUE,by = c('min'))
@@ -792,7 +792,7 @@ for(i in 2:dim(ML7m)[1]-1) {
   ML7m$momm[i+1]<-(ML7m$mom[i]+ML7m$st[i])*exp(C)
 }  
 
-ML8m <- data.frame(seq(0,dim(ML8)[1]-1,1),rep(0,dim(ML8)[1]))
+ML8m <- data.frame(seq(0,max(data$min)),rep(0,max(data$min)+1))
 names(ML8m) <- c("min","st")
 ML8 <- ML8[,c("min","st")]
 ML8m <- merge(ML8m, ML8, all = TRUE,by = c('min'))
@@ -811,7 +811,7 @@ for(i in 2:dim(ML8m)[1]-1) {
   ML8m$momm[i+1]<-(ML8m$mom[i]+ML8m$st[i])*exp(C)
 }  
 
-GL1m <- data.frame(seq(0,dim(GL1)[1]-1,1),rep(0,dim(GL1)[1]))
+GL1m <- data.frame(seq(0,max(data$min)),rep(0,max(data$min)+1))
 names(GL1m) <- c("min","st")
 GL1 <- GL1[,c("min","st")]
 GL1m <- merge(GL1m, GL1, all = TRUE,by = c('min'))
@@ -831,7 +831,7 @@ for(i in 2:dim(GL1m)[1]-1) {
 }  
 
 
-GL2m <- data.frame(seq(0,dim(GL2)[1]-1,1),rep(0,dim(GL2)[1]))
+GL2m <- data.frame(seq(0,max(data$min)),rep(0,max(data$min)+1))
 names(GL2m) <- c("min","st")
 GL2 <- GL2[,c("min","st")]
 GL2m <- merge(GL2m, GL2, all = TRUE,by = c('min'))
@@ -850,7 +850,7 @@ for(i in 2:dim(GL2m)[1]-1) {
   GL2m$momm[i+1]<-(GL2m$mom[i]+GL2m$st[i])*exp(C)
 }  
 
-GL3m <- data.frame(seq(0,dim(GL3)[1]-1,1),rep(0,dim(GL3)[1]))
+GL3m <- data.frame(seq(0,max(data$min)),rep(0,max(data$min)+1))
 names(GL3m) <- c("min","st")
 GL3 <- GL3[,c("min","st")]
 GL3m <- merge(GL3m, GL3, all = TRUE,by = c('min'))
@@ -869,7 +869,7 @@ for(i in 2:dim(GL3m)[1]-1) {
   GL3m$momm[i+1]<-(GL3m$mom[i]+GL3m$st[i])*exp(C)
 }  
 
-GL4m <- data.frame(seq(0,dim(GL4)[1]-1,1),rep(0,dim(GL4)[1]))
+GL4m <- data.frame(seq(0,max(data$min)),rep(0,max(data$min)+1))
 names(GL4m) <- c("min","st")
 GL4 <- GL4[,c("min","st")]
 GL4m <- merge(GL4m, GL4, all = TRUE,by = c('min'))
@@ -888,7 +888,7 @@ for(i in 2:dim(GL4m)[1]-1) {
   GL4m$momm[i+1]<-(GL4m$mom[i]+GL4m$st[i])*exp(C)
 }  
 
-GL5m <- data.frame(seq(0,dim(GL5)[1]-1,1),rep(0,dim(GL5)[1]))
+GL5m <- data.frame(seq(0,max(data$min)),rep(0,max(data$min)+1))
 names(GL5m) <- c("min","st")
 GL5 <- GL5[,c("min","st")]
 GL5m <- merge(GL5m, GL5, all = TRUE,by = c('min'))
@@ -907,7 +907,7 @@ for(i in 2:dim(GL5m)[1]-1) {
   GL5m$momm[i+1]<-(GL5m$mom[i]+GL5m$st[i])*exp(C)
 }  
 
-GL6m <- data.frame(seq(0,dim(GL6)[1]-1,1),rep(0,dim(GL6)[1]))
+GL6m <- data.frame(seq(0,max(data$min)),rep(0,max(data$min)+1))
 names(GL6m) <- c("min","st")
 GL6 <- GL6[,c("min","st")]
 GL6m <- merge(GL6m, GL6, all = TRUE,by = c('min'))
@@ -926,7 +926,7 @@ for(i in 2:dim(GL6m)[1]-1) {
   GL6m$momm[i+1]<-(GL6m$mom[i]+GL6m$st[i])*exp(C)
 }  
 
-GL7m <- data.frame(seq(0,dim(GL7)[1]-1,1),rep(0,dim(GL7)[1]))
+GL7m <- data.frame(seq(0,max(data$min)),rep(0,max(data$min)+1))
 names(GL7m) <- c("min","st")
 GL7 <- GL7[,c("min","st")]
 GL7m <- merge(GL7m, GL7, all = TRUE,by = c('min'))
@@ -945,7 +945,7 @@ for(i in 2:dim(GL7m)[1]-1) {
   GL7m$momm[i+1]<-(GL7m$mom[i]+GL7m$st[i])*exp(C)
 }  
 
-GL8m <- data.frame(seq(0,dim(GL8)[1]-1,1),rep(0,dim(GL8)[1]))
+GL8m <- data.frame(seq(0,max(data$min)),rep(0,max(data$min)+1))
 names(GL8m) <- c("min","st")
 GL8 <- GL8[,c("min","st")]
 GL8m <- merge(GL8m, GL8, all = TRUE,by = c('min'))
@@ -997,6 +997,15 @@ momm <- c(GL1m$momm[length(GL1m$momm)],GL2m$momm[length(GL2m$momm)],GL3m$momm[le
 
 ki <- c("GL1","GL2","GL3","GL4","GL5","GL6","GL7","GL8","ML2","ML3","ML4","ML5","ML6","ML7","ML8","NY2","NY3","NY4","NY5","NY6","NY7","NY8")
 count <- data.frame(ki,momm)
+
+
+#### MOMENTUM KAN LET FINDES HER!!!!!!!!!!
+
+
+count
+
+
+
 
 if (print == 1){png(file = "display/plots/plot8.png",res=reso)}
 barplot(count$momm,xlab="*En form for 'hamrings-hastigheds-speedometer'",ylab="Hamringsmomentum",names.arg = count[1:22,1],las=2,col=rainbow(23),main="Hamringsmomentum* paa koekkenerbasis \n med daempning paa 2.34% per minut", font.main = 1)
@@ -1183,7 +1192,7 @@ if(max(data$yhour) < 24) {
   axis(1, at=seq(0,2880,120), labels=hours,las = 2)
 }
 title(main="Hamringmomentum med daemping \n paa 2.34% for hele marathoncafeen",xlab="Tidspunkt",mgp=c(4,1,0), font.main = 1)
-title(ylab="Antal streger",mgp=c(3.5,1,0))
+title(ylab="Momentum [steger/sekund]",mgp=c(3.5,1,0))
 text(c(270,1440/2+540,2430),c(10,10,10), c("fredag","loerdag","soendag"))
 if (print == 1){dev.off()}
 
