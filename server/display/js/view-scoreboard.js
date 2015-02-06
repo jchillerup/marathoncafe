@@ -89,9 +89,9 @@ var ScoreboardUnit = Backbone.View.extend({
         $(window).resize(_.bind(this.ensureRound, this));
         
         // Ensure that the CSS matches up
-        $(function() {
+        $(_.bind(function() {
             this.render();
-        }, this);        
+        }, this ));        
     },
     render: function() {
         
