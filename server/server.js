@@ -17,6 +17,31 @@ var first = true;
 
 var state = { cur_scores: { 'GL1': 0, 'GL2': 0, 'GL3': 0, 'GL4': 0, 'GL5': 0, 'GL6': 0, 'GL7': 0, 'GL8': 0, 'ML2': 0, 'ML3': 0, 'ML4': 0, 'ML5': 0, 'ML6': 0, 'ML7': 0, 'ML8': 0, 'NY2': 0, 'NY3': 0, 'NY4': 0, 'NY5': 0, 'NY6': 0, 'NY7': 0, 'NY8': 0 }, jerseys: {yellow: null, green: null, dotted: null}}; 
 
+var modifiers = {
+    'GL1': 1.014,
+    'GL2': 1.014,
+    'GL3': 1.014,
+    'GL4': 1.014,
+    'GL5': 1.014,
+    'GL6': 1.014,
+    'GL7': 1.014,
+    'GL8': 1.014,
+    'ML2': 1.2,
+    'ML3': 1.2,
+    'ML4': 1.2,
+    'ML5': 1.2,
+    'ML6': 1.2,
+    'ML7': 1.2,
+    'ML8': 1.2,
+    'NY2': 1,
+    'NY3': 1,
+    'NY4': 1,
+    'NY5': 1,
+    'NY6': 1,
+    'NY7': 1,
+    'NY8': 1
+};
+
 // load state from sqlite
 db.serialize(function() { 
     var buffer = "";
@@ -63,8 +88,8 @@ io.sockets.on('connection', function (socket) {
             first = false;
         }
         
-
-        var quantity = parseFloat(data.quantity);
+        // Apply a modifier for different buildings. GL gets more than ML and NY.
+        var quantity = parseFloat(data.quantity) * modifiers[data.kitchen];
         
         // update stored state
         db.run('INSERT INTO streger VALUES (?,?,?,?)', [data.kitchen, quantity, (new Date).getTime(), sender]);
