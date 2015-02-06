@@ -28,7 +28,7 @@ var PlotsView = Backbone.View.extend({
 
     advance: function(event) {
         this.cur_plot += 1;
-        this.cur_plot %= len(this.plotfiles);
+        this.cur_plot %= this.plotfiles.length;
         
         this.insertPic();
 
