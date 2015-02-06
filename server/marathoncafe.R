@@ -121,16 +121,16 @@ count <- data.frame(count)
 count <- count[,1:2]
 names(count) <- c("yhour","st")
 
-if (print == 1){png(file = "display/plots/plot3.png",res=reso)}
-par(mar=c(5, 4.5, 4, 2) + 0.1)
-plot(count$st,type="l",col="blue",xaxt="n",las=1,ylab="",xlab="")
-abline(v=c(9,9+24),lty=2,col="red")
-  hours <- c("15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00")
-  axis(1, at=seq(0,48,2), labels=hours,las = 2)
-title(main="Antal streger fordelt paa timer for alle \n koekkener for hele marathoncafeen",xlab="",mgp=c(3,1,0), font.main = 1)
-title(ylab="Antal streger",mgp=c(3.5,1,0))
-text(c(4.5,9+12,42),c(10,10,10), c("fredag","loerdag","soendag"))
-if (print == 1){dev.off()}
+# if (print == 1){png(file = "display/plots/plot3.png",res=reso)}
+# par(mar=c(5, 4.5, 4, 2) + 0.1)
+# plot(count$st,type="l",col="blue",xaxt="n",las=1,ylab="",xlab="")
+# abline(v=c(9,9+24),lty=2,col="red")
+#   hours <- c("15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00")
+#   axis(1, at=seq(0,48,2), labels=hours,las = 2)
+# title(main="Antal streger fordelt paa timer for alle \n koekkener for hele marathoncafeen",xlab="",mgp=c(3,1,0), font.main = 1)
+# title(ylab="Antal streger",mgp=c(3.5,1,0))
+# text(c(4.5,9+12,42),c(10,10,10), c("fredag","loerdag","soendag"))
+# if (print == 1){dev.off()}
 
 
 #####
@@ -185,31 +185,33 @@ if (print == 1){dev.off()}
 ##
 # Barvagt plot - antal streger p?? egent k??kken. 
 # HER SKAL MAN SKRIVE BARVAGTER IND! 
-barvagt <- c("Personalet","G1","M7","M4","N5","G8","G3","N8","N7","G6","Festival","G5","M6","N6","G4","G1","Revyen","Cafeen")
-tidspunkt <- c(4*60,3*60,2.5*60,2.5*60,2.5*60,2.5*60,3*60,3*60,120,120,120,180,2.5*60,2.5*60,2.5*60,2.5*60,180,180)
+barvagt <- c("Personalet","NY5","ML7","Prof","NY5","GL2","GL5","NY7","GL1","ML3","ML6","Prof","ML8","xx","xx","Cafeen")
+tidspunkt <- c(4*30,5*30,5*30,16*30,4*30,6*30,4*30,4*30,4*30,5*30,5*30,20*30,4*30,5*30,5*30,5*30)
 tidspunkt <- cumsum(tidspunkt)
 vagt <- data.frame(tidspunkt=tidspunkt,barvagt=barvagt)
 data$vagt <- 0
-if (length(which(data$ki == "GL1" & data$min >= 240 & data$min < 420))>0){data[which(data$ki == "GL1" & data$min >= 240 & data$min < 420),]$vagt = "GL1"}
-if (length(which(data$ki == "ML7" & data$min >= 420 & data$min < 570))>0){data[which(data$ki == "ML7" & data$min >= 420 & data$min < 570),]$vagt = "ML7"}
-if (length(which(data$ki == "ML3" & data$min >= 420 & data$min < 570))>0){data[which(data$ki == "ML3" & data$min >= 420 & data$min < 570),]$vagt = "ML3"} # Forhalsbar
-if (length(which(data$ki == "ML4" & data$min >= 570 & data$min < 720))>0){data[which(data$ki == "ML4" & data$min >= 570 & data$min < 720),]$vagt = "ML4"}
-if (length(which(data$ki == "NY4" & data$min >= 570 & data$min < 720))>0){data[which(data$ki == "NY4" & data$min >= 570 & data$min < 720),]$vagt = "NY4"} # Forhalsbar
-if (length(which(data$ki == "NY5" & data$min >= 720 & data$min < 870) )>0){data[which(data$ki == "NY5" & data$min >= 720 & data$min < 870),]$vagt = "NY5"}
-if (length(which(data$ki == "GL8" & data$min >= 870 & data$min < 1020) )>0){data[which(data$ki == "GL8" & data$min >= 870 & data$min < 1020),]$vagt = "GL8"}
-if (length(which(data$ki == "GL3" & data$min >= 1020 & data$min < 1200) )>0){data[which(data$ki == "GL3" & data$min >= 1020 & data$min < 1200),]$vagt = "GL3"}
-if (length(which(data$ki == "NY8" & data$min >= 1200 & data$min < 1380) )>0){data[which(data$ki == "NY8" & data$min >= 1200 & data$min < 1380),]$vagt = "NY8"}
-if (length(which(data$ki == "NY7" & data$min >= 1380 & data$min < 1500) )>0){data[which(data$ki == "NY7" & data$min >= 1380 & data$min < 1500),]$vagt = "NY7"}
-if (length(which(data$ki == "GL6" & data$min >= 1500 & data$min < 1620) )>0){data[which(data$ki == "GL6" & data$min >= 1500 & data$min < 1620),]$vagt = "GL6"}
-# data[which(data$ki == "GL1" & data$min >= 1620 & data$min < 1740),]$vagt = "Festival"
-if (length(which(data$ki == "GL5" & data$min >= 1740 & data$min < 1920) )>0){data[which(data$ki == "GL5" & data$min >= 1740 & data$min < 1920),]$vagt = "GL5"}
-if (length(which(data$ki == "ML6" & data$min >= 1920 & data$min < 2070) )>0){data[which(data$ki == "ML6" & data$min >= 1920 & data$min < 2070),]$vagt = "ML6"}
-if (length(which(data$ki == "ML5" & data$min >= 2010 & data$min < 2160) )>0){data[which(data$ki == "ML5" & data$min >= 2010 & data$min < 2160),]$vagt = "ML5"} # Forhalsbar
-if (length(which(data$ki == "NY6" & data$min >= 2070 & data$min < 2220) )>0){data[which(data$ki == "NY6" & data$min >= 2070 & data$min < 2220),]$vagt = "NY6"}
-if (length(which(data$ki == "GL4" & data$min >= 2220 & data$min < 2370) )>0){data[which(data$ki == "GL4" & data$min >= 2220 & data$min < 2370),]$vagt = "GL4"}
-if (length(which(data$ki == "GL1" & data$min >= 2370 & data$min < 2520) )>0){data[which(data$ki == "GL1" & data$min >= 2370 & data$min < 2520),]$vagt = "GL1"}
-#data[which(data$ki == "GL1" & data$min >= 2520 & data$min < 2700),]$vagt = "Revyen"
-#data[which(data$ki == "GL1" & data$min >= 2700 & data$min < 2880),]$vagt = "Cafeen"
+if (length(which(data$ki == "NY5" & data$min >= 120 & data$min < 270))>0){data[which(data$ki == "NY5" & data$min >= 120 & data$min < 270),]$vagt = "NY5"}
+if (length(which(data$ki == "ML7" & data$min >= 270 & data$min < 420))>0){data[which(data$ki == "ML7" & data$min >= 270 & data$min < 420),]$vagt = "ML7"}
+if (length(which(data$ki == "NY5" & data$min >= 900 & data$min < 1020))>0){data[which(data$ki == "NY5" & data$min >= 900 & data$min < 1020),]$vagt = "NY5"} # Forhalsbar
+
+if (length(which(data$ki == "GL2" & data$min >= 1020 & data$min < 1200))>0){data[which(data$ki == "GL2" & data$min >= 1020 & data$min < 1200),]$vagt = "GL2"} # Forhalsbar
+if (length(which(data$ki == "GL5" & data$min >= 1200 & data$min < 1320))>0){data[which(data$ki == "GL5" & data$min >= 1200 & data$min < 1320),]$vagt = "GL5"}
+
+if (length(which(data$ki == "NY7" & data$min >= 1320 & data$min < 1440))>0){data[which(data$ki == "NY7" & data$min >= 1320 & data$min < 1440),]$vagt = "NY7"} # Forhalsbar
+if (length(which(data$ki == "GL1" & data$min >= 1440 & data$min < 1560) )>0){data[which(data$ki == "GL1" & data$min >= 1440 & data$min < 1560),]$vagt = "GL1"}
+if (length(which(data$ki == "ML3" & data$min >= 1560 & data$min < 1710) )>0){data[which(data$ki == "ML3" & data$min >= 1560 & data$min < 1710),]$vagt = "ML3"}
+
+if (length(which(data$ki == "ML6" & data$min >= 1710 & data$min < 1860) )>0){data[which(data$ki == "ML6" & data$min >= 1710 & data$min < 1860),]$vagt = "ML6"}
+if (length(which(data$ki == "ML8" & data$min >= 2340 & data$min < 2460) )>0){data[which(data$ki == "ML8" & data$min >= 2340 & data$min < 2460),]$vagt = "ML8"}
+
+# if (length(which(data$ki == "NY7" & data$min >= 1380 & data$min < 1500) )>0){data[which(data$ki == "NY7" & data$min >= 1380 & data$min < 1500),]$vagt = "NY7"}
+# if (length(which(data$ki == "GL6" & data$min >= 1500 & data$min < 1620) )>0){data[which(data$ki == "GL6" & data$min >= 1500 & data$min < 1620),]$vagt = "GL6"}
+# if (length(which(data$ki == "GL5" & data$min >= 1740 & data$min < 1920) )>0){data[which(data$ki == "GL5" & data$min >= 1740 & data$min < 1920),]$vagt = "GL5"}
+# if (length(which(data$ki == "ML6" & data$min >= 1920 & data$min < 2070) )>0){data[which(data$ki == "ML6" & data$min >= 1920 & data$min < 2070),]$vagt = "ML6"}
+# if (length(which(data$ki == "ML5" & data$min >= 2010 & data$min < 2160) )>0){data[which(data$ki == "ML5" & data$min >= 2010 & data$min < 2160),]$vagt = "ML5"} # Forhalsbar
+# if (length(which(data$ki == "NY6" & data$min >= 2070 & data$min < 2220) )>0){data[which(data$ki == "NY6" & data$min >= 2070 & data$min < 2220),]$vagt = "NY6"}
+# if (length(which(data$ki == "GL4" & data$min >= 2220 & data$min < 2370) )>0){data[which(data$ki == "GL4" & data$min >= 2220 & data$min < 2370),]$vagt = "GL4"}
+# if (length(which(data$ki == "GL1" & data$min >= 2370 & data$min < 2520) )>0){data[which(data$ki == "GL1" & data$min >= 2370 & data$min < 2520),]$vagt = "GL1"}
 
 vagt <- c("GL1","GL2","GL3","GL4","GL5","GL6","GL7","GL8","ML2","ML3","ML4","ML5","ML6","ML7","ML8","NY2","NY3","NY4","NY5","NY6","NY7","NY8")
 st <- rep(0,22)
@@ -1001,15 +1003,63 @@ count <- data.frame(ki,momm)
 
 #### MOMENTUM KAN LET FINDES HER!!!!!!!!!!
 
+t1 <- c("/?mode=momentum&GL1=",as.character(count[which(count$ki == "GL1"),2]))    
+t2 <- c("&GL2=",as.character(count[which(count$ki == "GL2"),2]))    
+t3 <- c("&GL3=",as.character(count[which(count$ki == "GL3"),2]))    
+t4 <- c("&GL4=",as.character(count[which(count$ki == "GL4"),2]))    
+t5 <- c("&GL5=",as.character(count[which(count$ki == "GL5"),2]))    
+t6 <- c("&GL6=",as.character(count[which(count$ki == "GL6"),2]))    
+t7 <- c("&GL7=",as.character(count[which(count$ki == "GL7"),2]))    
+t8 <- c("&GL8=",as.character(count[which(count$ki == "GL8"),2]))    
+t9 <- c("&ML2=",as.character(count[which(count$ki == "ML2"),2]))    
+t10 <- c("&ML3=",as.character(count[which(count$ki == "ML3"),2]))    
+t11 <- c("&ML4=",as.character(count[which(count$ki == "ML4"),2]))    
+t12 <- c("&ML5=",as.character(count[which(count$ki == "ML5"),2]))    
+t13 <- c("&ML6=",as.character(count[which(count$ki == "ML6"),2]))    
+t14 <- c("&ML7=",as.character(count[which(count$ki == "ML7"),2]))    
+t15 <- c("&ML8=",as.character(count[which(count$ki == "ML8"),2]))
+t16 <- c("&NY2=",as.character(count[which(count$ki == "NY2"),2]))    
+t17 <- c("&NY3=",as.character(count[which(count$ki == "NY3"),2]))    
+t18 <- c("&NY4=",as.character(count[which(count$ki == "NY4"),2]))    
+t19 <- c("&NY5=",as.character(count[which(count$ki == "NY5"),2]))    
+t20 <- c("&NY6=",as.character(count[which(count$ki == "NY6"),2]))    
+t21 <- c("&NY7=",as.character(count[which(count$ki == "NY7"),2]))    
+t22 <- c("&NY8=",as.character(count[which(count$ki == "NY8"),2]))    
 
-count
+
+tt1 <- paste(t1,collapse="");
+tt2<-paste(t2,collapse="");
+tt3<-paste(t3,collapse="");
+tt4<-paste(t4,collapse="");
+tt5<-paste(t5,collapse="");
+tt6<-paste(t6,collapse="");
+tt7<-paste(t7,collapse="");
+tt8<-paste(t8,collapse="");
+tt9<-paste(t9,collapse="");
+tt10<-paste(t10,collapse="");
+tt11<-paste(t11,collapse="");
+tt12<-paste(t12,collapse="");
+tt13<-paste(t13,collapse="");
+tt14<-paste(t14,collapse="");
+tt15<-paste(t15,collapse="");
+tt16<-paste(t16,collapse="");
+tt17<-paste(t17,collapse="");
+tt18<-paste(t18,collapse="");
+tt19<-paste(t19,collapse="");
+tt20<-paste(t20,collapse="");
+tt21<-paste(t21,collapse="");
+tt22<-paste(t22,collapse="");
+
+JC2 <- paste(c(tt1,tt2,tt3,tt4,tt5,tt6,tt7,tt8,tt9,tt10,tt11,tt12,tt13,tt14,tt15,tt16,tt17,tt18,tt19,tt20,tt21,tt22),collapse="");
+getToHost("127.0.0.1",JC2,"", port=8081)
 
 
 
 
-if (print == 1){png(file = "display/plots/plot8.png",res=reso)}
-barplot(count$momm,xlab="*En form for 'hamrings-hastigheds-speedometer'",ylab="Hamringsmomentum",names.arg = count[1:22,1],las=2,col=rainbow(23),main="Hamringsmomentum* paa koekkenerbasis \n med daempning paa 2.34% per minut", font.main = 1)
-if (print == 1){dev.off()}
+
+# if (print == 1){png(file = "display/plots/plot8.png",res=reso)}
+# barplot(count$momm,xlab="*En form for 'hamrings-hastigheds-speedometer'",ylab="Hamringsmomentum",names.arg = count[1:22,1],las=2,col=rainbow(23),main="Hamringsmomentum* paa koekkenerbasis \n med daempning paa 2.34% per minut", font.main = 1)
+# if (print == 1){dev.off()}
 
 # Dette skal laves paa en tilsvarende maade.
 
