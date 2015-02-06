@@ -24,7 +24,7 @@ function getTimestamp() {
 var Logger = Backbone.View.extend({
     tagName: "ul",
     id: "logList",
-    maxelements: 1,
+    maxelements: 5,
     
     initialize: function() {
         this.model.on('change', _.bind(this.newLogEntry, this));
@@ -36,6 +36,7 @@ var Logger = Backbone.View.extend({
 
         for (var kitchen in attributes) {
             var diff = attributes[kitchen] - prevAttributes[kitchen];
+            diff = diff.toFixed(2).replace(".00", "");
             var $obj = $("<li>").html("<span class=\"timestamp\">" + getTimestamp() + "</span> " + kitchen+ ": "+ diff + (diff==1||diff==0.5?" streg.":" streger."));
 
             this.$el.prepend($obj.fadeIn());

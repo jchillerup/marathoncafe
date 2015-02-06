@@ -237,12 +237,21 @@ h1 {
     margin: 0px;
 
     color: green;
-    font-family: Inconsolata;
+    font-family: Inconsolata, monospace;
+}
+
+ul {
+    margin: 0px;
+    padding: 0px;
 }
 
 #logList li {
-    margin: 3px 0px;
+    margin: 3px 7px;
+    padding: 0px;
     font-size: 1em;
+    float:left;
+    display:inline;
+    text-overflow: hidden;
 }
 
 #logList li .timestamp {
