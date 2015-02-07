@@ -30,4 +30,10 @@ $(function() {
         window.location.reload();
     });
     
+
+    // Reload the iframe automatically
+    setInterval(function() {
+        $('iframe').attr('src', $('iframe').attr('src'));
+    }, 120000);
+
 });
