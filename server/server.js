@@ -136,10 +136,13 @@ http.createServer(function(req, res) {
 }).listen(8081);
 
 
-setInterval(function() {
+
+function runR() {
     console.log("Running R");
     exec("R --vanilla < marathoncafe.R", function(error, stdout, stderr) {
-        console.log('done');
+        setTimeout(runR, 5000);
     });
-    
-}, 30000);
+
+}
+
+runR();
