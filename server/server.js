@@ -1,13 +1,15 @@
 var http = require('http');
 var url = require('url');
 var qs = require('querystring');
-var connect = require('connect');
 var sys = require('sys');
 var exec = require('child_process').exec;
 
-var app = connect.createServer(connect.static('display'));
-var server = http.createServer(app).listen(8080);
-var io = require('socket.io').listen(server, {log:false});
+var express = require('express');
+var app = express();
+
+app.use(express.static('display'));
+
+var io = require('socket.io').listen(app.listen(8080));
 var fs = require('fs');
 
 var sqlite3 = require('sqlite3');
@@ -77,7 +79,7 @@ io.sockets.on('connection', function (socket) {
     socket.emit('state', state);
     
     socket.on('streg', function(data) {
-        var sender = socket.manager.handshaken[socket.id].address.address;
+        var sender = socket.handshake.address;
 
         if (first) {
             buffer = "";

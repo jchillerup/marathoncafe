@@ -1,5 +1,4 @@
 var ScoreModel = Backbone.Model.extend({
-    endpoint: "http://localhost:8081/",
     socket: null,
 
     initialize: function(attr, opts) {
@@ -60,7 +59,7 @@ var POSView = Backbone.View.extend({
     }
 });
 
-var socket = io.connect('/');
+var socket = io.connect();
 var curScore = new ScoreModel(null, {socket: socket});    
 
 $(function() {    
