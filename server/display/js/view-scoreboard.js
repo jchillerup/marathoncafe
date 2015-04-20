@@ -8,14 +8,10 @@ var Scoreboard = Backbone.View.extend({
         
         // Create all the kitchen widgets
         var kitchens = [
-            "GL1", 
-            "GL2", "ML2", "NY2",
-            "GL3", "ML3", "NY3",
-            "GL4", "ML4", "NY4",
-            "GL5", "ML5", "NY5",
-            "GL6", "ML6", "NY6",
-            "GL7", "ML7", "NY7",
-            "GL8", "ML8", "NY8"
+            "1A", "2A", "3A", "4A", "5A", "6A", "7A",
+            "1B", "2B", "3B", "4B", "5B", "6B", "7B",
+            "1C", "2C", "3C", "4C", "5C", "6C", "7C",
+            "1D", "2D", "3D", "4D", "5D", "6D", "7D"
         ];
 
         for (var kitchen in kitchens) {
@@ -47,7 +43,7 @@ var Scoreboard = Backbone.View.extend({
         var $units = this.$el.children();
 	var totalWidth = this.$el.width();
 	var cols = Math.floor( totalWidth / ($units.width() + padding) );
-        var height = (Math.ceil(22 / cols) * (80 + padding))+ padding + "px";
+        var height = (Math.ceil(28 / cols) * (80 + padding))+ padding + "px";
         console.log("height: "+ height);
         this.$el.css('height', height);
 
