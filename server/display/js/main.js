@@ -1,4 +1,4 @@
-// establish a connection to the scoreboard server
+''// establish a connection to the scoreboard server
 
 $(function() {
     var scores = new Backbone.Model();
