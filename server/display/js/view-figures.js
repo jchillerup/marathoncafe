@@ -2,7 +2,7 @@ var PlotsView = Backbone.View.extend({
     id: "plots",
     cur_plot: 0,
     $cur_img: null,
-    plotfiles: ['plot0.png', 'plot10.png', 'plot11.png', 'plot12.png', 'plot13.png', 'plot1.png', 'plot2.png', 'plot4.png', 'plot5.png', 'plot6.png', 'plot7.png', 'plot9.png'],
+    plotfiles: ['plot0.png', 'plot11.png', 'plot12.png', 'plot13.png', 'plot1.png', 'plot2.png', 'plot4.png', 'plot6.png', 'plot6.png', 'plot7.png', 'plot9.png'],
 
     events: {
         "click img": "advance"
