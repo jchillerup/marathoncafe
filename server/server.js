@@ -18,34 +18,15 @@ var db = new sqlite3.Database('db.sqlite');
 var first = true;
 
 var state = { cur_scores: { 
-    '1A': 0,
-    '2A': 0,
-    '3A': 0,
-    '4A': 0,
-    '5A': 0,
-    '6A': 0,
-    '7A': 0,
-    '1B': 0,
-    '2B': 0,
-    '3B': 0,
-    '4B': 0,
-    '5B': 0,
-    '6B': 0,
-    '7B': 0,
-    '1C': 0,
-    '2C': 0,
-    '3C': 0,
-    '4C': 0,
-    '5C': 0,
-    '6C': 0,
-    '7C': 0,
-    '1D': 0,
-    '2D': 0,
-    '3D': 0,
-    '4D': 0,
-    '5D': 0,
-    '6D': 0,
-    '7D': 0
+    '1A': 0, '2A': 0, '3A': 0, '4A': 0, '5A': 0, '6A': 0, '7A': 0,
+    '1B': 0, '2B': 0, '3B': 0, '4B': 0, '5B': 0, '6B': 0, '7B': 0,
+    '1C': 0, '2C': 0, '3C': 0, '4C': 0, '5C': 0, '6C': 0, '7C': 0,
+    '1D': 0, '2D': 0, '3D': 0, '4D': 0, '5D': 0, '6D': 0, '7D': 0
+}, momentum: { 
+    '1A': 0, '2A': 0, '3A': 0, '4A': 0, '5A': 0, '6A': 0, '7A': 0,
+    '1B': 0, '2B': 0, '3B': 0, '4B': 0, '5B': 0, '6B': 0, '7B': 0,
+    '1C': 0, '2C': 0, '3C': 0, '4C': 0, '5C': 0, '6C': 0, '7C': 0,
+    '1D': 0, '2D': 0, '3D': 0, '4D': 0, '5D': 0, '6D': 0, '7D': 0
 }, jerseys: {yellow: null, green: null, dotted: null}}; 
 
 // load state from sqlite
@@ -130,8 +111,14 @@ http.createServer(function(req, res) {
         state.jerseys['dotted'] = query['dotted'];
 
         io.sockets.emit('state', state);
-
         break;
+
+    case "momentum":
+        delete query['mode'];
+        state.momentum = query;
+        io.sockets.emit('state', state);
+        break;
+    
     default:
         console.log('Did not understand this on the MGMT interface: ' + JSON.stringify(query));
     }
