@@ -19,7 +19,7 @@ var PlotsView = Backbone.View.extend({
     },
     
     insertPic: function() {
-        var path = "plots/"+(this.plotfiles[this.cur_plot + 1])+"?cachebust="+(new Date()).getTime();
+        var path = "plots/"+(this.plotfiles[this.cur_plot])+"?cachebust="+(new Date()).getTime();
         var $img = $("<img>").attr('src', path).css('left', '480px');
 
         this.$el.append($img);
