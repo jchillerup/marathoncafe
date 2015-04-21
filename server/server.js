@@ -86,8 +86,8 @@ io.sockets.on('connection', function (socket) {
             for (var kitchen in state.cur_scores) {
                 // 1391781601
                 
-                buffer += kitchen+";0;"+ Math.round((new Date).getTime()/1000) + "\n";
-                buffer += kitchen+";0;"+ Math.round((new Date).getTime()/1000) + "\n";
+                buffer += kitchen+";0.01;"+ Math.round((new Date).getTime()/1000) + "\n";
+                buffer += kitchen+";0.01;"+ Math.round((new Date).getTime()/1000 + 60) + "\n";
             }
             
             fs.writeFileSync("data.csv", buffer);
@@ -144,7 +144,7 @@ http.createServer(function(req, res) {
 
 function runR() {
     console.log("Running R");
-    exec("R --vanilla < marathoncafe.R", function(error, stdout, stderr) {
+    exec("nice R --vanilla < marathoncafe.R", function(error, stdout, stderr) {
         setTimeout(runR, 5000);
     });
 
