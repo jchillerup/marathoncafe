@@ -1,8 +1,10 @@
-''// establish a connection to the scoreboard server
+window.state = {};
 
 $(function() {
     var scores = new Backbone.Model();
     var jerseys = new Backbone.Model();
+    var momentum = new Backbone.Model();
+
     var socket = io.connect();
     
     var scoreboardview = new Scoreboard({ el: document.getElementById("scoreboard"), model: scores, jerseymodel: jerseys });
@@ -14,8 +16,11 @@ $(function() {
 
     socket.on('state', function (data) {
         scores.set(data.cur_scores);
+        momentum.set(data.momentum);
         jerseys.set(data.jerseys);
     });
+    
+    window.state = {"scores": scores, "momentum": momentum, "jerseys": jerseys};
     
     // We're updating the yellow jersey more frequently than the others
     jerseys.on('change', function() {
