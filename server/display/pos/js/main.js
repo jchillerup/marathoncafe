@@ -23,7 +23,7 @@ var ScoreModel = Backbone.Model.extend({
 
 var KitchenPicker = Backbone.View.extend({
     events: {
-        "mousedown .kitchenButton": "setScore"
+        "click .kitchenButton": "setScore",
     },
 
     initialize: function() {
@@ -63,12 +63,15 @@ var socket = io.connect();
 var curScore = new ScoreModel(null, {socket: socket});    
 
 $(function() {    
+    // Initialize FastClick
+    FastClick.attach(document.body);
+
     var kitchenView = new KitchenPicker({ el: document.getElementById("kitchens"), model: curScore });
     var posView = new POSView({model: curScore});
 
     $('#display h1').after(posView.$el);
 
-    $("#orders button").on('mousedown startdrag', function() {
+    $("#orders button").on('click', function() {
         if (this.id === "clearButton") {
             curScore.set('quantity', 0);
         } else {
