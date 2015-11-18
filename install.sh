@@ -9,3 +9,5 @@ R --save < install_packages.R
 ln -s /usr/bin/nodejs /usr/bin/node
 ./bootstrap.sh
 
+# print the ip
+ifconfig eth0 | awk '/inet addr/{print substr($2,6)}'

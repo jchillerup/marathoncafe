@@ -96,3 +96,5 @@ function testPOS(interval) {
     
     return setInterval(makeOrder, interval);
 }
+
+function randomRHK() { socket.emit('streg', {kitchen: Math.floor(Math.random()*7+1)+ ["A","B","C","D"][Math.floor(Math.random()*4)], quantity: Math.floor(Math.random()*8+1)}); }
