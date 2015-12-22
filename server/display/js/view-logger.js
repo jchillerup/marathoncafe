@@ -11,20 +11,15 @@ function getTimestamp() {
     if (m < 10) {
         ts += "0";
     } 
-    ts += "" + m + ":";
-    
-    if (s < 10) {
-        ts += "0";
-    } 
-    ts += "" + s;
-    
+    ts += "" + m; 
+
     return ts;
 }
 
 var Logger = Backbone.View.extend({
     tagName: "ul",
     id: "logList",
-    maxelements: 5,
+    maxelements: 50,
     
     initialize: function() {
         this.model.on('change', _.bind(this.newLogEntry, this));
