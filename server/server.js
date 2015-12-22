@@ -1,7 +1,6 @@
 var http = require('http');
 var url = require('url');
 var qs = require('querystring');
-var sys = require('sys');
 var exec = require('child_process').exec;
 
 var express = require('express');
@@ -9,7 +8,7 @@ var app = express();
 
 app.use(express.static('display'));
 
-var io = require('socket.io').listen(app.listen(80));
+var io = require('socket.io').listen(app.listen(8080));
 var fs = require('fs');
 
 var sqlite3 = require('sqlite3');
