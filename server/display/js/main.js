@@ -7,7 +7,14 @@ $(function() {
 
     var socket = io.connect();
     
-    var scoreboardview = new Scoreboard({ el: document.getElementById("scoreboard"), model: scores, jerseymodel: jerseys });
+    var compositeModel = new Backbone.Model();
+    compositeModel.set({
+        'scores': scores,
+        'jerseys': jerseys,
+        'momentum': momentum
+    } );
+    
+    var scoreboardview = new Scoreboard({ el: document.getElementById("scoreboard"), model: compositeModel});
     
     var loggerview = new Logger({model: scores});
     $('#logContainer').append(loggerview.$el);

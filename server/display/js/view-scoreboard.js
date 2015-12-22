@@ -4,7 +4,7 @@ var Scoreboard = Backbone.View.extend({
     children: [],
 
     initialize: function(arg1, arg2) {
-        this.model.on('change', _.bind(this.render, this));
+        this.model.get('scores').on('change', _.bind(this.render, this));
         
         // Create all the kitchen widgets
         var kitchens = [
@@ -13,10 +13,12 @@ var Scoreboard = Backbone.View.extend({
             "1C", "2C", "3C", "4C", "5C", "6C", "7C",
             "1D", "2D", "3D", "4D", "5D", "6D", "7D"
         ];
+        
+        console.log([this, this.options, this.momentummodel]);
 
         for (var kitchen in kitchens) {
             var unit = new ScoreboardUnit({
-                model: this.model, 
+                model: this.model,
                 kitchen_id: kitchens[kitchen],
                 id: "score-"+kitchens[kitchen]
             });
@@ -28,13 +30,12 @@ var Scoreboard = Backbone.View.extend({
         $(window).resize(_.bind(this.render, this));
                 
         this.render();
-
     },
 
     render: function() {
 	var padding = 10;
 
-        this.$el.children().tsort('div.points', {order: 'desc'}, 'h2');
+        this.$el.children().tsort('div.bar.points', {order: 'desc'}, 'h2');
         
         // ensure yellow
         $(".yellow").removeClass('yellow');
@@ -73,36 +74,55 @@ var ScoreboardUnit = Backbone.View.extend({
     initialize: function() {
         this.kitchen_id = this.id.split("-")[1];
         
-        if (!this.model.has(this.kitchen_id)) {
-            this.model.set(this.kitchen_id, 0);
+        if (!this.model.get('scores').has(this.kitchen_id)) {
+            this.model.get('scores').set(this.kitchen_id, 0);
         }
 
-        this.model.on('change:'+this.kitchen_id, _.bind(this.render, this));
+        this.model.get('scores').on('change', _.bind(this.render, this));
         
-        this.$el.html("<h2>"+this.kitchen_id +"</h2><div class=\"points\">0</div><div class=\"odometer\">0</span>");
+        this.$el.html("<div class=\"kitchen\">"+this.kitchen_id +"</div>" 
+                      + "<div class=\"bar bar_points\">"
+                      + "<div class=\"percentage percentage_points\"></div>"
+                      + "<div class=\"points\">0</div>"
+                      + "</div>"
+                      + "<div class=\"bar bar_momentum\"> "
+                      + "<div class=\"percentage percentage_momentum\"></div>"
+                      + "<div class=\"momentum\">0</div>"
+                      + "</div>"
+                      + "");
         this.$el.addClass('animated');
 
-        $(window).resize(_.bind(this.ensureRound, this));
-        
         // Ensure that the CSS matches up
         $(_.bind(function() {
             this.render();
         }, this ));        
     },
 
-    render: function() {
+    render: function() {   
+        // if (this.renderCount > 1) {
+        //     this.$el.removeClass('animated').effect('highlight', 'fast').addClass('animated');
+        // }
         
-        if (this.renderCount > 1) {
-            this.$el.removeClass('animated').effect('highlight', 'fast').addClass('animated');
-        }
+        var points = this.model.get('scores').get(this.kitchen_id);
+        var momentum = this.model.get('momentum').get(this.kitchen_id);
 
-        this.$('.points').text(this.model.get(this.kitchen_id));
-        this.$('.odometer').text(Math.round(this.model.get(this.kitchen_id)));
+        this.$('.points').text(points);
+        this.$('.momentum').text(momentum);
         
+        var maxPoints = _.max(this.model.get('scores').attributes);
+        var maxMomentum = _.max(this.model.get('momentum').attributes);
+        
+        var percentagePoints = points/maxPoints;
+        var percentageMomentum = momentum/maxMomentum;
+        
+        this.$('.bar_points .percentage').width((100 * percentagePoints) + "%");
+        this.$('.bar_momentum .percentage').width((100 * percentageMomentum) + "%"); 
+        
+        console.log([
+            percentagePoints, 
+            percentageMomentum]);
+
         this.renderCount++;
-    },
-    
-    ensureRound: function() {
     }
 });
 

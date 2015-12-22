@@ -138,12 +138,12 @@ h1 {
 
 .scoreboard-unit {
     width: 30%;
-    height: 85px;
-    background: rgba(87, 44, 16, 0.75);
+    height: 80px;
+    background: rgba(255, 255, 255, 0.75);
     color: #fff;
 
     margin: 7px;
-    border-radius: 81px;
+    border-radius: 15px;
     border: 2px solid #000;
     text-align: center;
 
@@ -151,11 +151,63 @@ h1 {
     position: absolute;
 }
 
-.scoreboard-unit h2 {
+.scoreboard-unit .kitchen {
+    position: absolute;
+    left: 0px;
+    width: 25%;
+
+    display: table-cell;
+    vertical-align: middle;
+    line-height: 100%;
+    
     text-align: center;
     font-size: 1.2em;
-    margin-top: 8px;
+    margin-top: 0px;
     margin-bottom: 0px;
+}
+
+.scoreboard-unit .bar {
+    position: absolute;
+    width: 75%;
+    height: 50%;
+    left: 25%;
+    
+}
+
+.scoreboard-unit .bar .points, .scoreboard-unit .bar .momentum {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+
+    border-radius: 2px;
+    padding: 3px 8px;
+
+    background: #fff;
+    color: #000;
+
+    margin: 4px;
+    
+}
+
+.scoreboard-unit .bar_points {
+    top: 0px;
+}
+
+.scoreboard-unit .bar_momentum {
+    top: 50%;
+}
+
+.percentage {
+    width: 0px;
+    height: 100%;
+}
+
+.percentage_points {
+    background: navy;
+}
+
+.percentage_momentum {
+    background: maroon;
 }
 
 
@@ -191,8 +243,6 @@ h1 {
     box-shadow: 0px 0px 60px 20px #dfc12a;
 }
 
-
-.points{display:none}
 .odometer {
     font-size:1.1em;
 }
@@ -256,8 +306,6 @@ ul {
     margin: 3px 7px;
     padding: 0px;
     font-size: 1em;
-    float:left;
-    display:inline;
     text-overflow: hidden;
 }
 
