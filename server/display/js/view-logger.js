@@ -37,7 +37,7 @@ var Logger = Backbone.View.extend({
         for (var kitchen in attributes) {
             var diff = attributes[kitchen] - prevAttributes[kitchen];
             diff = diff.toFixed(2).replace(".00", "");
-            var $obj = $("<li>").html("<span class=\"timestamp\">" + getTimestamp() + "</span> " + kitchen+ ": "+ diff + (diff==1||diff==0.5?" streg.":" streger."));
+            var $obj = $("<li>").html("<span class=\"timestamp\">" + getTimestamp() + "</span> " + kitchen+ ": "+ diff);
 
             this.$el.prepend($obj.fadeIn());
         }

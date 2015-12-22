@@ -43,9 +43,9 @@ var Scoreboard = Backbone.View.extend({
         var $units = this.$el.children();
 	var totalWidth = this.$el.width();
 	var cols = Math.floor( totalWidth / ($units.width() + padding) );
-        var height = (Math.ceil(28 / cols) * (80 + padding))+ padding + "px";
-        console.log("height: "+ height);
-        this.$el.css('height', height);
+        // var height = (Math.ceil(28 / cols) * (80 + padding))+ padding + "px";
+        // console.log("height: "+ height);
+        // this.$el.css('height', "10%");
 
 	$units.each(function(index) {
 	    var width = $(this).width();
@@ -89,6 +89,7 @@ var ScoreboardUnit = Backbone.View.extend({
             this.render();
         }, this ));        
     },
+
     render: function() {
         
         if (this.renderCount > 1) {
@@ -99,12 +100,9 @@ var ScoreboardUnit = Backbone.View.extend({
         this.$('.odometer').text(Math.round(this.model.get(this.kitchen_id)));
         
         this.renderCount++;
-        this.ensureRound();
-        
     },
     
     ensureRound: function() {
-        this.$el.css('height', this.$el.width() + "px");
     }
 });
 

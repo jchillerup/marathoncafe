@@ -99,8 +99,6 @@ textarea {
 body {
     background: url(../img/wood.jpg) no-repeat fixed;
     background-size: cover;
-    width: 1024px;
-    height: 768px;
     overflow: hidden;
 }
 
@@ -129,7 +127,8 @@ h1 {
 
 
 #scoreboard {
-    width: 100%;
+    width: 50%;
+    height: 100%;
     position:relative;
 }
 .animated {
@@ -138,8 +137,8 @@ h1 {
 }
 
 .scoreboard-unit {
-    width: 81px;
-    height: 81px;
+    width: 30%;
+    height: 85px;
     background: rgba(87, 44, 16, 0.75);
     color: #fff;
 
@@ -199,19 +198,26 @@ h1 {
 }
 
 #plots {
-    position: relative;
-    width: 480px;
-    height: 480px;
+    position: absolute;
+    top: 0px;
+    left: 50%;
+    width: 35%;
+    height: 50%;
     overflow: hidden;
     display: inline-block;
-    float: left;
 
-    border: 3px solid #000;
+    border: 3px solid #f00;
+    z-index:100;
 }
 
 #instagram {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 35%;
+    
     border: 3px solid #000;
-    height: 480px;
+    height: 50%;
 }
 
 #plots img {
@@ -228,8 +234,9 @@ h1 {
 
 #logList {
     position: fixed;
-    left: 0px;
-    width: 100%;
+    right: 0px;
+    width: 15%;
+    height: 100%;
     bottom: 0px;
     background: black;
     border-top: 2px maroon solid;
@@ -257,12 +264,6 @@ ul {
 #logList li .timestamp {
     font-weight: bold;
     margin-right: 6px;
-}
-
-#instagram {
-    display: inline-block;
-    position: relative;
-    margin-left:20px;
 }
 
 /* ==========================================================================
