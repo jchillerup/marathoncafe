@@ -8,10 +8,9 @@ var Scoreboard = Backbone.View.extend({
         
         // Create all the kitchen widgets
         var kitchens = [
-            "1A", "2A", "3A", "4A", "5A", "6A", "7A",
-            "1B", "2B", "3B", "4B", "5B", "6B", "7B",
-            "1C", "2C", "3C", "4C", "5C", "6C", "7C",
-            "1D", "2D", "3D", "4D", "5D", "6D", "7D"
+            "GL1", "GL2", "GL3", "GL4", "GL5", "GL6", "GL7", "GL8",
+                   "ML2", "ML3", "ML4", "ML5", "ML6", "ML7", "ML8",
+                   "NY2", "NY3", "NY4", "NY5", "NY6", "NY7", "NY8"
         ];
         
         console.log([this, this.options, this.momentummodel]);
