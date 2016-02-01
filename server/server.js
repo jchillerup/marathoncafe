@@ -52,6 +52,38 @@ db.serialize(function() {
     });
 });
 
+
+function registerStreg(kitchen, quantity, sender) {
+    if (first) {
+        buffer = "";
+        for (var c_kitchen in state.cur_scores) {
+            // 1391781601
+            
+            buffer += c_kitchen+";0.01;"+ Math.round((new Date).getTime()/1000) + "\n";
+            buffer += c_kitchen+";0.01;"+ Math.round((new Date).getTime()/1000 + 60) + "\n";
+        }
+        
+        fs.writeFileSync("data.csv", buffer);
+        first = false;
+    }
+    
+    quantity = parseFloat(quantity);
+    
+    // update stored state
+    db.run('INSERT INTO streger VALUES (?,?,?,?)', [kitchen, quantity, (new Date).getTime(), sender]);
+    
+    // Add to the CSV file
+    var buffer = kitchen + ";" + quantity + ";" + Math.round((new Date).getTime()/1000) + "\n";
+    fs.appendFileSync('data.csv', buffer);
+    
+    // update local state
+    state.cur_scores[kitchen] += quantity;        
+
+    // tell listeners about this
+    io.sockets.emit('state', state);
+}
+
+
 // socket.io
 io.sockets.on('connection', function (socket) {
     socket.emit('state', state);
@@ -59,33 +91,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('streg', function(data) {
         var sender = socket.handshake.address;
 
-        if (first) {
-            buffer = "";
-            for (var kitchen in state.cur_scores) {
-                // 1391781601
-                
-                buffer += kitchen+";0.01;"+ Math.round((new Date).getTime()/1000) + "\n";
-                buffer += kitchen+";0.01;"+ Math.round((new Date).getTime()/1000 + 60) + "\n";
-            }
-            
-            fs.writeFileSync("data.csv", buffer);
-            first = false;
-        }
-        
-        var quantity = parseFloat(data.quantity);
-        
-        // update stored state
-        db.run('INSERT INTO streger VALUES (?,?,?,?)', [data.kitchen, quantity, (new Date).getTime(), sender]);
-        
-        // Add to the CSV file
-        var buffer = data.kitchen + ";" + data.quantity + ";" + Math.round((new Date).getTime()/1000) + "\n";
-        fs.appendFileSync('data.csv', buffer);
-        
-        // update local state
-        state.cur_scores[data.kitchen] += quantity;        
-
-        // tell listeners about this
-        io.sockets.emit('state', state);
+        registerStreg(data.kitchen, data.quantity, sender);
     });
 });
 
@@ -114,6 +120,10 @@ http.createServer(function(req, res) {
         delete query['mode'];
         state.momentum = query;
         io.sockets.emit('state', state);
+        break;
+        
+    case "streg":
+        registerStreg(query['kitchen'], query['quantity'], 'debug');
         break;
     
     default:
