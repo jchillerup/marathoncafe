@@ -121,8 +121,8 @@ var ScoreboardUnit = Backbone.View.extend({
         var points = this.model.get('scores').get(this.kitchen_id);
         var momentum = this.model.get('momentum').get(this.kitchen_id);
 
-        this.$('.points').text(points);
-        this.$('.momentum').text(momentum);
+        this.$('.points').text(Math.round(points));
+        this.$('.momentum').text(Math.round(momentum));
 
         var maxPoints = _.max(this.model.get('scores').attributes);
         var maxMomentum = _.max(this.model.get('momentum').attributes);
