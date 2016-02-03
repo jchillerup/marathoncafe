@@ -100,34 +100,58 @@ io.sockets.on('connection', function (socket) {
 http.createServer(function(req, res) {
     res.writeHead(200, {'Content-Type': 'text/plain'});
     
-    var parsed = url.parse(req.url);
-    var query = qs.parse(parsed['query']);
+    if (req.method == "GET") {
+        var parsed = url.parse(req.url);
+        var query = qs.parse(parsed['query']);
 
-    switch(query['mode']) {
-    case "reload":
-        io.sockets.emit('reload');
-        break;
+        switch(query['mode']) {
+        case "reload":
+            io.sockets.emit('reload');
+            break;
+            
+        case "jersey":
+            state.jerseys['yellow'] = query['yellow'];
+            state.jerseys['green'] = query['green'];
+            state.jerseys['dotted'] = query['dotted'];
+
+            io.sockets.emit('state', state);
+            break;
+
+        case "momentum":
+            delete query['mode'];
+            state.momentum = query;
+            io.sockets.emit('state', state);
+            break;
+            
+        case "streg":
+            registerStreg(query['kitchen'], query['quantity'], 'debug');
+            break;
+            
+        default:
+            console.log('Did not understand this on the MGMT interface: ' + JSON.stringify(query));
+        }
+    } else if (req.method == "POST") {
+        // POSTing data makes it possible for R to send JSON objects.
+        console.log("GOT POST REQUEST");
         
-    case "jersey":
-        state.jerseys['yellow'] = query['yellow'];
-        state.jerseys['green'] = query['green'];
-        state.jerseys['dotted'] = query['dotted'];
+        var body = '';
 
-        io.sockets.emit('state', state);
-        break;
+        req.on('data', function (data) {
+            body += data;
 
-    case "momentum":
-        delete query['mode'];
-        state.momentum = query;
-        io.sockets.emit('state', state);
-        break;
+            // Too much POST data, kill the connection!
+            // 1e6 === 1 * Math.pow(10, 6) === 1 * 1000000 ~~~ 1MB
+            if (body.length > 1e6)
+                request.connection.destroy();
+        });
         
-    case "streg":
-        registerStreg(query['kitchen'], query['quantity'], 'debug');
-        break;
-    
-    default:
-        console.log('Did not understand this on the MGMT interface: ' + JSON.stringify(query));
+        req.on('end', function () {
+            //  Here we do something with the POST dataa
+            
+            var data = JSON.parse(body);
+            io.sockets.emit('plots', data);
+        });
+
     }
 
     res.end(req.url);
@@ -139,7 +163,7 @@ http.createServer(function(req, res) {
 function runR() {
     console.log("Running R");
     exec("nice R --vanilla < marathoncafe.R", function(error, stdout, stderr) {
-        setTimeout(runR, 5000);
+        setTimeout(runR, 10000);
     });
 
 }

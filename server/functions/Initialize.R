@@ -8,6 +8,7 @@ Initialize <- function(install_packages,load_packages){
         install.packages("lattice")
         install.packages("zoo")
         install.packages("httpRequest")
+        install.packages("jsonlite")
         update.packages()
     }
     return(NULL)

@@ -5,7 +5,7 @@ fp = open(sys.argv[1], 'r')
 ts_offset = -1
 timer = 0
 
-SPEED_FACTOR = 10
+SPEED_FACTOR = 2
 
 for line in fp.readlines():
     kitchen, quantity, timestamp = line.rstrip().split(';')

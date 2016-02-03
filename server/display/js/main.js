@@ -42,6 +42,11 @@ $(function() {
         window.location.reload();
     });
     
+    // Take care of plots
+    socket.on('plots', function(data) {
+        console.log(data);
+    });
+    
 
     // Reload the iframe automatically
     setInterval(function() {
