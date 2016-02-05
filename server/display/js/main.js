@@ -4,6 +4,7 @@ $(function() {
     var scores = new Backbone.Model();
     var jerseys = new Backbone.Model();
     var momentum = new Backbone.Model();
+    var plots = new Backbone.Model();
 
     var socket = io.connect();
     
@@ -11,8 +12,12 @@ $(function() {
     compositeModel.set({
         'scores': scores,
         'jerseys': jerseys,
-        'momentum': momentum
+        'momentum': momentum,
+        'plots': plots
     } );
+
+    window.state = {"scores": scores, "momentum": momentum, "jerseys": jerseys};
+    window.plots = plots;
     
     var scoreboardview = new Scoreboard({ el: document.getElementById("scoreboard"), model: compositeModel});
     
@@ -27,7 +32,11 @@ $(function() {
         jerseys.set(data.jerseys);
     });
     
-    window.state = {"scores": scores, "momentum": momentum, "jerseys": jerseys};
+    // Take care of plots
+    socket.on('plots', function(data) {
+        plots.set(data);
+    });
+
     
     // We're updating the yellow jersey more frequently than the others
     jerseys.on('change', function() {
@@ -41,12 +50,6 @@ $(function() {
     socket.on('reload', function(data) {
         window.location.reload();
     });
-    
-    // Take care of plots
-    socket.on('plots', function(data) {
-        console.log(data);
-    });
-    
 
     // Reload the iframe automatically
     setInterval(function() {

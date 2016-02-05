@@ -39,7 +39,7 @@ var Scoreboard = Backbone.View.extend({
     },
 
     render: _.debounce(function() {
-        console.log('scoreboard render');
+        // console.log('scoreboard render');
         var padding = 10;
 
         var $units = this.$el.children();

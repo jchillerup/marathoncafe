@@ -1,38 +1,57 @@
+var Plot = Backbone.View.extend({
+    tagName: "canvas",
+    ctx: null,
+    chart: null,
+
+    initialize: function() {
+        
+        this.ctx = this.$el.get(0).getContext("2d");
+        //this.chart = new Chart(this.ctx).Line(window.plots.get('hamringsmomentum_total'));
+        
+        window.plots.on('change', _.bind(this.render, this));
+        
+        this.$el.css({
+            width: "100%",
+            height: "100%"
+        });
+    },
+    
+    render: function() {
+        this.chart = new Chart(this.ctx).Line({
+            datasets: [{
+                fillColor: "rgba(220,220,220,0.2)",
+                strokeColor: "rgba(220,220,220,1)",
+                pointColor: "rgba(220,220,220,1)",
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(220,220,220,1)",
+                label: "Hamringsmomentum totalt",
+                data: window.plots.get('hamringsmomentum_total')
+            }]
+        });
+        this.chart.update();
+    }
+});
+
 var PlotsView = Backbone.View.extend({
     id: "plots",
-    cur_plot: 0,
-    $cur_img: null,
-    plotfiles: ['plot0.png', 'plot11.png', 'plot12.png', 'plot13.png', 'plot1.png', 'plot2.png', 'plot4.png', 'plot6.png', 'plot7.png', 'plot9.png'],
+    
 
     events: {
-        "click img": "advance"
+        
     },
     
     initialize: function() {
         console.log('plots view initialized');
         
-        this.insertPic();
-        this.insertPic();
-        this.advance();
+        var plot = new Plot();
+        this.$el.append(plot.$el);
 
-        setInterval(_.bind(this.advance, this), 18000);
-    },
-    
-    insertPic: function() {
-        var path = "plots/"+(this.plotfiles[this.cur_plot])+"?cachebust="+(new Date()).getTime();
-        var $img = $("<img>").attr('src', path).css('left', '480px');
-
-        this.$el.append($img);
-        this.$cur_img = $img;
+        // setInterval(_.bind(this.advance, this), 18000);
     },
 
-    advance: function(event) {
-        this.cur_plot += 1;
-        this.cur_plot %= this.plotfiles.length;
-        
-        this.insertPic();
-
-        this.$("img:first").animate({"left": "-480px"}, 600, function() {$(this).remove();});
-        $(this.$("img").get(1)).animate({"left": "0px"}, 600);       
+    render: function() {
+        console.log('plots view render');
     }
+    
 });

@@ -132,8 +132,6 @@ http.createServer(function(req, res) {
         }
     } else if (req.method == "POST") {
         // POSTing data makes it possible for R to send JSON objects.
-        console.log("GOT POST REQUEST");
-        
         var body = '';
 
         req.on('data', function (data) {
