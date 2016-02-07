@@ -10,8 +10,6 @@ udkomt <- 0 # 0 = udkommenteret
 files <- dir("functions", full.names = TRUE)
 for (i in 1:length(files)) source(files[i])
 
-Initialize(install_packages, install_packages);
-
 library(data.table) 
 library(plotrix)
 library(RSQLite)
@@ -62,6 +60,10 @@ datac <- Beregn_Kumuleret_Antal_Streger_For_Foerende_5(data)
 C <- 100000
 
 Hamringsmomentum_Koekkener <- Beregn_Hamringsmomentum_Fordelt_Paa_Koekkenerne(datac,Antal_Streger_Paa_Hvert_Koekken,C,print,reso)
+jsonToServer <- paste(jsonToServer, "\"hamringsmomentum_koekkener\": ")
+jsonToServer <- paste(jsonToServer, toJSON(Hamringsmomentum_Koekkener))
+jsonToServer <- paste(jsonToServer, ",")
+
 
 Hamrings_Momentum <- Beregn_Hamringsmomentum(data,C)
 jsonToServer <- paste(jsonToServer, "\"hamringsmomentum_total\": ")

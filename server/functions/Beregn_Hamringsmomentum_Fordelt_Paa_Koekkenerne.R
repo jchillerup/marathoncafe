@@ -724,64 +724,15 @@ count <- data.frame(ki,momm)
 
 count <- count[order(count[,"momm"]),] # Sorting  
 
+return(count)
 
+# JC: JEG RETURNER HER FORDI JEG IKKE FATTER HVAD DER SKER
 
-#### MOMENTUM KAN LET FINDES HER!!!!!!!!!!
-
-# # 
-# # t1 <- c("/?mode=momentum&GL1=",as.character(count[which(count$ki == "GL1"),2]))    
-# # t2 <- c("&GL2=",as.character(count[which(count$ki == "GL2"),2]))    
-# # t3 <- c("&GL3=",as.character(count[which(count$ki == "GL3"),2]))    
-# # t4 <- c("&GL4=",as.character(count[which(count$ki == "GL4"),2]))    
-# # t5 <- c("&GL5=",as.character(count[which(count$ki == "GL5"),2]))    
-# # t6 <- c("&GL6=",as.character(count[which(count$ki == "GL6"),2]))    
-# # t7 <- c("&GL7=",as.character(count[which(count$ki == "GL7"),2]))    
-# # t8 <- c("&GL8=",as.character(count[which(count$ki == "GL8"),2]))    
-# # t9 <- c("&ML2=",as.character(count[which(count$ki == "ML2"),2]))    
-# # t10 <- c("&ML3=",as.character(count[which(count$ki == "ML3"),2]))    
-# # t11 <- c("&ML4=",as.character(count[which(count$ki == "ML4"),2]))    
-# # t12 <- c("&ML5=",as.character(count[which(count$ki == "ML5"),2]))    
-# # t13 <- c("&ML6=",as.character(count[which(count$ki == "ML6"),2]))    
-# # t14 <- c("&ML7=",as.character(count[which(count$ki == "ML7"),2]))    
-# # t15 <- c("&ML8=",as.character(count[which(count$ki == "ML8"),2]))
-# # t16 <- c("&NY2=",as.character(count[which(count$ki == "NY2"),2]))    
-# # t17 <- c("&NY3=",as.character(count[which(count$ki == "NY3"),2]))    
-# # t18 <- c("&NY4=",as.character(count[which(count$ki == "NY4"),2]))    
-# # t19 <- c("&NY5=",as.character(count[which(count$ki == "NY5"),2]))    
-# # t20 <- c("&NY6=",as.character(count[which(count$ki == "NY6"),2]))    
-# # t21 <- c("&NY7=",as.character(count[which(count$ki == "NY7"),2]))    
-# # t22 <- c("&NY8=",as.character(count[which(count$ki == "NY8"),2]))    
-# 
-# 
-# tt1 <- paste(t1,collapse="");
-# tt2<-paste(t2,collapse="");
-# tt3<-paste(t3,collapse="");
-# tt4<-paste(t4,collapse="");
-# tt5<-paste(t5,collapse="");
-# tt6<-paste(t6,collapse="");
-# tt7<-paste(t7,collapse="");
-# tt8<-paste(t8,collapse="");
-# tt9<-paste(t9,collapse="");
-# tt10<-paste(t10,collapse="");
-# tt11<-paste(t11,collapse="");
-# tt12<-paste(t12,collapse="");
-# tt13<-paste(t13,collapse="");
-# tt14<-paste(t14,collapse="");
-# tt15<-paste(t15,collapse="");
-# tt16<-paste(t16,collapse="");
-# tt17<-paste(t17,collapse="");
-# tt18<-paste(t18,collapse="");
-# tt19<-paste(t19,collapse="");
-# tt20<-paste(t20,collapse="");
-# tt21<-paste(t21,collapse="");
-# tt22<-paste(t22,collapse="");
-# 
-
-# JC2 <- paste(c(tt1,tt2,tt3,tt4,tt5,tt6,tt7,tt8,tt9,tt10,tt11,tt12,tt13,tt14,tt15,tt16,tt17,tt18,tt19,tt20,tt21,tt22),collapse="");
-# getToHost("127.0.0.1",JC2,"", port=8081)
-
-
-
+#########################################################################################
+#########################################################################################
+#########################################################################################
+#########################################################################################
+#########################################################################################
 
 
 
@@ -1049,11 +1000,11 @@ trojegron <- troje[order(troje[,"gron"]),] # Sorting
 
 count <-  Antal_Streger_Paa_Hvert_Koekken
 
-a<-c("/?mode=jersey&yellow=",as.character(count[which(count$st == max(count$st)),1]))
-b<-c("&green=",as.character(troje[which(troje$gron == max(troje$gron)),1]))
-c<-c("&dotted=",as.character(troje[which(troje$prik == max(troje$prik)),1]))
-a<-paste(a,collapse="");b<-paste(b,collapse="");c<-paste(c,collapse="")
-JC<-paste(c(a,b),collapse="");JC<-paste(c(JC,c),collapse="")
+# a<-c("/?mode=jersey&yellow=",as.character(count[which(count$st == max(count$st)),1]))
+# b<-c("&green=",as.character(troje[which(troje$gron == max(troje$gron)),1]))
+# c<-c("&dotted=",as.character(troje[which(troje$prik == max(troje$prik)),1]))
+# a<-paste(a,collapse="");b<-paste(b,collapse="");c<-paste(c,collapse="")
+# JC<-paste(c(a,b),collapse="");JC<-paste(c(JC,c),collapse="")
 
 return(NULL)
 }

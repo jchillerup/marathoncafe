@@ -46,8 +46,9 @@ db.serialize(function() {
     });
     
     db.each('SELECT kitchen, SUM(quantity) count FROM streger GROUP BY kitchen;', function(err, row) {
-        state.cur_scores[row.kitchen] = row.count;
-    
+	if (row != undefined) {
+	    state.cur_scores[row.kitchen] = row.count;
+	}
         // TODO: set jerseys here.
     });
 });
@@ -144,9 +145,21 @@ http.createServer(function(req, res) {
         });
         
         req.on('end', function () {
-            //  Here we do something with the POST dataa
+            //  Here we do something with the POST data
             
             var data = JSON.parse(body);
+
+	    // Update the momentums.
+	    for (obj in data.hamringsmomentum_koekkener) {
+
+		var kitchen = data.hamringsmomentum_koekkener[obj].ki;
+		var momentum = data.hamringsmomentum_koekkener[obj].momm;
+
+		state["momentum"][kitchen] = momentum;
+	    }
+	    
+	    
+	    io.sockets.emit('state', state);
             io.sockets.emit('plots', data);
         });
 
@@ -161,7 +174,7 @@ http.createServer(function(req, res) {
 function runR() {
     console.log("Running R");
     exec("nice R --vanilla < marathoncafe.R", function(error, stdout, stderr) {
-        setTimeout(runR, 10000);
+        setTimeout(runR, 1000);
     });
 
 }
