@@ -10,4 +10,5 @@ server/Rplots.pdf
 overlevering/
 server/env
 #*#
+server/#*#
 node_modules/
