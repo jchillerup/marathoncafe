@@ -8,3 +8,6 @@ server/.RData
 server/.Rhistory
 server/Rplots.pdf
 overlevering/
+server/env
+#*#
+node_modules/
