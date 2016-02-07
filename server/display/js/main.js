@@ -27,7 +27,7 @@ $(function() {
     var plotsview = new PlotsView({el: document.getElementById('plots')});
 
     socket.on('state', function (data) {
-	console.log(['state', data]);
+	// console.log(['state', data]);
 	
         scores.set(data.cur_scores);
         momentum.set(data.momentum);
@@ -36,7 +36,7 @@ $(function() {
     
     // Take care of plots
     socket.on('plots', function(data) {
-	console.log(['plots', data]);
+	// console.log(['plots', data]);
         plots.set(data);
 
 	

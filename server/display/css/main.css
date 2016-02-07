@@ -256,9 +256,9 @@ h1 {
     height: 50%;
     overflow: hidden;
     display: inline-block;
-
-    border: 3px solid #f00;
     z-index:100;
+
+    background: #fff;
 }
 
 #instagram {
