@@ -70,7 +70,7 @@ var Scoreboard = Backbone.View.extend({
         
         // ensure yellow
         $(".yellow").removeClass('yellow');
-        $(this.$el.children().get(0)).addClass('yellow');
+        $(this.$el.children().get(0)).find(".tc").addClass('yellow');
     },
                        5) // debounce the function so we can have all scoreboardunits call 
                           // render without spamming the scoreboard.
@@ -93,7 +93,7 @@ var ScoreboardUnit = Backbone.View.extend({
 
         this.model.get('scores').on('change', _.bind(this.render, this));
 
-        this.$el.html("<div class=\"kitchen\"><div class=\"tc\">"+this.kitchen_id +"</div></div>"
+        this.$el.html("<div class=\"kitchen\"><div class=\"tc\"><span>"+this.kitchen_id +"</span></div></div>"
                       + "<div class=\"bar bar_points\">"
                       + "<div class=\"percentage percentage_points\"></div>"
                       + "<div class=\"points\">0</div>"
@@ -114,10 +114,6 @@ var ScoreboardUnit = Backbone.View.extend({
     },
 
     render: function() {
-        // if (this.renderCount > 1) {
-        //     this.$el.removeClass('animated').effect('highlight', 'fast').addClass('animated');
-        // }
-
         var points = this.model.get('scores').get(this.kitchen_id);
         var momentum = this.model.get('momentum').get(this.kitchen_id);
 
@@ -139,19 +135,8 @@ var ScoreboardUnit = Backbone.View.extend({
         this.$('.bar_points .percentage').width((100 * percentagePoints) + "%");
         this.$('.bar_momentum .percentage').width((100 * percentageMomentum) + "%");
 
-        // console.log([
-        //     percentagePoints,
-        //     percentageMomentum]);
-
-        this.renderCount++;
-        
+        this.renderCount++;        
         this.scoreboardView.render();
     }
 });
 
-
-window.odometerOptions = {
-    duration: 800,
-    theme: 'car',
-    animation: 'count'
-};
