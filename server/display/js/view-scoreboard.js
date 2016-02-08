@@ -93,7 +93,7 @@ var ScoreboardUnit = Backbone.View.extend({
 
         this.model.get('scores').on('change', _.bind(this.render, this));
 
-        this.$el.html("<div class=\"kitchen\"><h2>"+this.kitchen_id +"</h2></div>"
+        this.$el.html("<div class=\"kitchen\"><div class=\"tc\">"+this.kitchen_id +"</div></div>"
                       + "<div class=\"bar bar_points\">"
                       + "<div class=\"percentage percentage_points\"></div>"
                       + "<div class=\"points\">0</div>"
