@@ -134,60 +134,60 @@ if (length(NonNAindex) == 0){
 }
 count <- count[order(count[,"st"]),] # Sorting
 
-# if (dim(count)[1] >= 5){
-#   if (print == 1){png(file = "display/plots/plot7.png",res=reso)}  
-#   nr1 <- count[dim(count)[1],]
-#   nr1 <- data.frame(lapply(nr1, as.character), stringsAsFactors=FALSE)[1]
-#   nr1 <- as.character(nr1)
-#   datanr1 <- datac[which(datac$ki == nr1,),]
-#   datanr1$cumst <- cumsum(datanr1$st)
-#   nr2 <- count[dim(count)[1]-1,]
-#   nr2 <- data.frame(lapply(nr2, as.character), stringsAsFactors=FALSE)[1]
-#   nr2 <- as.character(nr2)
-#   datanr2 <- datac[which(datac$ki == nr2,),]
-#   datanr2$cumst <- cumsum(datanr2$st)
-#   nr3 <- count[dim(count)[1]-2,]  
-#   nr3 <- data.frame(lapply(nr3, as.character), stringsAsFactors=FALSE)[1]
-#   nr3 <- as.character(nr3)  
-#   datanr3 <- datac[which(datac$ki == nr3,),]
-#   datanr3$cumst <- cumsum(datanr3$st)
-#   nr4 <- count[dim(count)[1]-3,]
-#   nr4 <- data.frame(lapply(nr4, as.character), stringsAsFactors=FALSE)[1]
-#   nr4 <- as.character(nr4)
-#   datanr4 <- datac[which(datac$ki == nr4,),]
-#   datanr4$cumst <- cumsum(datanr4$st)
-#   nr5 <- count[dim(count)[1]-4,]
-#   nr5 <- data.frame(lapply(nr5, as.character), stringsAsFactors=FALSE)[1]
-#   nr5 <- as.character(nr5)
-#   datanr5 <- datac[which(datac$ki == nr5,),]
-#   datanr5$cumst <- cumsum(datanr5$st)
-#   par(mar=c(5, 5, 4, 2) + 0.1)
-#   plot(datanr1$min,datanr1$cumst,type="l",col=1,xaxt="n",las=1,ylab="",xlab="",ylim = c(0,temporary)) 
-#   points(datanr2$min,datanr2$cumst,type="l",col=2,xaxt="n",las=1,ylab="",xlab="")
-#   points(datanr3$min,datanr3$cumst,type="l",col=3,xaxt="n",las=1,ylab="",xlab="")  
-#   points(datanr4$min,datanr4$cumst,type="l",col=4,xaxt="n",las=1,ylab="",xlab="")  
-#   points(datanr5$min,datanr5$cumst,type="l",col=5,xaxt="n",las=1,ylab="",xlab="")  
-#   leg <- c(nr1,nr2,nr3,nr4,nr5)
-#   abline(v=c(540,540+24*60),lty=1,col="black")
-#   legend("topleft", inset=.05,leg, horiz=FALSE,lty=1,col=c(1:5),ncol=2, cex=.90,lwd=1,bg="transparent")
-#   if(max(data$yhour) < 24) {
-#     hours <- c("15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00" ,"16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00")
-#     axis(1, at=seq(0,2880,60), labels=hours,las = 2)
-#   } else if (max(data$yhour) > 24){
-#     hours <- c("15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00")
-#     axis(1, at=seq(0,2880,120), labels=hours,las = 2)
-#   }
-#   title(main="Kumulerede antal streger per minut for de tre \n foerende koekkener for hele marathoncafeen",mgp=c(3,1,0), font.main = 1)
-#   title(ylab="Antal streger",mgp=c(3.1,1,0))
-#   text(c(270,1440/2+540,2430),c(10,10,10), c("fredag","loerdag","soendag"))
-#   if (print == 1){dev.off()}  
-# } else if (dim(count)[1] < 3){
-#   if (print == 1){png(file = "display/plots/plot7.png",res=reso)}  
-#   plot(0,col="white",xlab="",ylab="",xaxt="n",yaxt="n")  
-#   text(1,0,c("This plot will be generated when \n data is available"))
-#   text(1,-0.5,paste("Present plots were generated: ",Sys.time()),cex=0.85)
-#   if (print == 1){dev.off()}
-# }
+if (dim(count)[1] >= 5){
+  if (print == 1){png(file = "display/plots/plot7-cum-top5.png",res=reso)}  
+  nr1 <- count[dim(count)[1],]
+  nr1 <- data.frame(lapply(nr1, as.character), stringsAsFactors=FALSE)[1]
+  nr1 <- as.character(nr1)
+  datanr1 <- datac[which(datac$ki == nr1,),]
+  datanr1$cumst <- cumsum(datanr1$st)
+  nr2 <- count[dim(count)[1]-1,]
+  nr2 <- data.frame(lapply(nr2, as.character), stringsAsFactors=FALSE)[1]
+  nr2 <- as.character(nr2)
+  datanr2 <- datac[which(datac$ki == nr2,),]
+  datanr2$cumst <- cumsum(datanr2$st)
+  nr3 <- count[dim(count)[1]-2,]  
+  nr3 <- data.frame(lapply(nr3, as.character), stringsAsFactors=FALSE)[1]
+  nr3 <- as.character(nr3)  
+  datanr3 <- datac[which(datac$ki == nr3,),]
+  datanr3$cumst <- cumsum(datanr3$st)
+  nr4 <- count[dim(count)[1]-3,]
+  nr4 <- data.frame(lapply(nr4, as.character), stringsAsFactors=FALSE)[1]
+  nr4 <- as.character(nr4)
+  datanr4 <- datac[which(datac$ki == nr4,),]
+  datanr4$cumst <- cumsum(datanr4$st)
+  nr5 <- count[dim(count)[1]-4,]
+  nr5 <- data.frame(lapply(nr5, as.character), stringsAsFactors=FALSE)[1]
+  nr5 <- as.character(nr5)
+  datanr5 <- datac[which(datac$ki == nr5,),]
+  datanr5$cumst <- cumsum(datanr5$st)
+  par(mar=c(5, 5, 4, 2) + 0.1)
+  plot(datanr1$min,datanr1$cumst,type="l",col=1,xaxt="n",las=1,ylab="",xlab="",ylim = c(0,temporary)) 
+  points(datanr2$min,datanr2$cumst,type="l",col=2,xaxt="n",las=1,ylab="",xlab="")
+  points(datanr3$min,datanr3$cumst,type="l",col=3,xaxt="n",las=1,ylab="",xlab="")  
+  points(datanr4$min,datanr4$cumst,type="l",col=4,xaxt="n",las=1,ylab="",xlab="")  
+  points(datanr5$min,datanr5$cumst,type="l",col=5,xaxt="n",las=1,ylab="",xlab="")  
+  leg <- c(nr1,nr2,nr3,nr4,nr5)
+  abline(v=c(540,540+24*60),lty=1,col="black")
+  legend("topleft", inset=.05,leg, horiz=FALSE,lty=1,col=c(1:5),ncol=2, cex=.90,lwd=1,bg="transparent")
+  if(max(data$yhour) < 24) {
+    hours <- c("15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00" ,"16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00")
+    axis(1, at=seq(0,2880,60), labels=hours,las = 2)
+  } else if (max(data$yhour) > 24){
+    hours <- c("15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00")
+    axis(1, at=seq(0,2880,120), labels=hours,las = 2)
+  }
+  title(main="Kumulerede antal streger per minut for de tre \n foerende koekkener for hele marathoncafeen",mgp=c(3,1,0), font.main = 1)
+  title(ylab="Antal streger",mgp=c(3.1,1,0))
+  text(c(270,1440/2+540,2430),c(10,10,10), c("fredag","loerdag","soendag"))
+  if (print == 1){dev.off()}  
+} else if (dim(count)[1] < 3){
+  if (print == 1){png(file = "display/plots/plot7-cum-top5.png",res=reso)}  
+  plot(0,col="white",xlab="",ylab="",xaxt="n",yaxt="n")  
+  text(1,0,c("This plot will be generated when \n data is available"))
+  text(1,-0.5,paste("Present plots were generated: ",Sys.time()),cex=0.85)
+  if (print == 1){dev.off()}
+}
 
 return(datac)
 

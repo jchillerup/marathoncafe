@@ -21,29 +21,30 @@ Beregn_Hamringsmomentum <- function(data,C){
   datam <- data.table(datam)
   datam <- datam[ ,lapply(.SD, sum), by = "min"]
   datam$momm <- datam$st
+  
   for(i in 2:dim(datam)[1]-1) {
-    CC <- tanh(datam$mom[i]/C)
+    # CC <- tanh(datam$mom[i]/C)
+    CC <- datam$mom[i]/(22*C)
     datam$momm[i+1] <- (1-CC)*(datam$mom[i]+datam$st[i])
   }  
   
+
+  if (print == 1){png(file = "display/plots/plot900-hamringsmomentum-global.png",res=reso)}
+  par(mar=c(5, 4.5, 4, 2) + 0.1)
+  plot(datam$min,datam$momm,type="l",col="blue",xaxt="n",las=1,ylab="",xlab="")
+  abline(v=c(540,540+24*60),lty=1,col="black")
+  if(max(data$min) < 1440) {
+    hours <- c("15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00" ,"16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00")
+    axis(1, at=seq(0,2880,60), labels=hours,las = 2)
+  } else if (max(data$min) > 1440){
+    hours <- c("15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00")
+    axis(1, at=seq(0,2880,120), labels=hours,las = 2)
+  }
+  title(main="Hamringmomentum* for daempning \n paa 2.34% per minut",mgp=c(4,1,0), font.main = 1)
+  title(ylab="Hamringmomentum",mgp=c(3.0,1,0))
+  title(mgp=c(3.5,1,0),xlab="*En form for 'hamrings-hastigheds-speedometer'")
+  if (print == 1){dev.off()}
   
-#   
-#   if (print == 1){png(file = "display/plots/plot9.png",res=reso)}
-#   par(mar=c(5, 4.5, 4, 2) + 0.1)
-#   plot(datam$min,datam$momm,type="l",col="blue",xaxt="n",las=1,ylab="",xlab="")
-#   abline(v=c(540,540+24*60),lty=1,col="black")
-#   if(max(data$min) < 1440) {
-#     hours <- c("15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00" ,"16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00")
-#     axis(1, at=seq(0,2880,60), labels=hours,las = 2)
-#   } else if (max(data$min) > 1440){
-#     hours <- c("15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00","17:00","19:00","21:00","23:00","01:00","03:00","05:00","07:00","09:00","11:00","13:00","15:00")
-#     axis(1, at=seq(0,2880,120), labels=hours,las = 2)
-#   }
-#   title(main="Hamringmomentum* for daempning \n paa 2.34% per minut",mgp=c(4,1,0), font.main = 1)
-#   title(ylab="Hamringmomentum",mgp=c(3.0,1,0))
-#   title(mgp=c(3.5,1,0),xlab="*En form for 'hamrings-hastigheds-speedometer'")
-#   if (print == 1){dev.off()}
-#   
   
   Hamrings_Momentum <- data.frame(datam$min,datam$momm)
   colnames(Hamrings_Momentum) <- c("min","momm")
@@ -51,3 +52,4 @@ Beregn_Hamringsmomentum <- function(data,C){
   
  return(Hamrings_Momentum) 
 }
+

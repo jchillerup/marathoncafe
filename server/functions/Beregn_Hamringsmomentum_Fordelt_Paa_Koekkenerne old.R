@@ -936,7 +936,7 @@ groen <- merge(groen, momm_stg, all = TRUE,by = c('ki'))
 groen <- groen[,c(1,3,5,6)]
 colnames(groen) <- c("ki","momm_max","momm_now","momm_stg")
 
-groen$point <- 0.1*groen$momm_max + 0.4*groen$momm_now + 0.5*groen$momm_stg 
+groen$point <- groen$momm_max + groen$momm_now + groen$momm_stg 
 groen <- groen[,c(1,5)]
 
 

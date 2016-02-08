@@ -1,6 +1,6 @@
 # Barvagter 
 rm(list = ls()) # Clear workspace
-print = 0
+print = 1
 
 install_packages = 0
 load_packages = 1
@@ -57,7 +57,7 @@ data$vagt <- 0
 
 datac <- Beregn_Kumuleret_Antal_Streger_For_Foerende_5(data)
 
-C <- 50000
+C <- 5000
 
 Hamringsmomentum_Koekkener <- Beregn_Hamringsmomentum_Fordelt_Paa_Koekkenerne(datac,Antal_Streger_Paa_Hvert_Koekken,C,print,reso)
 jsonToServer <- paste(jsonToServer, "\"hamringsmomentum_koekkener\": ")
