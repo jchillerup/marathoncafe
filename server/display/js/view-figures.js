@@ -35,8 +35,10 @@ var Plot = Backbone.View.extend({
     },
     
     render: function() {
+	/*
 	this.drawGraph();
         this.chart.update();
+	*/
     }
 });
 
