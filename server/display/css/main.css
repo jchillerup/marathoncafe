@@ -97,8 +97,11 @@ textarea {
    Author's custom styles
    ========================================================================== */
 body {
+    /*    
     background: url(../img/wood.jpg) no-repeat fixed;
     background-size: cover;
+    */
+    background-color: black;
     overflow: hidden;
 }
 
@@ -139,7 +142,8 @@ h1 {
 .scoreboard-unit {
     width: 30%;
     height: 80px;
-    background: rgba(255, 255, 255, 0.75);
+    background: rgba(40,40,40, 1);
+    border: 2px solid rgba(40,40,40, 0.5);
     color: #fff;
 
     margin: 7px;
@@ -173,7 +177,10 @@ h1 {
     font-size: 1.2em;
     margin-top: 0px;
     margin-bottom: 0px;
-    color: #000;
+    color: rgb(173,175,178);
+    font-weight: bold;
+
+    font-size: 1.6em;
 }
 
 .scoreboard-unit .bar {
@@ -181,7 +188,6 @@ h1 {
     width: 75%;
     height: 50%;
     left: 25%;
-    
 }
 
 .scoreboard-unit .bar .points, .scoreboard-unit .bar .momentum {
@@ -192,8 +198,9 @@ h1 {
     border-radius: 2px;
     padding: 3px 8px;
 
-    background: #fff;
-    color: #000;
+    background: #000;
+    color: #fff;
+    font-weight: bold;
 
     margin: 4px;
     
@@ -213,11 +220,11 @@ h1 {
 }
 
 .percentage_points {
-    background: navy;
+    background: #ffff00;
 }
 
 .percentage_momentum {
-    background: maroon;
+    background: #ff0000;
 }
 
 
@@ -267,7 +274,7 @@ h1 {
     display: inline-block;
     z-index:100;
 
-    background: #fff;
+    background: black;
 }
 
 #instagram {
@@ -315,7 +322,7 @@ ul {
 #logList li {
     margin: 3px 7px;
     padding: 0px;
-    font-size: 1em;
+    font-size: 1.4em;
     text-overflow: hidden;
 }
 
