@@ -121,6 +121,12 @@ var ScoreboardUnit = Backbone.View.extend({
         var points = this.model.get('scores').get(this.kitchen_id);
         var momentum = this.model.get('momentum').get(this.kitchen_id);
 
+	// Determine if we need animation
+	if (this.$('.points').text() != ""+Math.round(points)) {
+	    //	    this.$el.removeClass('animated').effect('highlight', 'fast').addClass('animated');
+	    this.$el.children().effect('highlight', 'slow');
+	}
+	
         this.$('.points').text(Math.round(points));
         this.$('.momentum').text(Math.round(momentum));
 

@@ -149,6 +149,8 @@ h1 {
 
     display: block;
     position: absolute;
+
+    transition: width 0.2s, height 0.2s, background-color 0.2s, transform 0.2s;
 }
 
 .scoreboard-unit .kitchen {
