@@ -295,8 +295,8 @@ h1 {
 
 #plots img {
     position: absolute;
-    width: 480px;
-    height: 480px;
+    width: 100%;
+    height: 100%;
 }
 
 #logContainer {
