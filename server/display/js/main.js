@@ -48,8 +48,8 @@ $(function() {
         $('.green').removeClass('green');
         $('.dotted').removeClass('dotted');
 
-        $("#score-" + jerseys.get('green')).addClass('green');
-        $("#score-" + jerseys.get('dotted')).addClass('dotted');
+        $("#score-" + jerseys.get('green') + " .tc").addClass('green');
+        $("#score-" + jerseys.get('dotted') + " .tc").addClass('dotted');
     });
 
     socket.on('reload', function(data) {

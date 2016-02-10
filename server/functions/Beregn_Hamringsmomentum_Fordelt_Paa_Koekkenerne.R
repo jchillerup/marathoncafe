@@ -1159,7 +1159,8 @@ b<-c("&green=",as.character(troje[which(troejer$groen == max(troejer$groen)),1])
 c<-c("&dotted=",as.character(troje[which(troejer$prik == max(troejer$prik)),1]))
 a<-paste(a,collapse="");b<-paste(b,collapse="");c<-paste(c,collapse="")
 JC<-paste(c(a,b),collapse="");JC<-paste(c(JC,c),collapse="")
-# 
+getToHost("127.0.0.1",JC,"", port=8081)
+
 
 troejer <- merge(troejer, Antal_Streger_Paa_Hvert_Koekken, all = TRUE, by = c('ki'))
 colnames(troejer) <- c("ki","prik","groen","gul")
