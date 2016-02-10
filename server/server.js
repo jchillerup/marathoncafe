@@ -120,8 +120,12 @@ http.createServer(function(req, res) {
 
         case "momentum":
             delete query['mode'];
-            state.momentum = query;
-            io.sockets.emit('state', state);
+
+	    for (var idx in query) {
+		state.momentum[idx] = parseFloat(query[idx])
+	    }
+	    
+	    io.sockets.emit('state', state);
             break;
             
         case "streg":
@@ -150,13 +154,13 @@ http.createServer(function(req, res) {
             var data = JSON.parse(body);
 
 	    // Update the momentums.
-	    for (obj in data.hamringsmomentum_koekkener) {
-
-		var kitchen = data.hamringsmomentum_koekkener[obj].ki;
-		var momentum = data.hamringsmomentum_koekkener[obj].momm;
-
-		state["momentum"][kitchen] = momentum;
-	    }
+//	    for (obj in data.hamringsmomentum_koekkener) {
+//
+//		var kitchen = data.hamringsmomentum_koekkener[obj].ki;
+//		var momentum = data.hamringsmomentum_koekkener[obj].momm;
+//
+//		state["momentum"][kitchen] = momentum;
+//	    }
 	    
 	    
 	    io.sockets.emit('state', state);
