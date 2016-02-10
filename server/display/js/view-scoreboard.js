@@ -4,117 +4,139 @@ var Scoreboard = Backbone.View.extend({
     children: [],
 
     initialize: function(arg1, arg2) {
-        this.model.on('change', _.bind(this.render, this));
-        
         // Create all the kitchen widgets
         var kitchens = [
-            "GL1", 
-            "GL2", "ML2", "NY2",
-            "GL3", "ML3", "NY3",
-            "GL4", "ML4", "NY4",
-            "GL5", "ML5", "NY5",
-            "GL6", "ML6", "NY6",
-            "GL7", "ML7", "NY7",
-            "GL8", "ML8", "NY8"
+            "GL1", "GL2", "GL3", "GL4", "GL5", "GL6", "GL7", "GL8",
+                   "ML2", "ML3", "ML4", "ML5", "ML6", "ML7", "ML8",
+                   "NY2", "NY3", "NY4", "NY5", "NY6", "NY7", "NY8"
         ];
 
         for (var kitchen in kitchens) {
             var unit = new ScoreboardUnit({
-                model: this.model, 
+                model: this.model,
                 kitchen_id: kitchens[kitchen],
-                id: "score-"+kitchens[kitchen]
+                id: "score-"+kitchens[kitchen],
+                scoreboard: this
             });
-            
+
             this.children.push(unit);
             this.$el.append(unit.$el);
         }
-        
-        $(window).resize(_.bind(this.render, this));
-                
-        this.render();
 
+        // Ensure the scoreboard is redrawn when the window is resized.
+        // This is needed to re-sort the scoreboard units, if needed.
+        $(window).resize(_.bind(this.render, this));
+        
+        // And when scores change, we need to ensure that we still have
+        // the right sorting.
+        this.model.get('scores').on('change', _.bind(function() {
+            setTimeout(_.bind(function() {
+                this.render();
+            }, this), 100);
+        }, this));
+
+        this.render();
     },
 
-    render: function() {
-	var padding = 10;
+    render: _.debounce(function() {
+        // console.log('scoreboard render');
+        var padding = 10;
 
-        this.$el.children().tsort('div.points', {order: 'desc'}, 'h2');
+        var $units = this.$el.children();
+        var totalWidth = this.$el.width();
+        var cols = Math.floor( totalWidth / ($units.width() + padding) );
+        // var height = (Math.ceil(28 / cols) * (80 + padding))+ padding + "px";
+        // console.log("height: "+ height);
+        // this.$el.css('height', "10%");
+
+        $units.each(function(index) {
+            var width = $(this).width();
+            var height = $(this).height();
+            var c = index % cols;
+            var r = Math.floor( index / cols);
+            var left = c * (width + padding);
+            var top = r * (height + padding);
+            left = left % (totalWidth - width);
+
+            $(this).css({
+                left: left,
+                top: top
+            });
+        });
+        
+
+        // Sort the scoreboard elements by kitchen.
+        tinysort('#scoreboard div.scoreboard-unit', {selector: '.points', order: 'desc'});
         
         // ensure yellow
         $(".yellow").removeClass('yellow');
-        $(this.$el.children().get(0)).addClass('yellow');
+        $(this.$el.children().get(0)).find(".tc").addClass('yellow');
+    },
+                       5) // debounce the function so we can have all scoreboardunits call 
+                          // render without spamming the scoreboard.
+}
 
-        var $units = this.$el.children();
-	var totalWidth = this.$el.width();
-	var cols = Math.floor( totalWidth / ($units.width() + padding) );
-        var height = (Math.ceil(22 / cols) * (80 + padding))+ padding + "px";
-        console.log("height: "+ height);
-        this.$el.css('height', height);
-
-	$units.each(function(index) {
-	    var width = $(this).width();
-	    var height = $(this).height();
-	    var c = index % cols;
-	    var r = Math.floor( index / cols);
-	    var left = c * (width + padding);
-	    var top = r * (height + padding);
-	    left = left % (totalWidth - width);
-
-	    $(this).css({
-		left: left,
-		top: top
-	    });
-	});
-
-    }
-});
+);
 
 var ScoreboardUnit = Backbone.View.extend({
     tagName: "div",
     className: "scoreboard-unit",
     renderCount: 0,
+    scoreboardView: null,
 
-    initialize: function() {
+    initialize: function(options) {
         this.kitchen_id = this.id.split("-")[1];
-        
-        if (!this.model.has(this.kitchen_id)) {
-            this.model.set(this.kitchen_id, 0);
+
+        if (!this.model.get('scores').has(this.kitchen_id)) {
+            this.model.get('scores').set(this.kitchen_id, 0);
         }
 
-        this.model.on('change:'+this.kitchen_id, _.bind(this.render, this));
-        
-        this.$el.html("<h2>"+this.kitchen_id +"</h2><div class=\"points\">0</div><div class=\"odometer\">0</span>");
+        this.model.get('scores').on('change', _.bind(this.render, this));
+
+        this.$el.html("<div class=\"kitchen\"><div class=\"tc\"><span>"+this.kitchen_id +"</span></div></div>"
+                      + "<div class=\"bar bar_points\">"
+                      + "<div class=\"percentage percentage_points\"></div>"
+                      + "<div class=\"points\">0</div>"
+                      + "</div>"
+                      + "<div class=\"bar bar_momentum\"> "
+                      + "<div class=\"percentage percentage_momentum\"></div>"
+                      + "<div class=\"momentum\">0</div>"
+                      + "</div>"
+                      + "");
         this.$el.addClass('animated');
 
-        $(window).resize(_.bind(this.ensureRound, this));
-        
         // Ensure that the CSS matches up
         $(_.bind(function() {
             this.render();
-        }, this ));        
-    },
-    render: function() {
+        }, this ));
         
-        if (this.renderCount > 1) {
-            this.$el.removeClass('animated').effect('highlight', 'fast').addClass('animated');
-        }
+        this.scoreboardView = options.scoreboard;
+    },
 
-        this.$('.points').text(this.model.get(this.kitchen_id));
-        this.$('.odometer').text(Math.round(this.model.get(this.kitchen_id)));
-        
-        this.renderCount++;
-        this.ensureRound();
-        
-    },
-    
-    ensureRound: function() {
-        this.$el.css('height', this.$el.width() + "px");
+    render: function() {
+        var points = this.model.get('scores').get(this.kitchen_id);
+        var momentum = this.model.get('momentum').get(this.kitchen_id);
+
+	// Determine if we need animation
+	if (this.$('.points').text() != ""+Math.round(points)) {
+	    //	    this.$el.removeClass('animated').effect('highlight', 'fast').addClass('animated');
+	    this.$el.children().effect('highlight', 'slow');
+	}
+	
+        this.$('.points').text(Math.round(points));
+        this.$('.momentum').text(Math.round(momentum));
+
+        var maxPoints = _.max(this.model.get('scores').attributes);
+        var maxMomentum = _.max(this.model.get('momentum').attributes);
+
+        var percentagePoints = points/maxPoints;
+        var percentageMomentum = momentum/maxMomentum;
+
+        this.$('.bar_points .percentage').width((100 * percentagePoints) + "%");
+        this.$('.bar_momentum .percentage').width((100 * percentageMomentum) + "%");
+
+        this.renderCount++;        
+        this.scoreboardView.render();
     }
 });
 
-
-window.odometerOptions = {
-    duration: 800,
-    theme: 'car',
-    animation: 'count' 
-};

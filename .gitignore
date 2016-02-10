@@ -5,4 +5,10 @@ db.sqlite
 server/display/plots/
 server/data.csv
 server/.RData
+server/.Rhistory
+server/Rplots.pdf
 overlevering/
+server/env
+#*#
+server/#*#
+node_modules/

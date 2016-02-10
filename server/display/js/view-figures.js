@@ -2,7 +2,7 @@ var PlotsView = Backbone.View.extend({
     id: "plots",
     cur_plot: 0,
     $cur_img: null,
-    plotfiles: ['plot0.png', 'plot10.png', 'plot11.png', 'plot12.png', 'plot13.png', 'plot1.png', 'plot2.png', 'plot4.png', 'plot5.png', 'plot6.png', 'plot7.png', 'plot9.png'],
+    plotfiles: ['plot0.png', 'plot2-kumulerede-antal-streger.png', 'plot5-streger-paa-barvagt.png', 'plot7-cum-top5.png', 'plot900-hamringsmomentum-global.png'],
 
     events: {
         "click img": "advance"
@@ -19,8 +19,8 @@ var PlotsView = Backbone.View.extend({
     },
     
     insertPic: function() {
-        var path = "plots/"+(this.plotfiles[this.cur_plot + 1])+"?cachebust="+(new Date()).getTime();
-        var $img = $("<img>").attr('src', path).css('left', '480px');
+        var path = "plots/"+(this.plotfiles[this.cur_plot])+"?cachebust="+(new Date()).getTime();
+        var $img = $("<img>").attr('src', path).css('left', '100%');
 
         this.$el.append($img);
         this.$cur_img = $img;

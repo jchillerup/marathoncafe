@@ -97,10 +97,11 @@ textarea {
    Author's custom styles
    ========================================================================== */
 body {
+    /*    
     background: url(../img/wood.jpg) no-repeat fixed;
     background-size: cover;
-    width: 1024px;
-    height: 768px;
+    */
+    background-color: rgb(40,40,40);
     overflow: hidden;
 }
 
@@ -129,7 +130,8 @@ h1 {
 
 
 #scoreboard {
-    width: 100%;
+    width: 50%;
+    height: 100%;
     position:relative;
 }
 .animated {
@@ -138,25 +140,98 @@ h1 {
 }
 
 .scoreboard-unit {
-    width: 81px;
-    height: 81px;
-    background: rgba(87, 44, 16, 0.75);
+    width: 30%;
+    height: 80px;
+    background: rgba(40,40,40, 1);
+    border: 2px solid rgba(255,255,255, 0.5);
     color: #fff;
 
     margin: 7px;
-    border-radius: 81px;
-    border: 2px solid #000;
     text-align: center;
 
     display: block;
     position: absolute;
+
+    transition: width 0.2s, height 0.2s, background-color 0.2s, transform 0.2s;
 }
 
-.scoreboard-unit h2 {
+.scoreboard-unit .kitchen {
+    position: absolute;
+    left: 0px;
+    width: 25%;
+    height: 80px;
+    display: table;
+    background: rgba(255,255,255, 0.2);
+    border-right: 3px solid #000;
+}
+
+.scoreboard-unit .kitchen .tc {
+    right:0px;
+    left: 0px;
+    display: table-cell;
     text-align: center;
+    height: 80px;
+    width: 100%;
+    vertical-align: middle;
+    
     font-size: 1.2em;
-    margin-top: 8px;
+    margin-top: 0px;
     margin-bottom: 0px;
+    color: rgb(173,175,178);
+    font-weight: bold;
+
+    font-size: 1.6em;
+
+}
+
+.scoreboard-unit .kitchen .tc span {
+    background: rgba(0,0,0,0.5);
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.scoreboard-unit .bar {
+    position: absolute;
+    width: 75%;
+    height: 50%;
+    left: 25%;
+}
+
+.scoreboard-unit .bar .points, .scoreboard-unit .bar .momentum {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+
+    border-radius: 2px;
+    padding: 3px 8px;
+
+    background: #000;
+    color: #fff;
+    font-weight: bold;
+
+    margin: 4px;
+    
+}
+
+.scoreboard-unit .bar_points {
+    top: 0px;
+}
+
+.scoreboard-unit .bar_momentum {
+    top: 50%;
+}
+
+.percentage {
+    width: 0px;
+    height: 100%;
+}
+
+.percentage_points {
+    background: #ffff00;
+}
+
+.percentage_momentum {
+    background: #ff0000;
 }
 
 
@@ -175,49 +250,53 @@ h1 {
 }
 
 .yellow.green {
-    background: linear-gradient(to right, #ff0 50%, #0f0 50%);
+    background: linear-gradient(#ff0 50%, #0f0 50%);
 }
 
 .yellow.dotted {
-    background: linear-gradient(to right, #ff0 50%, #f00 50%);
+    background: linear-gradient( #ff0 50%, #f00 50%);
 }
 
 .green.dotted {
-    background: linear-gradient(to right, #0f0 50%, #f00 50%);
+    background: linear-gradient(#0f0 50%, #f00 50%);
 }
 
 .yellow.green.dotted {
-    background: linear-gradient(to right, #ff0 33%, #0f0 33%,
+    background: linear-gradient(#ff0 33%, #0f0 33%,
                                           #0f0 66%, #f00 66%);
-    box-shadow: 0px 0px 60px 20px #dfc12a;
 }
 
-
-.points{display:none}
 .odometer {
     font-size:1.1em;
 }
 
 #plots {
-    position: relative;
-    width: 480px;
-    height: 480px;
+    position: absolute;
+    top: 0px;
+    left: 50%;
+    width: 35%;
+    height: 50%;
     overflow: hidden;
     display: inline-block;
-    float: left;
+    z-index:100;
 
-    border: 3px solid #000;
+    background: black;
 }
 
 #instagram {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 35%;
+    
     border: 3px solid #000;
-    height: 480px;
+    height: 50%;
 }
 
 #plots img {
     position: absolute;
-    width: 480px;
-    height: 480px;
+    width: 100%;
+    height: 100%;
 }
 
 #logContainer {
@@ -228,8 +307,9 @@ h1 {
 
 #logList {
     position: fixed;
-    left: 0px;
-    width: 100%;
+    right: 0px;
+    width: 15%;
+    height: 100%;
     bottom: 0px;
     background: black;
     border-top: 2px maroon solid;
@@ -248,21 +328,13 @@ ul {
 #logList li {
     margin: 3px 7px;
     padding: 0px;
-    font-size: 1em;
-    float:left;
-    display:inline;
+    font-size: 1.4em;
     text-overflow: hidden;
 }
 
 #logList li .timestamp {
     font-weight: bold;
     margin-right: 6px;
-}
-
-#instagram {
-    display: inline-block;
-    position: relative;
-    margin-left:20px;
 }
 
 /* ==========================================================================

@@ -1,5 +1,4 @@
 var ScoreModel = Backbone.Model.extend({
-    endpoint: "http://localhost:8081/",
     socket: null,
 
     initialize: function(attr, opts) {
@@ -24,7 +23,7 @@ var ScoreModel = Backbone.Model.extend({
 
 var KitchenPicker = Backbone.View.extend({
     events: {
-        "mousedown .kitchenButton": "setScore"
+        "click .kitchenButton": "setScore",
     },
 
     initialize: function() {
@@ -60,16 +59,19 @@ var POSView = Backbone.View.extend({
     }
 });
 
-var socket = io.connect('/');
+var socket = io.connect();
 var curScore = new ScoreModel(null, {socket: socket});    
 
 $(function() {    
+    // Initialize FastClick
+    FastClick.attach(document.body);
+
     var kitchenView = new KitchenPicker({ el: document.getElementById("kitchens"), model: curScore });
     var posView = new POSView({model: curScore});
 
     $('#display h1').after(posView.$el);
 
-    $("#orders button").on('mousedown startdrag', function() {
+    $("#orders button").on('click', function() {
         if (this.id === "clearButton") {
             curScore.set('quantity', 0);
         } else {
@@ -94,3 +96,5 @@ function testPOS(interval) {
     
     return setInterval(makeOrder, interval);
 }
+
+function randomRHK() { socket.emit('streg', {kitchen: Math.floor(Math.random()*7+1)+ ["A","B","C","D"][Math.floor(Math.random()*4)], quantity: Math.floor(Math.random()*8+1)}); }
