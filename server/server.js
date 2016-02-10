@@ -26,6 +26,10 @@ var state = { cur_scores: {
     "NY2": 0, "NY3": 0, "NY4": 0, "NY5": 0, "NY6": 0, "NY7": 0, "NY8": 0
 }, jerseys: {yellow: null, green: null, dotted: null}}; 
 
+
+fs.appendFileSync('orders.csv', "### STARTED NEW RUN: "+Math.round((new Date).getTime()/1000)+"\n"  );
+
+
 // load state from sqlite
 db.serialize(function() { 
     var buffer = "";
@@ -84,6 +88,11 @@ function registerStreg(kitchen, quantity, sender) {
     io.sockets.emit('state', state);
 }
 
+function registerOrder(data, sender) {
+    var buffer = [Math.round((new Date).getTime()/1000), data.kitchen, data.quantity, data.beer, data.drink, data.jbomb, data.fisk, data.shot, sender].join(";")+"\n";
+    fs.appendFileSync('orders.csv', buffer);    
+}
+
 
 // socket.io
 io.sockets.on('connection', function (socket) {
@@ -93,6 +102,10 @@ io.sockets.on('connection', function (socket) {
         var sender = socket.handshake.address;
 
         registerStreg(data.kitchen, data.quantity, sender);
+
+	if (data.beer !== undefined) {
+	    registerOrder(data, sender);
+	}
     });
 });
 
@@ -178,7 +191,7 @@ http.createServer(function(req, res) {
 function runR() {
     console.log("Running R");
     exec("nice R --vanilla < marathoncafe.R", function(error, stdout, stderr) {
-        setTimeout(runR, 1000);
+        setTimeout(runR, 10000);
     });
 
 }

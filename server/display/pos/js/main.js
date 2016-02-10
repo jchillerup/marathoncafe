@@ -1,10 +1,17 @@
 var ScoreModel = Backbone.Model.extend({
     socket: null,
+    defaults: {
+	quantity: 0,
+	beer: 0,
+	drink: 0,
+	jbomb: 0,
+	fisk: 0,
+	shot: 0},
 
     initialize: function(attr, opts) {
         this.socket = opts.socket;
 
-        this.set('quantity', 0);
+        this.set(this.defaults);
         this.on('change:kitchen', _.bind(this.submit, this));
     },
 
@@ -15,7 +22,7 @@ var ScoreModel = Backbone.Model.extend({
 
             // HACK
             this.clear();
-            this.set('quantity', 0);
+            this.set(this.defaults);
             // /HACK
         }
     }
@@ -64,19 +71,26 @@ var curScore = new ScoreModel(null, {socket: socket});
 
 $(function() {    
     // Initialize FastClick
-    FastClick.attach(document.body);
+    //FastClick.attach(document.body);
 
     var kitchenView = new KitchenPicker({ el: document.getElementById("kitchens"), model: curScore });
     var posView = new POSView({model: curScore});
 
     $('#display h1').after(posView.$el);
 
-    $("#orders button").on('click', function() {
+    $("#orders button").on('click', function(event, button) {
+	var product = $(event.target).data('order');
+	var unit_quantity = $(event.target).data('quantity');
+	
         if (this.id === "clearButton") {
-            curScore.set('quantity', 0);
+
+	    curScore.set(curScore.defaults);
+	    
         } else {
             var score = this.value;
             curScore.set('quantity', parseFloat(curScore.get('quantity')) + parseFloat(score));
+
+	    curScore.set(product, (curScore.get(product)||0)+unit_quantity);
         }
     });
 });

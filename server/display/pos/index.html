@@ -14,23 +14,25 @@
 
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/main.css">
-    <script type="application/javascript" src="js/vendor/fastclick.min.js"></script>
+    <script type="application/javascript" src="js/vendor/fastclick.min.js"></script> 
     <script src="js/vendor/modernizr-2.6.2.min.js"></script>
   </head>
   <body>
 
     <section id="orders">
-      <button value="0.5">+ ½</button> <br/>
-      <button value="1">+ 1</button> <br/>
-      <button value="2">+ 2</button> <br/>
-      <button value="5">+ 5</button> <br/>
+      <button value="2.5" data-order="beer" data-quantity="1">1x Øl <br> (2½ streg) </button> <br/>
+      <button value="2" data-order="drink" data-quantity="1">1x Drink <br> (2 streger)</button> <br/>
+      <button value="1.5" data-order="jbomb" data-quantity="1">1x Jägerbomb <br> (1½ streg)</button> <br/>
+      <button value="0.5" style="width:50%;" data-order="fisk" data-quantity="1">1x Fisk / Gajol<br>(½ streg)</button><button
+	      value="6" style="width:50%;" data-order="fisk" data-quantity="12">12x Fisk<br>(6 streger)</button> <br/>
+      <button value="1" data-order="shot" data-quantity="1">1x Shot <br> (1 streg)</button> <br/>
+      
       <button id="clearButton">Slet</button>
     </section>
 
     <section id="display">
-      <h1>Marbar stregindtastning</h1>
+      <h1>Stregindtastning</h1>
 
-      <p>I er for nice, piger!</p>
     </section>
 
     <table id="kitchens">
