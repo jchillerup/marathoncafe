@@ -251,19 +251,19 @@ h1 {
 }
 
 .yellow.green {
-    background: linear-gradient(#ff0 50%, #0f0 50%);
+    background: linear-gradient(to right, #ff0 50%, #0f0 50%);
 }
 
 .yellow.dotted {
-    background: linear-gradient( #ff0 50%, #f00 50%);
+    background: linear-gradient(to right, #ff0 50%, #f00 50%);
 }
 
 .green.dotted {
-    background: linear-gradient(#0f0 50%, #f00 50%);
+    background: linear-gradient(to right, #0f0 50%, #f00 50%);
 }
 
 .yellow.green.dotted {
-    background: linear-gradient(#ff0 33%, #0f0 33%,
+    background: linear-gradient(to right, #ff0 33%, #0f0 33%,
                                           #0f0 66%, #f00 66%);
 }
 
