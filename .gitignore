@@ -4,6 +4,7 @@ db.sqlite
 */*/*~
 server/display/plots/
 server/data.csv
+server/orders.csv
 server/.RData
 server/.Rhistory
 server/Rplots.pdf
