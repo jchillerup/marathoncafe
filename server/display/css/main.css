@@ -174,7 +174,7 @@ h1 {
     width: 100%;
     vertical-align: middle;
     
-    font-size: 1.1em;
+    font-size: 1.0em;
     margin-top: 0px;
     margin-bottom: 0px;
     color: #fff;
@@ -232,7 +232,7 @@ h1 {
 }
 
 .percentage_momentum {
-    background: #ff0000;
+    background: #00ff00;
 }
 
 
