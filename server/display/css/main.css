@@ -174,13 +174,12 @@ h1 {
     width: 100%;
     vertical-align: middle;
     
-    font-size: 0.8em;
     margin-top: 0px;
     margin-bottom: 0px;
     color: #fff;
     font-weight: bold;
 
-    font-size: 1.6em;
+    font-size: 1.4em;
 
     border-right: 2px solid #000;
 }
@@ -189,6 +188,7 @@ h1 {
     background: rgba(0,0,0,0.5);
     padding: 4px;
     border-radius: 4px;
+   
 }
 
 .scoreboard-unit .bar {
