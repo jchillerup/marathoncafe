@@ -103,6 +103,7 @@ body {
     */
     background-color: rgb(40,40,40);
     overflow: hidden;
+    padding-top: 20px;
 }
 
 h1 {
