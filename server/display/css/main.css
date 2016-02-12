@@ -229,11 +229,11 @@ h1 {
 }
 
 .percentage_points {
-    background: #ffff00;
+    background: #ff0;
 }
 
 .percentage_momentum {
-    background: #00ff00;
+    background: #f00;
 }
 
 
@@ -243,7 +243,7 @@ h1 {
 }
 
 .green {
-    background: #f00;
+    background: #0f0;
     color: #000;
 }
 
