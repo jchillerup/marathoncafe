@@ -15,7 +15,7 @@ for line in fp.readlines():
 
     while (int(timestamp) - ts_offset) > timer:
         timer += 1
-        time.sleep(1/SPEED_FACTOR)
+        time.sleep(1.0/SPEED_FACTOR)
 
         print(timer)
         
