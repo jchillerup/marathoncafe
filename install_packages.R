@@ -7,3 +7,6 @@ install.packages("ggplot2", repos='http://cran-mirror.cs.uu.nl/')
 install.packages("lattice", repos='http://cran-mirror.cs.uu.nl/')
 install.packages("zoo", repos='http://cran-mirror.cs.uu.nl/')
 install.packages("httpRequest", repos='http://cran-mirror.cs.uu.nl/')
+install.packages("jsonlite", repos='http://cran-mirror.cs.uu.nl/')
+update.packages()
+
